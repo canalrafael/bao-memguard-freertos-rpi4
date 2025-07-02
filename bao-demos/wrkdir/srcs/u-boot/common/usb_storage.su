@@ -1,0 +1,17 @@
+common/usb_storage.c:344:12:usb_stor_irq	0	static
+common/usb_storage.c:465:12:usb_stor_BBB_reset	48	static
+common/usb_storage.c:519:12:usb_stor_CB_reset	64	static
+common/usb_storage.c:598:12:usb_stor_CB_comdat	144	static
+common/usb_storage.c:667:12:usb_stor_CBI_get_status	48	static
+common/usb_storage.c:845:12:usb_stor_CB_transport	400	static
+common/usb_storage.c:1015:12:usb_request_sense.constprop.isra	48	static
+common/usb_storage.c:1226:22:usb_stor_write	128	static
+common/usb_storage.c:1143:22:usb_stor_read	128	static
+common/usb_storage.c:714:12:usb_stor_BBB_clear_endpt_stall.isra	32	static
+common/usb_storage.c:722:12:usb_stor_BBB_transport	352	static
+common/usb_storage.c:141:5:usb_stor_info	64	static
+common/usb_storage.c:306:6:usb_stor_reset	0	static
+common/usb_storage.c:316:5:usb_stor_scan	32	static
+common/usb_storage.c:1314:5:usb_storage_probe	80	static
+common/usb_storage.c:1436:5:usb_stor_get_info	352	static
+common/usb_storage.c:1524:12:usb_mass_storage_probe	256	static

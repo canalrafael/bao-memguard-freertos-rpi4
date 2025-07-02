@@ -1,0 +1,2 @@
+drivers/reset/reset-raspberrypi.c:13:12:raspberrypi_reset_request	0	static
+drivers/reset/reset-raspberrypi.c:21:12:raspberrypi_reset_assert	16	static

@@ -1,0 +1,1 @@
+cmd_drivers/crypto/built-in.o :=  rm -f drivers/crypto/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT drivers/crypto/built-in.o drivers/crypto/rsa_mod_exp/built-in.o drivers/crypto/fsl/built-in.o drivers/crypto/hash/built-in.o drivers/crypto/aspeed/built-in.o drivers/crypto/nuvoton/built-in.o

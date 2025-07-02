@@ -1,0 +1,7 @@
+board/raspberrypi/rpi/rpi.c:270:5:dram_init	160	static
+board/raspberrypi/rpi/rpi.c:297:5:dram_init_banksize	16	static
+board/raspberrypi/rpi/rpi.c:338:15:board_get_usable_ram_top	0	static
+board/raspberrypi/rpi/rpi.c:414:5:misc_init_r	208	static
+board/raspberrypi/rpi/rpi.c:480:5:board_init	160	static
+board/raspberrypi/rpi/rpi.c:496:7:board_fdt_blob_setup	0	static
+board/raspberrypi/rpi/rpi.c:507:5:ft_board_setup	32	static

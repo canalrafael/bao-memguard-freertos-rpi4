@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+VM_INDEX=NULL source env.bash
+nvim $BAO_CORE/init.c

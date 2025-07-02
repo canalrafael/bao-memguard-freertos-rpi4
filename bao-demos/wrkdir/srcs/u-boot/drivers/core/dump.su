@@ -1,0 +1,7 @@
+drivers/core/dump.c:13:13:show_devices	80	static
+drivers/core/dump.c:48:6:dm_dump_tree	32	static
+drivers/core/dump.c:77:6:dm_dump_uclass	96	static
+drivers/core/dump.c:100:6:dm_dump_driver_compat	64	static
+drivers/core/dump.c:124:6:dm_dump_drivers	96	static
+drivers/core/dump.c:163:6:dm_dump_static_driver_info	48	static
+drivers/core/dump.c:176:6:dm_dump_mem	96	static

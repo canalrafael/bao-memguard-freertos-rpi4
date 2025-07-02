@@ -1,0 +1,1 @@
+cmd_drivers/dfu/built-in.o :=  rm -f drivers/dfu/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT drivers/dfu/built-in.o drivers/dfu/dfu.o drivers/dfu/dfu_mmc.o

@@ -1,0 +1,6 @@
+drivers/serial/serial_pl01x.c:294:5:pl01x_serial_probe	32	static
+drivers/serial/serial_pl01x.c:307:5:pl01x_serial_getc	16	static
+drivers/serial/serial_pl01x.c:314:5:pl01x_serial_putc	32	static
+drivers/serial/serial_pl01x.c:321:5:pl01x_serial_pending	32	static
+drivers/serial/serial_pl01x.c:350:5:pl01x_serial_of_to_plat	32	static
+drivers/serial/serial_pl01x.c:281:5:pl01x_serial_setbrg	48	static

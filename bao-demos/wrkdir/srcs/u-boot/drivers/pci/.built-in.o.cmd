@@ -1,0 +1,1 @@
+cmd_drivers/pci/built-in.o :=  rm -f drivers/pci/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT drivers/pci/built-in.o drivers/pci/pci_rom.o drivers/pci/pci-uclass.o drivers/pci/pci_auto.o drivers/pci/pci_auto_common.o drivers/pci/pci_common.o drivers/pci/pcie_brcmstb.o

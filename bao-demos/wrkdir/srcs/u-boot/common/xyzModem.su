@@ -1,0 +1,8 @@
+common/xyzModem.c:64:1:CYGACC_COMM_IF_GETC_TIMEOUT.constprop	32	static
+common/xyzModem.c:239:1:xyzModem_flush	32	static
+common/xyzModem.c:252:1:xyzModem_get_hdr	80	static
+common/xyzModem.c:413:1:xyzModem_stream_open	96	static
+common/xyzModem.c:491:1:xyzModem_stream_read	96	static
+common/xyzModem.c:611:1:xyzModem_stream_close	0	static
+common/xyzModem.c:623:1:xyzModem_stream_terminate	32	static
+common/xyzModem.c:679:1:xyzModem_error	0	static

@@ -1,0 +1,2 @@
+drivers/mmc/mmc_bootdev.c:14:12:mmc_get_bootflow	64	static
+drivers/mmc/mmc_bootdev.c:38:12:mmc_bootdev_bind	16	static

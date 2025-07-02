@@ -1,0 +1,7 @@
+drivers/gpio/bcm2835_gpio.c:65:12:bcm2835_gpio_set_value	32	static
+drivers/gpio/bcm2835_gpio.c:20:12:bcm2835_gpio_direction_input	32	static
+drivers/gpio/bcm2835_gpio.c:77:12:bcm2835_gpio_get_function	32	static
+drivers/gpio/bcm2835_gpio.c:33:12:bcm2835_gpio_direction_output	48	static
+drivers/gpio/bcm2835_gpio.c:119:12:bcm2835_gpio_of_to_plat	32	static
+drivers/gpio/bcm2835_gpio.c:102:12:bcm2835_gpio_probe	48	static
+drivers/gpio/bcm2835_gpio.c:58:12:bcm2835_gpio_get_value	32	static

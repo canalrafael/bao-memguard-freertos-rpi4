@@ -1,0 +1,1 @@
+cmd_arch/arm/mach-bcm283x/built-in.o :=  rm -f arch/arm/mach-bcm283x/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT arch/arm/mach-bcm283x/built-in.o arch/arm/mach-bcm283x/init.o arch/arm/mach-bcm283x/reset.o arch/arm/mach-bcm283x/mbox.o arch/arm/mach-bcm283x/msg.o arch/arm/mach-bcm283x/phys2bus.o

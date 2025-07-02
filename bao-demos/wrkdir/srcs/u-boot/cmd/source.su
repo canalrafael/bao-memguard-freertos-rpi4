@@ -1,0 +1,2 @@
+cmd/source.c:45:5:image_source_script	32	static
+cmd/source.c:164:12:do_source	32	static

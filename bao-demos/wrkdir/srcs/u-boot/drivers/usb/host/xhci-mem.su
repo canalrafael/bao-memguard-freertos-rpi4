@@ -1,0 +1,17 @@
+drivers/usb/host/xhci-mem.c:217:13:xhci_link_segments	0	static
+drivers/usb/host/xhci-mem.c:81:13:xhci_ring_free	48	static
+drivers/usb/host/xhci-mem.c:37:6:xhci_flush_cache	16	static
+drivers/usb/host/xhci-mem.c:192:14:xhci_malloc	32	static
+drivers/usb/host/xhci-mem.c:276:29:xhci_segment_alloc	32	static
+drivers/usb/host/xhci-mem.c:425:4:xhci_alloc_container_ctx	48	static
+drivers/usb/host/xhci-mem.c:52:6:xhci_inval_cache	16	static
+drivers/usb/host/xhci-mem.c:175:6:xhci_cleanup	64	static
+drivers/usb/host/xhci-mem.c:305:19:xhci_ring_alloc	64	static
+drivers/usb/host/xhci-mem.c:450:5:xhci_alloc_virt_device	48	static
+drivers/usb/host/xhci-mem.c:509:5:xhci_mem_init	96	static
+drivers/usb/host/xhci-mem.c:617:4:xhci_get_input_control_ctx	16	static
+drivers/usb/host/xhci-mem.c:630:23:xhci_get_slot_ctx	0	static
+drivers/usb/host/xhci-mem.c:648:21:xhci_get_ep_ctx	0	static
+drivers/usb/host/xhci-mem.c:673:6:xhci_endpoint_copy	16	static
+drivers/usb/host/xhci-mem.c:702:6:xhci_slot_copy	16	static
+drivers/usb/host/xhci-mem.c:723:6:xhci_setup_addressable_virt_dev	96	static

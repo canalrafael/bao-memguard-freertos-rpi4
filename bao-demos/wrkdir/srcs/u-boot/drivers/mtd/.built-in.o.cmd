@@ -1,0 +1,1 @@
+cmd_drivers/mtd/built-in.o :=  rm -f drivers/mtd/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT drivers/mtd/built-in.o drivers/mtd/nand/built-in.o drivers/mtd/onenand/built-in.o drivers/mtd/spi/built-in.o

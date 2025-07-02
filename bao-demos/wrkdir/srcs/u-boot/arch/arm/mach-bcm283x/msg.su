@@ -1,0 +1,5 @@
+arch/arm/mach-bcm283x/msg.c:50:5:bcm2835_power_on_module	160	static
+arch/arm/mach-bcm283x/msg.c:74:5:bcm2835_get_mmc_clock	160	static
+arch/arm/mach-bcm283x/msg.c:96:5:bcm2835_get_video_size	176	static
+arch/arm/mach-bcm283x/msg.c:115:5:bcm2835_set_video_params	336	static
+arch/arm/mach-bcm283x/msg.c:168:5:bcm2711_notify_vl805_reset	160	static

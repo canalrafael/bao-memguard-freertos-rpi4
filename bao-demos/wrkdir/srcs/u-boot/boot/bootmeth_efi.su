@@ -1,0 +1,4 @@
+boot/bootmeth_efi.c:143:5:distro_efi_boot	80	static
+boot/bootmeth_efi.c:160:12:distro_bootmeth_efi_bind	16	static
+boot/bootmeth_efi.c:102:12:distro_efi_check	0	static
+boot/bootmeth_efi.c:114:12:distro_efi_read_bootflow	304	static

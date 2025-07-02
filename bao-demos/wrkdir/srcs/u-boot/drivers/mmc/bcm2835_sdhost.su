@@ -1,0 +1,6 @@
+drivers/mmc/bcm2835_sdhost.c:708:12:bcm2835_set_ios	32	static
+drivers/mmc/bcm2835_sdhost.c:796:12:bcm2835_bind	32	static
+drivers/mmc/bcm2835_sdhost.c:395:12:bcm2835_read_wait_sdcmd	48	static
+drivers/mmc/bcm2835_sdhost.c:465:12:bcm2835_finish_command	32	static
+drivers/mmc/bcm2835_sdhost.c:756:12:bcm2835_probe	48	static
+drivers/mmc/bcm2835_sdhost.c:662:12:bcm2835_send_cmd	96	static

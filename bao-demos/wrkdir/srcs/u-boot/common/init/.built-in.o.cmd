@@ -1,0 +1,1 @@
+cmd_common/init/built-in.o :=  rm -f common/init/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT common/init/built-in.o common/init/board_init.o

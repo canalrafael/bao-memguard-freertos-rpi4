@@ -1,0 +1,13 @@
+arch/arm/lib/interrupts_64.c:35:13:show_efi_loaded_images.isra	0	static
+arch/arm/lib/interrupts_64.c:18:5:interrupt_init	0	static
+arch/arm/lib/interrupts_64.c:25:6:enable_interrupts	0	static
+arch/arm/lib/interrupts_64.c:30:5:disable_interrupts	0	static
+arch/arm/lib/interrupts_64.c:51:6:show_regs	64	static
+arch/arm/lib/interrupts_64.c:113:6:do_bad_sync	32	static
+arch/arm/lib/interrupts_64.c:126:6:do_bad_irq	32	static
+arch/arm/lib/interrupts_64.c:138:6:do_bad_fiq	32	static
+arch/arm/lib/interrupts_64.c:150:6:do_bad_error	32	static
+arch/arm/lib/interrupts_64.c:162:6:do_sync	32	static
+arch/arm/lib/interrupts_64.c:177:6:do_irq	32	static
+arch/arm/lib/interrupts_64.c:189:6:do_fiq	32	static
+arch/arm/lib/interrupts_64.c:204:13:do_error	32	static

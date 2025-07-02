@@ -1,0 +1,1 @@
+cmd_u-boot.srec := /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-objcopy --gap-fill=0xff -j .text -j .secure_text -j .secure_data -j .rodata -j .data -j __u_boot_list -j .rela.dyn -j .got -j .got.plt -j .binman_sym_table -j .text_rest -j .dtb.init.rodata -j .efi_runtime -j .efi_runtime_rel -O srec u-boot u-boot.srec

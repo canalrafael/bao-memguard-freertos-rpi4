@@ -1,0 +1,1 @@
+cmd_drivers/usb/gadget/built-in.o :=  rm -f drivers/usb/gadget/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT drivers/usb/gadget/built-in.o drivers/usb/gadget/epautoconf.o drivers/usb/gadget/config.o drivers/usb/gadget/usbstring.o drivers/usb/gadget/dwc2_udc_otg.o drivers/usb/gadget/g_dnl.o drivers/usb/gadget/f_dfu.o

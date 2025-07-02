@@ -1,0 +1,1 @@
+cmd_drivers/pinctrl/broadcom/built-in.o :=  rm -f drivers/pinctrl/broadcom/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT drivers/pinctrl/broadcom/built-in.o drivers/pinctrl/broadcom/pinctrl-bcm283x.o

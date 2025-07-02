@@ -1,0 +1,1 @@
+cmd_drivers/serial/built-in.o :=  rm -f drivers/serial/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT drivers/serial/built-in.o drivers/serial/serial-uclass.o drivers/serial/serial_pl01x.o drivers/serial/serial_bcm283x_mu.o drivers/serial/serial_bcm283x_pl011.o

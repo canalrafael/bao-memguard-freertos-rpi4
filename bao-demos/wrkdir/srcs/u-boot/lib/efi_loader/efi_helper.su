@@ -1,0 +1,4 @@
+lib/efi_loader/efi_helper.c:69:25:efi_get_dp_from_boot	128	static
+lib/efi_loader/efi_helper.c:132:13:guid_to_sha_str	48	static
+lib/efi_loader/efi_helper.c:150:5:algo_to_len	48	static
+lib/efi_loader/efi_helper.c:169:5:efi_link_dev	0	static

@@ -1,0 +1,3 @@
+lib/efi_loader/efi_load_options.c:25:14:efi_set_load_options	96	static
+lib/efi_loader/efi_load_options.c:60:14:efi_deserialize_load_option	48	static
+lib/efi_loader/efi_load_options.c:110:15:efi_serialize_load_option	64	static

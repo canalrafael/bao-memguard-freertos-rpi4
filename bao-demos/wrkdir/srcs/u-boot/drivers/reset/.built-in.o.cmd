@@ -1,0 +1,1 @@
+cmd_drivers/reset/built-in.o :=  rm -f drivers/reset/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT drivers/reset/built-in.o drivers/reset/reset-uclass.o drivers/reset/reset-raspberrypi.o

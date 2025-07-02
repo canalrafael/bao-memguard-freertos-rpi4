@@ -1,0 +1,1 @@
+cmd_drivers/block/built-in.o :=  rm -f drivers/block/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT drivers/block/built-in.o drivers/block/blk-uclass.o drivers/block/blkcache.o

@@ -1,0 +1,4 @@
+drivers/pinctrl/broadcom/pinctrl-bcm283x.c:63:5:bcm283x_pinctrl_set_state	176	static
+drivers/pinctrl/broadcom/pinctrl-bcm283x.c:92:12:bcm283x_pinctrl_get_gpio_mux	32	static
+drivers/pinctrl/broadcom/pinctrl-bcm283x.c:107:5:bcm283x_pinctl_of_to_plat	32	static
+drivers/pinctrl/broadcom/pinctrl-bcm283x.c:122:5:bcm283x_pinctl_probe	48	static

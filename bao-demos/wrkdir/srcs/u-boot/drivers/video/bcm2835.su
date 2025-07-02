@@ -1,0 +1,1 @@
+drivers/video/bcm2835.c:14:12:bcm2835_video_probe	80	static

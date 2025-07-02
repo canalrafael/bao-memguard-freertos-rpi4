@@ -1,0 +1,1 @@
+cmd_drivers/usb/host/built-in.o :=  rm -f drivers/usb/host/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT drivers/usb/host/built-in.o drivers/usb/host/usb-uclass.o drivers/usb/host/usb_bootdev.o drivers/usb/host/xhci.o drivers/usb/host/xhci-mem.o drivers/usb/host/xhci-ring.o drivers/usb/host/xhci-pci.o

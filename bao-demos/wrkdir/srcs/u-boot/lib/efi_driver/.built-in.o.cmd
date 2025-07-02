@@ -1,0 +1,1 @@
+cmd_lib/efi_driver/built-in.o :=  rm -f lib/efi_driver/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT lib/efi_driver/built-in.o lib/efi_driver/efi_uclass.o lib/efi_driver/efi_block_device.o

@@ -1,0 +1,2 @@
+drivers/serial/serial_bcm283x_pl011.c:63:12:bcm283x_pl011_serial_setbrg	32	static
+drivers/serial/serial_bcm283x_pl011.c:36:12:bcm283x_pl011_serial_probe	48	static

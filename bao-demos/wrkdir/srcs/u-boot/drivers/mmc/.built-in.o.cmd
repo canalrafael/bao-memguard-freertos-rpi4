@@ -1,0 +1,1 @@
+cmd_drivers/mmc/built-in.o :=  rm -f drivers/mmc/built-in.o; /home/main/Documents/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar cDPrsT drivers/mmc/built-in.o drivers/mmc/mmc.o drivers/mmc/mmc-uclass.o drivers/mmc/mmc_bootdev.o drivers/mmc/mmc_write.o drivers/mmc/sdhci.o drivers/mmc/bcm2835_sdhci.o drivers/mmc/bcm2835_sdhost.o
