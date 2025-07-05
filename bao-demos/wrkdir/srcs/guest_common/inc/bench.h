@@ -4,6 +4,7 @@
 typedef struct {
   volatile int (*function)(void);
   const char *name;
+  int function_index;
   int vm_num;
   int task_num;
   const char *budget_function;

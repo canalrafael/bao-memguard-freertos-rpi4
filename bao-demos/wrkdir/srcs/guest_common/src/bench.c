@@ -4,7 +4,7 @@
 // Global variables for all benchmark functions
 #define NUM_BENCHMARKS 56
 #define MAX_TASKS 8
-#define BENCH_ARRAY_INDEX 5
+#define BENCH_ARRAY_INDEX 0
 
 volatile int a = 12345;
 volatile int b = 6789;
@@ -588,6 +588,7 @@ BenchInfo get_benchmark_info(int vm_num, int task_num) {
   info.vm_num = vm_num;
   info.task_num = task_num;
   info.budget_function = get_budget_function();
+  info.function_index = index;
   // printf("BenchInfo{%d, %s, VM%d, T%d}\n", *(int *)info.function, info.name,
   // info.vm_num, info.task_num);
   return info;

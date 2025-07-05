@@ -1,7 +1,7 @@
 bao-demos/wrkdir/srcs/bao/bin/rpi4/
 
 bao-demos/wrkdir/imgs/
-**/bin/
+bao-demos/**/bin/
 **/build/
 **/GPATH
 **/GRTAGS

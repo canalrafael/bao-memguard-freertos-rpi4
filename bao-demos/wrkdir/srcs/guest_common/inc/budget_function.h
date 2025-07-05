@@ -7,7 +7,7 @@
 #define AFC_FORMULA 3
 #define LR_FORMULA 4
 #define PIC_FORMULA 5
-#define USED_BUDGET_FORMULA 1
+#define USED_BUDGET_FORMULA 0
 
 const char *get_budget_function();
 

@@ -177,8 +177,8 @@ void print_csv_task_data(BenchInfo info) {
   write_clock_cycle(info, &d);
 
   // BenchInfo
-  printf("%d,%d,%s,%s,", info.vm_num, info.task_num, info.name,
-         info.budget_function);
+  printf("%d,%d,%d,%s,%s,", info.vm_num, info.task_num, info.function_index,
+         info.name, info.budget_function);
 
   // BenchmarkData
   // print_value_array(d.used_budget_per_period_read, BENCHMARK_MAX_EXE);
@@ -207,7 +207,8 @@ void print_header_array(const char *name, int size) {
 
 void print_csv_header() {
   // Info Header
-  printf("%s,%s,%s,%s,", "VM", "Task", "Task Name", "Budget Function");
+  printf("%s,%s,%s,%s,%s,", "VM", "Task", "Function Index", "Task Name",
+         "Budget Function");
 
   // benchmark header
   // print_header_array("used_budget_per_period_read", BENCHMARK_MAX_EXE);
