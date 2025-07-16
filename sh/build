@@ -1,1 +1,1 @@
-./sh/build_freertos.sh all && ./sh/build_bao.sh && ./sh/copy_files.sh
+./sh/build_vm.sh all && ./sh/build_bao.sh && ./sh/copy_files.sh

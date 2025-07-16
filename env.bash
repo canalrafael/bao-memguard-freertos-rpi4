@@ -9,7 +9,7 @@ if [ ! -d "$bao_folder" ]; then
   return
 fi
 if [ ! -d "$toolchain_folder" ]; then
-  echo "'$toolchain' not found. Is the project structured correctly?"
+  echo "'$toolchain_folder' not found. Is the project structured correctly?"
   return
 fi
 

@@ -56,6 +56,8 @@
 #include <dijkstra.h>
 #include <sha.h>
 
+#include <budget.h>
+
 
 //=================================================================================
 QITEM *qHead = NULL;
@@ -781,7 +783,8 @@ void ctrl_task(void *pvParameters)
 		if (get_budget_t0 && !info_showed_t0)
 		{
 			vTaskSuspend(th->task_handler[TASK_0]);
-			HC_regulator_budget_depleted(TASK_0);
+			BenchInfo info = get_benchmark_info(VM_NUM, TASK_0);
+			HC_regulator_budget_depleted(TASK_0, info.budget_formula);
 
 			vm_conf[VM_NUM].used_r_budget_period[TASK_0][idx_t0] = HC_regulator_get_current_used_budget(TASK_0, READ);
 			vm_conf[VM_NUM].used_w_budget_period[TASK_0][idx_t0] = HC_regulator_get_current_used_budget(TASK_0, WRITE);
@@ -804,39 +807,40 @@ void ctrl_task(void *pvParameters)
 		// ======================
 		// T1
 		// ======================
-		/* TickType_t current_time_task_1 = xTaskGetTickCount(); */
-		/* if ((current_time_task_1 - last_check_time_task_1) >= period_task_1 && !get_budget_t1) */
-		/* { */
-		/* 	get_budget_t1 = 1; */
-		/* 	last_check_time_task_1 = current_time_task_1; */
-		/* } */
-		/* else if (vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_1] && !get_budget_t1) */
-		/* { */
-		/* 	get_budget_t1 = 1; */
-		/* } */
+		 TickType_t current_time_task_1 = xTaskGetTickCount(); 
+		 if ((current_time_task_1 - last_check_time_task_1) >= period_task_1 && !get_budget_t1) 
+		 { 
+		 	get_budget_t1 = 1; 
+		 	last_check_time_task_1 = current_time_task_1; 
+		 } 
+		 else if (vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_1] && !get_budget_t1) 
+		 { 
+		 	get_budget_t1 = 1; 
+		 } 
 
-		/* if (get_budget_t1 && !info_showed_t1) */
-		/* { */
-		/* 	vTaskSuspend(th->task_handler[TASK_1]); */
-		/* 	HC_regulator_budget_depleted(TASK_1); */
+		 if (get_budget_t1 && !info_showed_t1) 
+		 { 
+		 	vTaskSuspend(th->task_handler[TASK_1]); 
+			BenchInfo info = get_benchmark_info(VM_NUM, TASK_1);
+			HC_regulator_budget_depleted(TASK_1, info.budget_formula);
 
-		/* 	vm_conf[VM_NUM].used_r_budget_period[TASK_1][idx_t1] = HC_regulator_get_current_used_budget(TASK_1, READ); */
-		/* 	vm_conf[VM_NUM].used_w_budget_period[TASK_1][idx_t1] = HC_regulator_get_current_used_budget(TASK_1, WRITE); */
+		 	vm_conf[VM_NUM].used_r_budget_period[TASK_1][idx_t1] = HC_regulator_get_current_used_budget(TASK_1, READ); 
+		 	vm_conf[VM_NUM].used_w_budget_period[TASK_1][idx_t1] = HC_regulator_get_current_used_budget(TASK_1, WRITE); 
 
-		/* 	//printf("cru1: r:%u w:%u\n", vm_conf[VM_NUM].used_r_budget_period[TASK_1][idx_t1], vm_conf[VM_NUM].used_w_budget_period[TASK_1][idx_t1]); */
-		/* 	vm_conf[VM_NUM].new_read_budget[TASK_1]  = HC_regulator_get_new_budget(TASK_1, READ); */
-		/* 	vm_conf[VM_NUM].new_write_budget[TASK_1] = HC_regulator_get_new_budget(TASK_1, WRITE); */
+		 	//printf("cru1: r:%u w:%u\n", vm_conf[VM_NUM].used_r_budget_period[TASK_1][idx_t1], vm_conf[VM_NUM].used_w_budget_period[TASK_1][idx_t1]); 
+		 	vm_conf[VM_NUM].new_read_budget[TASK_1]  = HC_regulator_get_new_budget(TASK_1, READ); 
+		 	vm_conf[VM_NUM].new_write_budget[TASK_1] = HC_regulator_get_new_budget(TASK_1, WRITE); 
 
-		/* 	vm_conf[VM_NUM].calc_r_budget_period[TASK_1][idx_t1] = vm_conf[VM_NUM].new_read_budget[TASK_1]; */
-		/* 	vm_conf[VM_NUM].calc_w_budget_period[TASK_1][idx_t1] = vm_conf[VM_NUM].new_write_budget[TASK_1]; */
+		 	vm_conf[VM_NUM].calc_r_budget_period[TASK_1][idx_t1] = vm_conf[VM_NUM].new_read_budget[TASK_1]; 
+		 	vm_conf[VM_NUM].calc_w_budget_period[TASK_1][idx_t1] = vm_conf[VM_NUM].new_write_budget[TASK_1]; 
 			
-		/* 	if (idx_t1 < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget[TASK_1] != 0 && vm_conf[VM_NUM].new_write_budget[TASK_1] != 0) */
-		/* 		idx_t1++; */
+		 	if (idx_t1 < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget[TASK_1] != 0 && vm_conf[VM_NUM].new_write_budget[TASK_1] != 0) 
+		 		idx_t1++; 
 			
-		/* 	get_budget_t1 = 0; */
-		/* 	vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_1] = 0; */
-		/* 	vTaskResume(th->task_handler[TASK_1]); */
-		/* } */
+		 	get_budget_t1 = 0; 
+		 	vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_1] = 0; 
+		 	vTaskResume(th->task_handler[TASK_1]); 
+		 } 
 
 		// showing results		
 		if (idx_t0 >= 10 && task_conf[TASK_0].show_exe_info && !info_showed_t0)
@@ -894,7 +898,7 @@ void benchmark(void *pvParameters)
 			HC_PMU_config_counter(task_conf->pmu_counter_a, vm_conf[VM_NUM].new_read_budget[task_conf->task_num], vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG, task_conf->task_num);
 			HC_PMU_start_counter(task_conf->pmu_counter_a);
 #endif
-			info.function();
+			info.function.pointer();
 #if VM_2_REGULATION
 			HC_PMU_stop_counter(task_conf->pmu_counter_a);
 #endif

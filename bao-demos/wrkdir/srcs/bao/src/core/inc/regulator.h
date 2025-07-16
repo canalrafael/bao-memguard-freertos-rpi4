@@ -9,7 +9,7 @@
 #include <vm.h>
 #include <pmu.h>
 
-#include "../../../../guest_common/inc/budget_function.h"
+#include "../../../../guest_common/inc/budget.h"
 
 #define NO 0
 #define YES 1
@@ -130,7 +130,7 @@ struct Regulation_config {
 extern struct Regulation_config reg_conf[VM_QNT];
 
 void init_regulation_config();
-void regulator_budget_depleted(const uint8_t task_num);
+void regulator_budget_depleted(const uint8_t task_num, formula_t formula);
 uint32_t regulator_get_new_budget(const uint8_t task_num,
                                   const uint8_t op_type);
 

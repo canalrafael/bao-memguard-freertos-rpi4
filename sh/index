@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# --- Configuration ---
+# Using snake_case for local script variables is a common best practice.
+file_path_1="bao-demos/wrkdir/srcs/guest_common/inc/budget_function.h"
+define_name_1="USED_BUDGET_FORMULA"
+file_path_2="bao-demos/wrkdir/srcs/guest_common/src/bench.c"
+define_name_2="BENCH_ARRAY_INDEX"
+
+# --- Script Logic ---
+
+# Check if exactly two arguments are provided
+if [ "$#" -ne 2 ]; then
+    echo "❌ Error: Invalid number of arguments."
+    echo "Usage: $0 <budget_formula_value> <bench_array_index_value>"
+    exit 1
+fi
+
+new_value_1=$1
+new_value_2=$2
+
+# --- Process File 1 ---
+echo "--- 📝 Processing: ${file_path_1} ---"
+if [ ! -f "$file_path_1" ]; then
+    echo "❌ Error: File not found!"
+else
+    # Find the original line using grep
+    original_line_1=$(grep "^#define ${define_name_1}" "$file_path_1")
+
+    if [ -z "$original_line_1" ]; then
+        echo "⚠️ Warning: Define '${define_name_1}' not found in file."
+    else
+        echo "Before: ${original_line_1}"
+
+        # Modify the file in-place
+        sed -i "s/^#define ${define_name_1}.*/#define ${define_name_1} ${new_value_1}/" "$file_path_1"
+
+        # Find the new line to confirm the change
+        new_line_1=$(grep "^#define ${define_name_1}" "$file_path_1")
+        echo "After:  ${new_line_1}"
+    fi
+fi
+echo "" # Add a blank line for readability
+
+# --- Process File 2 ---
+echo "--- 📝 Processing: ${file_path_2} ---"
+if [ ! -f "$file_path_2" ]; then
+    echo "❌ Error: File not found!"
+else
+    # Find the original line using grep
+    original_line_2=$(grep "^#define ${define_name_2}" "$file_path_2")
+
+    if [ -z "$original_line_2" ]; then
+        echo "⚠️ Warning: Define '${define_name_2}' not found in file."
+    else
+        echo "Before: ${original_line_2}"
+
+        # Modify the file in-place
+        sed -i "s/^#define ${define_name_2}.*/#define ${define_name_2} ${new_value_2}/" "$file_path_2"
+
+        # Find the new line to confirm the change
+        new_line_2=$(grep "^#define ${define_name_2}" "$file_path_2")
+        echo "After:  ${new_line_2}"
+    fi
+fi
+
+echo -e "\nScript finished successfully. ✨"

@@ -22,9 +22,11 @@ VM_INDEX=9 source env.bash
 ## #cp -v $BAO_DEMOS/platforms/rpi4/config.txt $BAO_DEMOS_SDCARD
 ## #cp -v $BAO_DEMOS_WRKDIR_PLAT/bl31.bin $BAO_DEMOS_SDCARD
 ## #cp -v $BAO_DEMOS_WRKDIR_PLAT/u-boot.bin $BAO_DEMOS_SDCARD
-rm -rf $BAO_DEMOS_SDCARD/**
-cp -v $BAO_DEMOS/../arquivos_SD/** $BAO_DEMOS_SDCARD
-cp -v $BAO_DEMOS_WRKDIR_IMGS/bao.bin $BAO_DEMOS_SDCARD
+
+# rm -rf $BAO_DEMOS_SDCARD/**
+# cp -vr $BAO_DEMOS/../arquivos_SD/** $BAO_DEMOS_SDCARD
+cp -vr $BAO_DEMOS_WRKDIR_IMGS/bao.bin $BAO_DEMOS_SDCARD
+
 # umount $BAO_DEMOS_SDCARD
 
 echo Finished.;

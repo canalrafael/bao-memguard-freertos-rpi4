@@ -284,17 +284,18 @@ static inline uint32_t HC_regulator_period_expired(const uint32_t task_num, cons
 }
 
 
-static inline void HC_regulator_budget_depleted(const uint8_t task_num)
+static inline void HC_regulator_budget_depleted(const uint8_t task_num, const uint8_t formula)
 {	
 	const uint32_t hc_id = SMCC64_FID_VND_HYP_SRVC | HC_REGULATOR_BUDGET_DEPLETED;
 	
 	ASM (
-		"mov x0, %0\n\t"
-		"mov x1, %1\n\t"
+		"mov x0, %0\n\t" // 
+		"mov x1, %1\n\t" // task_num
+		"mov x2, %2\n\t" // formula
 		"hvc #0\n\t"
 		: 
-		: "r" (hc_id), "r" (task_num)
-		: "x0", "x1"
+		: "r" (hc_id), "r" (task_num), "r" (formula)
+		: "x0", "x1", "x2"
 		);
 }
 

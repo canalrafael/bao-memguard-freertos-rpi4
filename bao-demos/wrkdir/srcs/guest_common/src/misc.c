@@ -97,17 +97,17 @@ void print_end_bench_info_reg(BenchInfo info) { print_csv_task_data(info); }
 ///
 ///
 typedef struct {
-  // int used_budget_per_period_read[BENCHMARK_MAX_EXE];
-  // int used_budget_per_period_write[BENCHMARK_MAX_EXE];
-  // int total_used_budget_rw_per_index[BENCHMARK_MAX_EXE];
+  int used_budget_per_period_read[BENCHMARK_MAX_EXE];
+  int used_budget_per_period_write[BENCHMARK_MAX_EXE];
+  int total_used_budget_rw_per_index[BENCHMARK_MAX_EXE];
   int total_used_budget_rw;
 
-  // int calc_per_period_read[BENCHMARK_MAX_EXE];
-  // int calc_per_period_write[BENCHMARK_MAX_EXE];
-  // int total_calc_rw_per_index[BENCHMARK_MAX_EXE];
+  int calc_per_period_read[BENCHMARK_MAX_EXE];
+  int calc_per_period_write[BENCHMARK_MAX_EXE];
+  int total_calc_rw_per_index[BENCHMARK_MAX_EXE];
   int total_calc_rw;
 
-  // int clock_per_period[BENCHMARK_MAX_EXE];
+  int clock_per_period[BENCHMARK_MAX_EXE];
   int total_clock;
 } BenchmarkData;
 
@@ -125,10 +125,9 @@ void write_used_budget(BenchInfo info, BenchmarkData *d) {
     total_read_used += period_read_used;
     total_write_used += period_write_used;
 
-    // d->used_budget_per_period_read[i] = period_read_used;
-    // d->used_budget_per_period_write[i] = period_write_used;
-    // d->total_used_budget_rw_per_index[i] = period_read_used +
-    // period_write_used;
+    d->used_budget_per_period_read[i] = period_read_used;
+    d->used_budget_per_period_write[i] = period_write_used;
+    d->total_used_budget_rw_per_index[i] = period_read_used + period_write_used;
   }
   d->total_used_budget_rw = total_read_used + total_write_used;
 }
@@ -147,9 +146,9 @@ void write_calc_budget(BenchInfo info, BenchmarkData *d) {
     total_calc_read += period_calc_read;
     total_calc_write += period_calc_write;
 
-    // d->calc_per_period_read[i] = period_calc_read;
-    // d->calc_per_period_write[i] = period_calc_write;
-    // d->total_calc_rw_per_index[i] = period_calc_read + period_calc_write;
+    d->calc_per_period_read[i] = period_calc_read;
+    d->calc_per_period_write[i] = period_calc_write;
+    d->total_calc_rw_per_index[i] = period_calc_read + period_calc_write;
   }
   d->total_calc_rw = total_calc_read + total_calc_write;
 }
@@ -163,10 +162,16 @@ void write_clock_cycle(BenchInfo info, BenchmarkData *d) {
         vm_conf[info.vm_num].cycle_per_period[info.task_num][i];
     total_clock += clock_period;
 
-    // d->clock_per_period[i] = clock_period;
+    d->clock_per_period[i] = clock_period;
   }
 
   d->total_clock = total_clock;
+}
+
+void print_value_array(int *values, int size) {
+  for (int i = 0; i < size; ++i) {
+    printf("%d,", values[i]);
+  }
 }
 
 void print_csv_task_data(BenchInfo info) {
@@ -178,25 +183,19 @@ void print_csv_task_data(BenchInfo info) {
 
   // BenchInfo
   printf("%d,%d,%d,%s,%s,", info.vm_num, info.task_num, info.function_index,
-         info.name, info.budget_function);
+         info.function.name, get_formula_name(info.budget_formula));
 
   // BenchmarkData
-  // print_value_array(d.used_budget_per_period_read, BENCHMARK_MAX_EXE);
-  // print_value_array(d.used_budget_per_period_write, BENCHMARK_MAX_EXE);
-  // print_value_array(d.total_used_budget_rw_per_index, BENCHMARK_MAX_EXE);
+  print_value_array(d.used_budget_per_period_read, BENCHMARK_MAX_EXE);
+  print_value_array(d.used_budget_per_period_write, BENCHMARK_MAX_EXE);
+  print_value_array(d.total_used_budget_rw_per_index, BENCHMARK_MAX_EXE);
   printf("%d,", d.total_used_budget_rw);
-  // print_value_array(d.calc_per_period_read, BENCHMARK_MAX_EXE);
-  // print_value_array(d.calc_per_period_write, BENCHMARK_MAX_EXE);
-  // print_value_array(d.total_calc_rw_per_index, BENCHMARK_MAX_EXE);
+  print_value_array(d.calc_per_period_read, BENCHMARK_MAX_EXE);
+  print_value_array(d.calc_per_period_write, BENCHMARK_MAX_EXE);
+  print_value_array(d.total_calc_rw_per_index, BENCHMARK_MAX_EXE);
   printf("%d,", d.total_calc_rw);
-  // print_value_array(d.clock_per_period, BENCHMARK_MAX_EXE);
+  print_value_array(d.clock_per_period, BENCHMARK_MAX_EXE);
   printf("%d\n", d.total_clock); // no end comma
-}
-
-void print_value_array(int *values, int size) {
-  for (int i = 0; i < size; ++i) {
-    printf("%d,", values[i]);
-  }
 }
 
 void print_header_array(const char *name, int size) {
@@ -205,18 +204,18 @@ void print_header_array(const char *name, int size) {
   }
 }
 
-void print_csv_header() {
+void print_csv_header() { ////
   // Info Header
   printf("%s,%s,%s,%s,%s,", "VM", "Task", "Function Index", "Task Name",
          "Budget Function");
 
   // benchmark header
-  // print_header_array("used_budget_per_period_read", BENCHMARK_MAX_EXE);
-  // print_header_array("used_budget_per_period_write", BENCHMARK_MAX_EXE);
+  print_header_array("used_budget_per_period_read", BENCHMARK_MAX_EXE);
+  print_header_array("used_budget_per_period_write", BENCHMARK_MAX_EXE);
   print_header_array("total_used_budget_rw_per_index", BENCHMARK_MAX_EXE);
   printf("total_used_budget_rw,");
-  // print_header_array("calc_per_period_read", BENCHMARK_MAX_EXE);
-  // print_header_array("calc_per_period_write", BENCHMARK_MAX_EXE);
+  print_header_array("calc_per_period_read", BENCHMARK_MAX_EXE);
+  print_header_array("calc_per_period_write", BENCHMARK_MAX_EXE);
   print_header_array("total_calc_rw_per_index", BENCHMARK_MAX_EXE);
   printf("total_calc_rw,");
   print_header_array("clock_per_period", BENCHMARK_MAX_EXE);

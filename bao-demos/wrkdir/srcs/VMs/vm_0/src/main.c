@@ -44,7 +44,6 @@
 
 #include <pmu.h>
 #include <regulation.h>
-#include <misc.h>
 #include <bandwidth.h>
 #include <disparity.h>
 #include <ecrts2019_images_64_48.h>
@@ -56,7 +55,9 @@
 #include <dijkstra.h>
 #include <sha.h>
 //
+#include <misc.h> //
 #include <bench.h>
+#include <budget.h>
 
 
 //=================================================================================
@@ -767,7 +768,7 @@ void ctrl_task(void *pvParameters)
 	uint8_t  idx_t0 = 0;
 	uint8_t  idx_t1 = 0;
     
-    while (1)
+  while (1)
 	{
 		// ======================
 		// T0
@@ -786,7 +787,8 @@ void ctrl_task(void *pvParameters)
 		if (get_budget_t0)
 		{
 			vTaskSuspend(th->task_handler[TASK_0]);
-			HC_regulator_budget_depleted(TASK_0);
+			BenchInfo info = get_benchmark_info(VM_NUM, TASK_0);
+			HC_regulator_budget_depleted(TASK_0, info.budget_formula);
 
 			vm_conf[VM_NUM].used_r_budget_period[TASK_0][idx_t0] = HC_regulator_get_current_used_budget(TASK_0, READ);
 			vm_conf[VM_NUM].used_w_budget_period[TASK_0][idx_t0] = HC_regulator_get_current_used_budget(TASK_0, WRITE);
@@ -823,7 +825,8 @@ void ctrl_task(void *pvParameters)
 		if (get_budget_t1)
 		{
 			vTaskSuspend(th->task_handler[TASK_1]);
-			HC_regulator_budget_depleted(TASK_1);
+			BenchInfo info = get_benchmark_info(VM_NUM, TASK_1);
+			HC_regulator_budget_depleted(TASK_1, info.budget_formula);
 
 			vm_conf[VM_NUM].used_r_budget_period[TASK_1][idx_t1] = HC_regulator_get_current_used_budget(TASK_1, READ);
 			vm_conf[VM_NUM].used_w_budget_period[TASK_1][idx_t1] = HC_regulator_get_current_used_budget(TASK_1, WRITE);
@@ -861,8 +864,8 @@ void ctrl_task(void *pvParameters)
 			// vTaskDelay((1000));
 			vTaskDelay((1000));
 			// print_end_info_reg(VM_NUM, TASK_1);
-			BenchInfo info = get_benchmark_info(VM_NUM, TASK_1);
-			print_end_bench_info_reg(info);
+			// BenchInfo info = get_benchmark_info(VM_NUM, TASK_1);
+			// print_end_bench_info_reg(info);
 
 			idx_t1 = 0;
 			info_showed_t1 = 1;
@@ -899,7 +902,7 @@ void benchmark(void *pvParameters)
 			HC_PMU_config_counter(task_conf->pmu_counter_a, vm_conf[VM_NUM].new_read_budget[task_conf->task_num], vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG, task_conf->task_num);
 			HC_PMU_start_counter(task_conf->pmu_counter_a);
 #endif
-			info.function();
+			info.function.pointer();
 #if VM_0_REGULATION
 			HC_PMU_stop_counter(task_conf->pmu_counter_a);
 #endif

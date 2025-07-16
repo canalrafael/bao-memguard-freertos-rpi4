@@ -673,20 +673,54 @@ inline static void pic(const uint8_t cpu_id, const uint8_t task_num)
     }
 }
 
-void regulator_budget_depleted(const uint8_t task_num)
+void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
 {
-    if (USED_BUDGET_FORMULA == EWMA_FORMULA)
-        ewma(cpu()->id, task_num);
-    else if (USED_BUDGET_FORMULA == SW_FORMULA)
-        sw(cpu()->id, task_num);
-    else if (USED_BUDGET_FORMULA == AMBP_FORMULA)
-        ambp(cpu()->id, task_num);
-    else if (USED_BUDGET_FORMULA == AFC_FORMULA)
-        afc(cpu()->id, task_num);
-    else if (USED_BUDGET_FORMULA == LR_FORMULA)
-        lr(cpu()->id, task_num);
-    else if (USED_BUDGET_FORMULA == PIC_FORMULA)
-        pic(cpu()->id, task_num);
+    // formula_t used = get_current_formula();
+    int ewma_n = 0, sw_n = 0, ambp_n = 0, afc_n = 0, lr_n = 0, pic_n = 0;
+    switch (formula) {
+        case EWMA_FORMULA:
+            ewma(cpu()->id, task_num);
+            ++ewma_n;
+            if (!(ewma_n % 10)) {
+                printk("ewma: %d\n", ewma_n);
+            }
+            break;
+        case SW_FORMULA:
+            sw(cpu()->id, task_num);
+            ++sw_n;
+            if (!(sw_n % 10)) {
+                printk("sw_n: %d\n", sw_n);
+            }
+            break;
+        case AMBP_FORMULA:
+            ambp(cpu()->id, task_num);
+            ++ambp_n;
+            if (!(ambp_n % 10)) {
+                printk("ambp_n: %d\n", ambp_n);
+            }
+            break;
+        case AFC_FORMULA:
+            afc(cpu()->id, task_num);
+            ++afc_n;
+            if (!(afc_n % 10)) {
+                printk("afc_n: %d\n", afc_n);
+            }
+            break;
+        case LR_FORMULA:
+            lr(cpu()->id, task_num);
+            ++lr_n;
+            if (!(lr_n % 10)) {
+                printk("lr_n: %d\n", lr_n);
+            }
+            break;
+        case PIC_FORMULA:
+            pic(cpu()->id, task_num);
+            ++pic_n;
+            if (!(pic_n % 10)) {
+                printk("pic_n: %d\n", pic_n);
+            }
+            break;
+    }
 
     reg_conf[cpu()->id].vm[task_num].depleated_op_type = UNKNOWN_VALUE;
 
@@ -696,9 +730,10 @@ void regulator_budget_depleted(const uint8_t task_num)
         PMU_reset_counter(2);
 
 #if DEBUG
-    printk("VM %u task %u, new R: %u, new W: %u\n", cpu()->id, task_num,
-           reg_conf[cpu()->id].vm[task_num].new_read_budget,
-           reg_conf[cpu()->id].vm[task_num].new_write_budget);
+    printk("VM %u task %u, new R: %u, new W: %u, formula: %s\n", cpu()->id,
+           task_num, reg_conf[cpu()->id].vm[task_num].new_read_budget,
+           reg_conf[cpu()->id].vm[task_num].new_write_budget, "UNDEFINED");
+    // get_current_formula_name());
 #endif
 }
 
