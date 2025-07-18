@@ -1,35 +1,38 @@
-#ifndef BUDGET_FUNCTIONS_H
-#define BUDGET_FUNCTIONS_H
+#ifndef BENCH_FUNCTIONS_H
+#define BENCH_FUNCTIONS_H
 
 volatile int empty();
-volatile int sum_ab();
-volatile int subtract_ab();
-volatile int multiply_ab();
-volatile int divide_ab();
-volatile int mod_ab();
 
-volatile int and_ab();
-volatile int or_ab();
-volatile int xor_ab();
-volatile int not_a();
-volatile int shift_a_left_2();
+volatile int sum_array();
+volatile int subtract_array();
+volatile int multiply_array();
+volatile int divide_array();
+volatile int mod_array();
 
-volatile int shift_b_right_1();
-volatile int equals_ab();
-volatile int not_equals_ab();
-volatile int greater_than_ab();
-volatile int less_than_ab();
+volatile int and_array();
+volatile int or_array();
+volatile int xor_array();
+volatile int sum_not_array();
+volatile int sum_shl2_array();
 
-volatile int max_ab();
-volatile int min_ab();
+volatile int sum_shr1_array();
+volatile int count_eq_next();
+volatile int count_gt_prev();
+volatile int sum_of_squares_array();
+volatile int count_primes_array();
+
+/////////////
+
+volatile int max_sum();
+volatile int min_sum();
 volatile int logical_and();
 volatile int logical_or();
 volatile int logical_not_equal();
 
-volatile int increment_a_100_times();
-volatile int decrement_b_100_times();
-volatile int factorial_10();
-volatile int sum_1_to_100();
+volatile int increment_a_1000_times();
+volatile int decrement_b_1000_times();
+volatile int factorial_15();
+volatile int sum_1_to_1000();
 volatile int gcd_ab();
 
 volatile int popcount_a();
@@ -38,15 +41,15 @@ volatile int lcg_sequence();
 volatile int xorshift_a();
 volatile int sum_of_squares_ab();
 
-volatile int sum_of_squares_0_to_99();
+volatile int sum_of_squares_0_to_999();
 volatile int repeated_square_mod();
-volatile int count_primes_below_100();
+volatile int count_primes_below_1000();
 volatile int fibonacci_20();
 volatile int reverse_digits_a();
 
 volatile int russian_peasant_mul();
 volatile int count_bits_a();
-volatile int sum_of_cubes_1_to_10();
+volatile int sum_of_cubes_1_to_100();
 volatile int xor_all_globals();
 volatile int complex_bitwise();
 
@@ -69,3 +72,5 @@ volatile int my_insertion_sort();
 volatile int my_q_sort(int v[], int left, int right);
 volatile int my_quick_sort();
 #endif
+
+///////

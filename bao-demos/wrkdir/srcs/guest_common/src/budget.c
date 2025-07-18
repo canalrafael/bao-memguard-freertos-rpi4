@@ -22,6 +22,9 @@ const char *get_formula_name(formula_t formula) {
   case PIC_FORMULA:
     return "PIC";
     break;
+  default:
+    return "UNDEFINED";
+    break;
   }
 }
 

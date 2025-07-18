@@ -9,13 +9,15 @@
 // #define PIC_FORMULA 5
 // #define USED_BUDGET_FORMULA 5
 //
+#define FORMULA_COUNT 6
 typedef enum {
-  EWMA_FORMULA = 0,
-  SW_FORMULA = 1,
-  AMBP_FORMULA = 2,
-  AFC_FORMULA = 3,
-  LR_FORMULA = 4,
-  PIC_FORMULA = 5,
+  EWMA_FORMULA,
+  SW_FORMULA,
+  AMBP_FORMULA,
+  AFC_FORMULA,
+  LR_FORMULA,
+  PIC_FORMULA,
+  // FORMULA_COUNT,
 } formula_t;
 
 const char *get_formula_name(formula_t formula);

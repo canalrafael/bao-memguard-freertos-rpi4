@@ -168,11 +168,23 @@ void write_clock_cycle(BenchInfo info, BenchmarkData *d) {
   d->total_clock = total_clock;
 }
 
-void print_value_array(int *values, int size) {
-  for (int i = 0; i < size; ++i) {
-    printf("%d,", values[i]);
-  }
-}
+// void print_value_array(int *values, int size, char buffer[], char current[])
+// {
+//   for (int i = 0; i < size; ++i) {
+//     printf("%d,", values[i]);
+//   }
+// }
+
+#define append_array(arr)                                                      \
+  do {                                                                         \
+    for (size_t __i = 0; __i < BENCHMARK_MAX_EXE; ++__i) {                     \
+      current += snprintf(current, buffer + sizeof(buffer) - current, "%d",    \
+                          (arr)[__i]);                                         \
+      if (__i + 1 < BENCHMARK_MAX_EXE)                                         \
+        *current++ = ',';                                                      \
+    }                                                                          \
+    *current++ = ','; /* comma after array */                                  \
+  } while (0)
 
 void print_csv_task_data(BenchInfo info) {
   // Benchmark Calculations
@@ -181,21 +193,36 @@ void print_csv_task_data(BenchInfo info) {
   write_calc_budget(info, &d);
   write_clock_cycle(info, &d);
 
+  char buffer[2048];
+  char *current = buffer;
+
   // BenchInfo
-  printf("%d,%d,%d,%s,%s,", info.vm_num, info.task_num, info.function_index,
-         info.function.name, get_formula_name(info.budget_formula));
+  // printf("%d,%d,%d,%s,%s,", info.vm_num, info.task_num, info.function_index,
+  //        info.function.name, get_formula_name(info.budget_formula));
+  current +=
+      snprintf(current, buffer + sizeof(buffer) - current, "%d,%d,%d,%s,%s,",
+               info.vm_num, info.task_num, info.function_index,
+               info.function.name, get_formula_name(info.budget_formula));
 
   // BenchmarkData
-  print_value_array(d.used_budget_per_period_read, BENCHMARK_MAX_EXE);
-  print_value_array(d.used_budget_per_period_write, BENCHMARK_MAX_EXE);
-  print_value_array(d.total_used_budget_rw_per_index, BENCHMARK_MAX_EXE);
-  printf("%d,", d.total_used_budget_rw);
-  print_value_array(d.calc_per_period_read, BENCHMARK_MAX_EXE);
-  print_value_array(d.calc_per_period_write, BENCHMARK_MAX_EXE);
-  print_value_array(d.total_calc_rw_per_index, BENCHMARK_MAX_EXE);
-  printf("%d,", d.total_calc_rw);
-  print_value_array(d.clock_per_period, BENCHMARK_MAX_EXE);
-  printf("%d\n", d.total_clock); // no end comma
+  append_array(d.used_budget_per_period_read);
+  append_array(d.used_budget_per_period_write);
+  append_array(d.total_used_budget_rw_per_index);
+  // printf("%d,", d.total_used_budget_rw);
+  current += snprintf(current, buffer + sizeof(buffer) - current, "%d,",
+                      d.total_used_budget_rw);
+  append_array(d.calc_per_period_read);
+  append_array(d.calc_per_period_write);
+  append_array(d.total_calc_rw_per_index);
+  // printf("%d,", d.total_calc_rw);
+  current += snprintf(current, buffer + sizeof(buffer) - current, "%d,",
+                      d.total_calc_rw);
+  append_array(d.clock_per_period);
+  // printf("%d\n", d.total_clock); // no end comma
+  current += snprintf(current, buffer + sizeof(buffer) - current, "%d\n",
+                      d.total_clock);
+  fputs(buffer, stdout);
+  fflush(stdout);
 }
 
 void print_header_array(const char *name, int size) {
@@ -204,7 +231,7 @@ void print_header_array(const char *name, int size) {
   }
 }
 
-void print_csv_header() { ////
+void print_csv_header() {
   // Info Header
   printf("%s,%s,%s,%s,%s,", "VM", "Task", "Function Index", "Task Name",
          "Budget Function");

@@ -10,3 +10,6 @@ bao:
 
 copy:
 	@./sh/copy_files.sh
+
+clean:
+	@./sh/clean.sh

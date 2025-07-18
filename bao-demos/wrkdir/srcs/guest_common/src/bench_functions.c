@@ -1,4 +1,5 @@
-#include "../inc/budget_functions.h"
+#include "../inc/bench_functions.h"
+#include <stdint.h>
 
 #define array_size 128
 volatile int a = 12345;
@@ -22,54 +23,203 @@ void copy_array(const volatile int origin[], int *destiny, int size) {
     destiny[i] = origin[i];
   }
 }
+////////////
 
-// Function declarations
+volatile int sum_array(void) {
+  int total = 0;
+  for (int i = 0; i < array_size; ++i) {
+    total += array[i];
+  }
+  return total;
+}
+
+volatile int subtract_array(void) {
+  int total = array[0];
+  for (int i = 1; i < array_size; ++i) {
+    total -= array[i];
+  }
+  return total;
+}
+
+volatile int multiply_array(void) {
+  int total = 1;
+  for (int i = 0; i < array_size; ++i) {
+    total *= array[i];
+  }
+  return total;
+}
+
+volatile int divide_array(void) {
+  int total = array[0] ? array[0] : 1;
+  for (int i = 1; i < array_size; ++i) {
+    int v = array[i] ? array[i] : 1;
+    total /= v;
+  }
+  return total;
+}
+
+volatile int mod_array(void) {
+  int total = array[0];
+  for (int i = 1; i < array_size; ++i) {
+    int v = array[i] ? array[i] : 1;
+    total %= v;
+  }
+  return total;
+}
+
+volatile int and_array(void) {
+  int total = array[0];
+  for (int i = 1; i < array_size; ++i) {
+    total &= array[i];
+  }
+  return total;
+}
+
+volatile int or_array(void) {
+  int total = array[0];
+  for (int i = 1; i < array_size; ++i) {
+    total |= array[i];
+  }
+  return total;
+}
+
+volatile int xor_array(void) {
+  int total = array[0];
+  for (int i = 1; i < array_size; ++i) {
+    total ^= array[i];
+  }
+  return total;
+}
+
+volatile int sum_not_array(void) {
+  int total = 0;
+  for (int i = 0; i < array_size; ++i) {
+    total += ~array[i];
+  }
+  return total;
+}
+
+volatile int sum_shl2_array(void) {
+  int total = 0;
+  for (int i = 0; i < array_size; ++i) {
+    total += (array[i] << 2);
+  }
+  return total;
+}
+
+volatile int sum_shr1_array(void) {
+  int total = 0;
+  for (int i = 0; i < array_size; ++i) {
+    total += (array[i] >> 1);
+  }
+  return total;
+}
+
+volatile int count_eq_next(void) {
+  int cnt = 0;
+  for (int i = 0; i < array_size - 1; ++i) {
+    if (array[i] == array[i + 1])
+      ++cnt;
+  }
+  return cnt;
+}
+
+volatile int count_gt_prev(void) {
+  int cnt = 0;
+  for (int i = 1; i < array_size; ++i) {
+    if (array[i] > array[i - 1])
+      ++cnt;
+  }
+  return cnt;
+}
+
+volatile int sum_of_squares_array(void) {
+  int total = 0;
+  for (int i = 0; i < array_size; ++i) {
+    total += array[i] * array[i];
+  }
+  return total;
+}
+
+volatile int count_primes_array(void) {
+  int total = 0;
+  for (int i = 0; i < array_size; ++i) {
+    int v = array[i];
+    int is_prime = (v > 1);
+    for (int d = 2; d * d <= v && is_prime; ++d) {
+      if (v % d == 0)
+        is_prime = 0;
+    }
+    total += is_prime;
+  }
+  return total;
+}
+
+////////////
+
 volatile int empty() { return array[0]; }
-volatile int sum_ab() { return a + b; }
-volatile int subtract_ab() { return a - b; }
-volatile int multiply_ab() { return a * b; }
-volatile int divide_ab() { return a / (b ? b : 1); }
-volatile int mod_ab() { return a % (b ? b : 1); }
 
-volatile int and_ab() { return a & b; }
-volatile int or_ab() { return a | b; }
-volatile int xor_ab() { return a ^ b; }
-volatile int not_a() { return ~a; }
-volatile int shift_a_left_2() { return a << 2; }
+volatile int max_sum(void) {
+  int m = array[0];
+  for (int i = 1; i < array_size; ++i) {
+    m = (m > array[i]) ? m : array[i];
+  }
+  return m;
+}
 
-volatile int shift_b_right_1() { return b >> 1; }
-volatile int equals_ab() { return (a == b); }
-volatile int not_equals_ab() { return (a != b); }
-volatile int greater_than_ab() { return (a > b); }
-volatile int less_than_ab() { return (a < b); }
+volatile int min_sum(void) {
+  int m = array[0];
+  for (int i = 1; i < array_size; ++i) {
+    m = (m < array[i]) ? m : array[i];
+  }
+  return m;
+}
 
-volatile int max_ab() { return (a > b) ? a : b; }
-volatile int min_ab() { return (a < b) ? a : b; }
-volatile int logical_and() { return (a > b && b > c); }
-volatile int logical_or() { return (a < b || c < d); }
-volatile int logical_not_equal() { return !(a == b); }
+volatile int logical_and(void) {
+  int r = 1;
+  for (int i = 0; i < array_size; ++i) {
+    r = r && (array[i] != 0);
+  }
+  return r;
+}
 
-volatile int increment_a_100_times() {
+volatile int logical_or(void) {
+  int r = 0;
+  for (int i = 0; i < array_size; ++i) {
+    r = r || (array[i] != 0);
+  }
+  return r;
+}
+
+volatile int logical_not_equal(void) {
+  int cnt = 0;
+  for (int i = 0; i < array_size - 1; ++i) {
+    cnt += (array[i] != array[i + 1]);
+  }
+  return cnt;
+}
+
+volatile int increment_a_1000_times() {
   int x = a;
-  for (int i = 0; i < 100; i++)
+  for (int i = 0; i < 1000; i++)
     x++;
   return x;
 }
-volatile int decrement_b_100_times() {
+volatile int decrement_b_1000_times() {
   int x = b;
-  for (int i = 0; i < 100; i++)
+  for (int i = 0; i < 1000; i++)
     x--;
   return x;
 }
-volatile int factorial_10() {
+volatile int factorial_15() {
   int x = 1;
-  for (int i = 1; i <= 10; i++)
+  for (int i = 1; i <= 15; i++)
     x *= i;
   return x;
 }
-volatile int sum_1_to_100() {
+volatile int sum_1_to_1000() {
   int x = 0;
-  for (int i = 1; i <= 100; i++)
+  for (int i = 1; i <= 1000; i++)
     x += i;
   return x;
 }
@@ -112,9 +262,9 @@ volatile int xorshift_a() {
 }
 volatile int sum_of_squares_ab() { return a * a + b * b; }
 
-volatile int sum_of_squares_0_to_99() {
+volatile int sum_of_squares_0_to_999() {
   int x = 0;
-  for (int i = 0; i < 100; i++)
+  for (int i = 0; i < 1000; i++)
     x += i * i;
   return x;
 }
@@ -124,9 +274,9 @@ volatile int repeated_square_mod() {
     x = x * x % 997;
   return x;
 }
-volatile int count_primes_below_100() {
+volatile int count_primes_below_1000() {
   int count = 0;
-  for (int i = 2; i < 100; i++) {
+  for (int i = 2; i < 1000; i++) {
     int p = 1;
     for (int j = 2; j * j <= i; j++)
       if (i % j == 0)
@@ -171,13 +321,19 @@ volatile int count_bits_a() {
   }
   return count;
 }
-volatile int sum_of_cubes_1_to_10() {
+volatile int sum_of_cubes_1_to_100() {
   int x = 0;
-  for (int i = 1; i <= 10; i++)
+  for (int i = 1; i <= 100; i++)
     x += i * i * i;
   return x;
 }
-volatile int xor_all_globals() { return a ^ b ^ c ^ d; }
+volatile int xor_all_globals() {
+  int sum = 0;
+  for (int i = 0; i < array_size; ++i) {
+    sum += a ^ b ^ c ^ d;
+  }
+  return sum;
+}
 volatile int complex_bitwise() { return (a & b) | (c ^ d); }
 
 volatile int mixed_arithmetic_mod() { return ((a + b) * (c + d)) % 10000; }

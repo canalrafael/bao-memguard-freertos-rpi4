@@ -720,6 +720,9 @@ void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
                 printk("pic_n: %d\n", pic_n);
             }
             break;
+        default:
+            printk("something has gone very wrong!\n");
+            break;
     }
 
     reg_conf[cpu()->id].vm[task_num].depleated_op_type = UNKNOWN_VALUE;

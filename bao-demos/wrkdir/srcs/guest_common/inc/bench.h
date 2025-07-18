@@ -3,6 +3,8 @@
 
 #include "budget.h"
 
+#define BENCH_ARRAY_INDEX 1
+
 typedef struct {
   volatile int (*pointer)(void);
   const char *name;
