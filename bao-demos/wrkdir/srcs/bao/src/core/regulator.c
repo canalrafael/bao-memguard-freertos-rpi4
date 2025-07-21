@@ -681,42 +681,42 @@ void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
         case EWMA_FORMULA:
             ewma(cpu()->id, task_num);
             ++ewma_n;
-            if (!(ewma_n % 10)) {
+            if (!(ewma_n % 5)) {
                 printk("ewma: %d\n", ewma_n);
             }
             break;
         case SW_FORMULA:
             sw(cpu()->id, task_num);
             ++sw_n;
-            if (!(sw_n % 10)) {
+            if (!(sw_n % 5)) {
                 printk("sw_n: %d\n", sw_n);
             }
             break;
         case AMBP_FORMULA:
             ambp(cpu()->id, task_num);
             ++ambp_n;
-            if (!(ambp_n % 10)) {
+            if (!(ambp_n % 5)) {
                 printk("ambp_n: %d\n", ambp_n);
             }
             break;
         case AFC_FORMULA:
             afc(cpu()->id, task_num);
             ++afc_n;
-            if (!(afc_n % 10)) {
+            if (!(afc_n % 5)) {
                 printk("afc_n: %d\n", afc_n);
             }
             break;
         case LR_FORMULA:
             lr(cpu()->id, task_num);
             ++lr_n;
-            if (!(lr_n % 10)) {
+            if (!(lr_n % 5)) {
                 printk("lr_n: %d\n", lr_n);
             }
             break;
         case PIC_FORMULA:
             pic(cpu()->id, task_num);
             ++pic_n;
-            if (!(pic_n % 10)) {
+            if (!(pic_n % 5)) {
                 printk("pic_n: %d\n", pic_n);
             }
             break;

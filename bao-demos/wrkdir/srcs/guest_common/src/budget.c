@@ -1,4 +1,5 @@
 #include "../inc/budget.h"
+#include <stdio.h>
 
 // formula_t used_budget_formula = EWMA_FORMULA;
 
@@ -23,6 +24,7 @@ const char *get_formula_name(formula_t formula) {
     return "PIC";
     break;
   default:
+    printf("invalid formula name %d, returning UNDEFINED\n", formula);
     return "UNDEFINED";
     break;
   }

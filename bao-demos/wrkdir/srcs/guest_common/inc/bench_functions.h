@@ -1,6 +1,15 @@
 #ifndef BENCH_FUNCTIONS_H
 #define BENCH_FUNCTIONS_H
 
+#include "../../benchmarks/bandwidth/inc/bandwidth.h"
+#include "../../benchmarks/dijkstra/inc/dijkstra.h"
+#include "../../benchmarks/disparity/inc/disparity.h"
+#include "../../benchmarks/fft/inc/fft.h"
+#include "../../benchmarks/mser/inc/mser.h"
+#include "../../benchmarks/qsort/inc/qsort.h"
+#include "../../benchmarks/sha/inc/sha.h"
+#include "../../benchmarks/sorting/inc/sorting.h"
+
 volatile int empty();
 
 volatile int sum_array();
@@ -74,3 +83,15 @@ volatile int my_quick_sort();
 #endif
 
 ///////
+
+volatile int bandwidth_wrapper();
+volatile int dijkstra_wrapper();
+volatile int disparity_wrapper();
+volatile int fft_wrapper();
+volatile int mser_wrapper();
+volatile int qsort_wrapper();
+volatile int sha_wrapper();
+volatile int sorting_wrapper();
+
+void init_data();
+void free_data();

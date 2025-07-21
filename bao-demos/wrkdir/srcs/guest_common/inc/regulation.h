@@ -114,7 +114,7 @@
 #define DEADLINE_MS_TASK_1 10
 
 #define BENCHMARK_MAX_EXE 10
-#define CACHE_COLORING 1
+#define CACHE_COLORING 0
 
 // =======================================
 // Beginning do not change

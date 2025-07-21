@@ -847,7 +847,7 @@ void ctrl_task(void *pvParameters) {
       idx_t0 = 0;
 
       formula_t formula = info.budget_formula + 1;
-      if (formula == FORMULA_COUNT) {
+      if (formula >= FORMULA_COUNT) {
         info_showed_t0 = 1;
       } else {
         task_conf[TASK_0].show_exe_info = 0;
@@ -866,7 +866,7 @@ void ctrl_task(void *pvParameters) {
       idx_t1 = 0;
 
       formula_t formula = info.budget_formula + 1;
-      if (formula == FORMULA_COUNT) {
+      if (formula >= FORMULA_COUNT) {
         info_showed_t1 = 1;
       } else {
         task_conf[TASK_1].show_exe_info = 0;
@@ -946,6 +946,7 @@ void benchmark(void *pvParameters) {
 }
 
 int main(void) {
+  init_bench();
 #if VM_2_REGULATION
   // T0
   irq_set_handler(GUEST_SUSPEND_TASK_0_BUDGET_ID, t0_suspend_task_budget_sgi);
@@ -993,6 +994,7 @@ int main(void) {
   vTaskStartScheduler();
   while (1)
     ;
+  destroy_bench();
   return 0;
 }
 

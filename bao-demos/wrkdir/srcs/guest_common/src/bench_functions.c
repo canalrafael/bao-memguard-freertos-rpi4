@@ -1,6 +1,8 @@
 #include "../inc/bench_functions.h"
 #include <stdint.h>
 
+#include "../inc/data.h"
+
 #define array_size 128
 volatile int a = 12345;
 volatile int b = 6789;
@@ -603,5 +605,153 @@ volatile int my_quick_sort() {
   int numbers[array_size];
   copy_array(array, numbers, array_size);
   my_q_sort(numbers, 0, array_size - 1);
+  return 0;
+}
+
+///////////////////
+int *g_mem_ptr = NULL; // bandwidth
+I2D *It = NULL;
+
+void init_data() {
+  // bandwitdh
+  g_mem_ptr = (int *)malloc(BW_DEFAULT_ALLOC_SIZE);
+  memset((char *)g_mem_ptr, 1, BW_DEFAULT_ALLOC_SIZE);
+  for (uint64_t i = 0; i < BW_DEFAULT_ALLOC_SIZE / sizeof(int); i++) {
+    g_mem_ptr[i] = i;
+  }
+
+  // mser
+  int i, j, k;
+  I2D *I;
+  // I2D *It;
+  int rows = 196, cols = 98;
+
+  I = (I2D *)mserb;
+  rows = I->height;
+  cols = I->width;
+
+  It = (I2D *)mserb1;
+
+  k = 0;
+  for (i = 0; i < cols; i++) {
+    for (j = 0; j < rows; j++) {
+      asubsref(It, k++) = subsref(I, j, i);
+    }
+  }
+}
+
+void free_data() {
+  // bandwitdh
+  free(g_mem_ptr);
+}
+
+volatile int bandwidth_wrapper() {
+  static volatile uint64_t sum = 0;
+  sum += bench_read(g_mem_ptr);
+  sum += bench_write(g_mem_ptr);
+
+  return 0;
+}
+
+volatile int dijkstra_wrapper() {
+  int i, j, k;
+
+  for (i = 0, j = NUM_NODES / 2; i < 100; i++, j++) {
+    j = j % NUM_NODES;
+    dijkstra(i, j);
+  }
+
+  return 0;
+}
+
+// -
+volatile int disparity_wrapper() {
+  I2D *imleft = (I2D *)img1;
+  I2D *imright = (I2D *)img2;
+  int WIN_SZ = 8, SHIFT = 64;
+  char signature[2] = {66, 77};
+  short int bits_per_pixel = 24;
+
+  // Check if images are valid BMP images.
+  if (imleft->height <= 0 || imleft->width <= 0 || signature[0] != 'B' ||
+      signature[1] != 'M' || (bits_per_pixel != 24 && bits_per_pixel != 8)) {
+    return -1;
+  }
+
+  if (imright->height <= 0 || imright->width <= 0 || signature[0] != 'B' ||
+      signature[1] != 'M' || (bits_per_pixel != 24 && bits_per_pixel != 8)) {
+    return -1;
+  }
+
+  I2D *retDisparity = getDisparity(imleft, imright, WIN_SZ, SHIFT);
+  return 0;
+}
+
+// -
+volatile int fft_wrapper() {
+  static uint32_t A_re[NUM_POINTS];
+  static uint32_t A_im[NUM_POINTS];
+  static uint32_t W_re[NUM_POINTS / 2];
+  static uint32_t W_im[NUM_POINTS / 2];
+
+  int n = NUM_POINTS;
+  init_array(n, A_re, A_im);
+  compute_W(n, W_re, W_im);
+  fft(n, A_re, A_im, W_re, W_im);
+  permute_bitrev(n, A_re, A_im);
+
+  return 0;
+}
+
+// -
+volatile int mser_wrapper() {
+  //
+  mser(It, 2);
+  return 0;
+}
+
+// -
+volatile int qsort_wrapper() {
+  struct my3DVertexStruct array[QSORT_MAXARRAY];
+
+  int numRows = sizeof(qsort_input_data) / sizeof(qsort_input_data[0]);
+  int count = 0;
+
+  // Process the array instead of reading from a file
+  for (int i = 0; i < numRows && count < QSORT_MAXARRAY; i++) {
+    array[count].x = qsort_input_data[i][0];
+    array[count].y = qsort_input_data[i][1];
+    array[count].z = qsort_input_data[i][2];
+    array[count].distance = (array[count].x * array[count].x) +
+                            (array[count].y * array[count].y) +
+                            (array[count].z * array[count].z);
+    count++;
+  }
+
+  qsort(array, count, sizeof(struct my3DVertexStruct), qsort_compare);
+  return 0;
+}
+
+volatile int sha_wrapper() {
+  SHA_INFO sha_info;
+  sha_stream(&sha_info);
+  return 0;
+}
+
+volatile int sorting_wrapper() {
+  int orig[MAX_SORTING], copy[MAX_SORTING], i;
+
+  void *function[NUM_SORT] = {&selection_sort, &quick_sort,     &shell_sort,
+                              &stdlib_qsort,   &insertion_sort, &bubble_sort};
+  char *sort_name[NUM_SORT] = {"Selection sort", "Quicksort",
+                               "Shellsort",      "Qsort",
+                               "Insertion sort", "Bubble sort"};
+
+  fill_array(orig, MAX_SORTING);
+
+  for (i = 0; i < NUM_SORT; i++) {
+    execute_sort(orig, copy, MAX_SORTING, sort_name[i], function[i]);
+  }
+
   return 0;
 }

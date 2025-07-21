@@ -91,7 +91,13 @@ void print_end_info_reg(const uint8_t vm_num, const uint8_t task_num,
   print_clock_cycle(vm_num, task_num);
 }
 
-void print_end_bench_info_reg(BenchInfo info) { print_csv_task_data(info); }
+void print_end_bench_info_reg(BenchInfo info) {
+  if (info.budget_formula < 0 || info.budget_formula >= FORMULA_COUNT) {
+    printf("invalid budget formula %d, not printing\n", info.budget_formula);
+    return;
+  }
+  print_csv_task_data(info);
+}
 
 /// CSV related
 ///
@@ -222,7 +228,10 @@ void print_csv_task_data(BenchInfo info) {
   current += snprintf(current, buffer + sizeof(buffer) - current, "%d\n",
                       d.total_clock);
   fputs(buffer, stdout);
-  fflush(stdout);
+
+  if (info.budget_formula == (FORMULA_COUNT - 1)) {
+    fflush(stdout);
+  }
 }
 
 void print_header_array(const char *name, int size) {
