@@ -20,6 +20,8 @@
 #define READ 0
 #define WRITE 1
 
+#define PMU_COUNTER_PAIR_RW 0
+
 #define GUEST_SUSPEND_BUDGET_ID 0
 // #define GUEST_RESUME_TASK_0_ID 0
 // #define GUEST_SUSPEND_TASK_0_BUDGET_ID 1
@@ -91,15 +93,15 @@
 #define EXEC_VM_3 1
 
 #define VM_0_REGULATION 1
-#define VM_1_REGULATION 1
-#define VM_2_REGULATION 1
-#define VM_3_REGULATION 1
+#define VM_1_REGULATION 0
+#define VM_2_REGULATION 0
+#define VM_3_REGULATION 0
 
 #define PERIOD_QNT 10
 
 // Periodicity of each task
 // #define PERIOD_MS_TASK_0 30
-#define PERIOD_MS_TASK_ANY 30
+#define PERIOD_MS_TASK_ANY 100
 #define PERIOD_MS_TASK_CTRL 10
 
 // The time of the period for each task to run (old value 100)
@@ -138,8 +140,7 @@
 // #define BENCHMARK_QNT 8
 
 struct VM {
-  // uint8_t pmu_counter_read;
-  // uint8_t pmu_counter_write;
+  uint8_t pmu_counter_pair_rw;
 
   const uint32_t r_fac;
   const uint32_t w_fac;

@@ -57,6 +57,7 @@
 #include <sha.h>
 #include <sorting.h>
 
+#include <bench.h>
 #include <budget.h>
 #include <data.h>
 
@@ -76,9 +77,9 @@ int AdjMatrix[666][NUM_NODES];
 #define VM_NUM 3
 
 // typedef struct {
-//   TaskHandle_t task_handler[TASK_QNT];
+TaskHandle_t task_handlers[TASK_QUANTITY];
 // } Task_handlers;
-// Task_handlers th[TASK_QNT] = {{NULL, NULL}};
+// Task_handlers task_handlers[TASK_QUANTITY] = {{NULL, NULL}};
 
 #if VM_0_REGULATION
 static void suspend_task_budget_sgi() {
@@ -776,9 +777,6 @@ void ctrl_task(void *pvParameters) {
   uint8_t idx = 0;
 
   while (1) {
-    // ======================
-    // T0
-    // ======================
     TickType_t current_time_task_any = xTaskGetTickCount();
     if ((current_time_task_any - last_check_time_task_any) >= period_task_any &&
         !get_budget) {
@@ -791,11 +789,13 @@ void ctrl_task(void *pvParameters) {
     if (get_budget) {
       // suspend all tasks
       for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-        BenchInfo *info = get_benchmark_info(VM_NUM, task_num);
-        vTaskSuspend(info->task_handle);
+        printf("suspending task %d\n", task_num);
+        vTaskSuspend(task_handlers[task_num]);
       }
 
+      printf("calling HC_regulator_get_new_budget\n");
       HC_regulator_budget_depleted(UNUSED_ARG, get_budget_formula());
+      printf("done\n");
 
       vm_conf[VM_NUM].used_r_budget_period[idx] =
           HC_regulator_get_current_used_budget(UNUSED_ARG, READ);
@@ -812,17 +812,26 @@ void ctrl_task(void *pvParameters) {
       vm_conf[VM_NUM].calc_w_budget_period[idx] =
           vm_conf[VM_NUM].new_write_budget;
 
+      if (vm_conf[VM_NUM].new_read_budget == 0) {
+        printf("new read budget == 0\n");
+      }
+      if (vm_conf[VM_NUM].new_write_budget == 0) {
+        printf("new write budget == 0\n");
+      }
       if (idx < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget != 0 &&
-          vm_conf[VM_NUM].new_write_budget != 0)
+          vm_conf[VM_NUM].new_write_budget != 0) {
+
         idx++;
+        printf("idx++ to %d", idx);
+      }
 
       get_budget = 0;
       vm_conf[VM_NUM].sgi_suspend_task_budget = 0;
 
       // resume all tasks
       for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-        BenchInfo *info = get_benchmark_info(VM_NUM, task_num);
-        vTaskResume(info->task_handle);
+        printf("resuming task %d\n", task_num);
+        vTaskResume(task_handlers[task_num]);
       }
     }
 
@@ -830,6 +839,7 @@ void ctrl_task(void *pvParameters) {
     if (idx >= 10 && /* task_conf.show_exe_info && */ !info_showed) {
       // vTaskDelay((3500));
 
+      printf("showing results");
       print_vm_info(vm_conf[VM_NUM]);
       idx = 0;
 
@@ -947,11 +957,39 @@ int main(void) {
   init_bench();
 
 #if VM_0_REGULATION
+  HC_PMU_config_counter(PMU_COUNTER_PAIR_RW, vm_conf[VM_NUM].new_read_budget,
+                        vm_conf[VM_NUM].new_write_budget, UNUSED_ARG,
+                        UNUSED_ARG);
+
   irq_set_handler(GUEST_SUSPEND_BUDGET_ID, suspend_task_budget_sgi);
   irq_enable(GUEST_SUSPEND_BUDGET_ID);
   irq_set_prio(GUEST_SUSPEND_BUDGET_ID, 0);
 
   xTaskCreate(ctrl_task, "vm_ctrl_task", 1400, NULL, CTRL_TASK_PRIORITY, NULL);
+
+  HC_PMU_start_counter(vm_conf->pmu_counter_pair_rw);
+#endif
+
+  for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
+    BenchInfo *info = add_benchmark_info(VM_NUM, task_num, NULL);
+    TaskHandle_t handler;
+    xTaskCreate(
+        delayed_task,            //
+        info->function.name,     //
+        TASK_STACK_SIZE,         //
+        info,                    // pvParameters to delayed_task
+        OTHER_TASK_PRIORITY,     // priority
+        &task_handlers[task_num] // where to store the retuned TaskHandler_t
+    );
+
+    if (task_handlers[task_num] == NULL) {
+      printf("NULL task_handle, returning\n");
+      return 0;
+    }
+  }
+
+#ifdef VM_0_REGULATION
+  HC_PMU_stop_counter(vm_conf->pmu_counter_pair_rw);
 #endif
 
   // **************************** IMPORTANT *********************************
@@ -959,17 +997,6 @@ int main(void) {
   // All values inside the [] must be equal through all the line
   // The control task must only controls the same number of active tasks
   // ************************************************************************
-
-  for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-    BenchInfo *info = get_benchmark_info(VM_NUM, task_num);
-    xTaskCreate(delayed_task,        //
-                info->function.name, //
-                TASK_STACK_SIZE,     //
-                info,                // pvParameters to delayed_task
-                OTHER_TASK_PRIORITY, // priority
-                info->task_handle    // where to store the retuned TaskHandler_t
-    );
-  }
 
   // xTaskCreate(benchmark, NULL, 400, (void *)&task_conf[1],
   //             task_conf[1].priority, &th->task_handler[1]);

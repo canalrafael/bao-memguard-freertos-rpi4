@@ -2,6 +2,7 @@
 #define BENCH_H
 
 #include "budget.h"
+#include <stdint.h>
 
 #define BENCH_ARRAY_INDEX 0
 
@@ -14,13 +15,14 @@ typedef struct {
 typedef struct {
   Function function;
   int task_num;
-  void *task_handle;
+  // TaskHandle_t task_handle;
   formula_t budget_formula;
-  int periodicity;
+  // int periodicity;
   int task_overruns;
   int task_underruns;
 } BenchInfo;
 
+BenchInfo *add_benchmark_info(int vm_num, int task_num, void *handler);
 BenchInfo *get_benchmark_info(int vm_num, int task_num);
 
 // formula handling

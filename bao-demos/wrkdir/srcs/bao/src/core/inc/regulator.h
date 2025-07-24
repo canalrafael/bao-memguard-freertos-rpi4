@@ -16,6 +16,7 @@
 
 #define READ 0
 #define WRITE 1
+#define UNUSED_ARG 0
 
 #define MAX_INT 4294967295U
 #define UNKNOWN_VALUE MAX_INT
@@ -107,7 +108,7 @@ struct PIC {
 
 struct Regulation_config {
 #define VM_QNT 4
-#define TASK_QNT 2
+    // #define TASK_QNT 2
 
     // WARN: defined in <budget_function.h>
     // #define EWMA_FORMULA        0
@@ -118,13 +119,13 @@ struct Regulation_config {
     // #define PIC_FORMULA         5
     // #define USED_BUDGET_FORMULA PIC_FORMULA
 
-    struct VM vm[TASK_QNT];
-    struct EWMA ewma[TASK_QNT];
-    struct SW sw[TASK_QNT];
-    struct AMBP ambp[TASK_QNT];
-    struct AFC afc[TASK_QNT];
-    struct LR lr[TASK_QNT];
-    struct PIC pic[TASK_QNT];
+    struct VM vm;      //[TASK_QNT];
+    struct EWMA ewma;  //[TASK_QNT];
+    struct SW sw;      //[TASK_QNT];
+    struct AMBP ambp;  //[TASK_QNT];
+    struct AFC afc;    //[TASK_QNT];
+    struct LR lr;      //[TASK_QNT];
+    struct PIC pic;    //[TASK_QNT];
 };
 
 extern struct Regulation_config reg_conf[VM_QNT];

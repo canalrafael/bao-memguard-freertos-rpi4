@@ -78,7 +78,7 @@ Function benchmark_functions[NUM_BENCHMARKS] = {
     // {my_quick_sort, "my_quick_sort"},
 };
 
-BenchInfo benchmark_info[NUM_BENCHMARKS] = {};
+BenchInfo benchmark_info[NUM_BENCHMARKS];
 formula_t budget_formula = 0;
 
 ////////
@@ -109,40 +109,50 @@ BenchInfo *get_benchmark_info(int vm_num, int task_num) {
   }
   //
   int index = get_benchmark_index(vm_num, task_num);
+  BenchInfo *benchInfo = &benchmark_info[index];
+  if (benchInfo == NULL) {
+    printf("NULL benchInfo\n");
+  }
+  return benchInfo;
+}
+
+BenchInfo *add_benchmark_info(int vm_num, int task_num, void *handler) {
+  BenchInfo info;
+  int index = get_benchmark_index(vm_num, task_num);
+  info.function = benchmark_functions[index];
+  info.task_num = task_num;
+  // info.task_handle = handler;
+  info.budget_formula = 0;
+  // info.periodicity;
+  info.task_overruns = 0;
+  info.task_underruns = 0;
+
+  benchmark_info[index] = info;
   return &benchmark_info[index];
 }
 
 void init_bench() {
   init_data();
 
-  // to flag erros
-  for (int i = 0; i < NUM_BENCHMARKS; ++i) {
-    benchmark_info[i].function.index = -1;
-  }
-
   for (int vm_num = 0; vm_num < VM_QNT; ++vm_num) {
     for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
       int index = get_benchmark_index(vm_num, task_num);
 
-      benchmark_info[index].function = benchmark_functions[index];
+      benchmark_info[index].function.index = -1;
+      benchmark_info[index].function.name = "UNDEFINED";
+      benchmark_info[index].function.pointer = (void *)MAX_INT;
       benchmark_info[index].task_num = -1;
-      benchmark_info[index].task_handle = NULL;
-      benchmark_info[index].budget_formula = 0;
-      benchmark_info[index].periodicity = 0;
-      benchmark_info[index].task_overruns = 0;
-      benchmark_info[index].task_underruns = 0;
-    }
-  }
-
-  // checking
-  for (int i = 0; i < NUM_BENCHMARKS; ++i) {
-    if (benchmark_info[i].function.index == -1) {
-      printf("Invalid BenchInfo's initialization");
+      // benchmark_info[index].task_handle = (void *)MAX_INT;
+      benchmark_info[index].budget_formula = -1;
+      // benchmark_info[index].periodicity = 0;
+      benchmark_info[index].task_overruns = -1;
+      benchmark_info[index].task_underruns = -1;
     }
   }
 
   init = true;
 }
+
 void destroy_bench() {
   if (init) {
     free_data();
