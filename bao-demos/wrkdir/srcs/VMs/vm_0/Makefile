@@ -3,13 +3,13 @@ NAME:=vm_0
 ROOT_DIR:=$(realpath .)
 BUILD_DIR:=$(ROOT_DIR)/build/$(PLATFORM)
 
-# Include all freertos sources
-INC_GUEST_COMMON=$(BAO_DEMOS_WRKDIR_SRC)/guest_common/inc
-SRC_GUEST_COMMON=$(BAO_DEMOS_WRKDIR_SRC)/guest_common/src
-
 # Setup baremetal-runtime build
 bmrt_dir:=$(ROOT_DIR)/src/baremetal-runtime
 include $(bmrt_dir)/setup.mk
+
+# Include all freertos sources
+INC_GUEST_COMMON=$(BAO_DEMOS_WRKDIR_SRC)/guest_common/inc
+SRC_GUEST_COMMON=$(BAO_DEMOS_WRKDIR_SRC)/guest_common/src
 
 # Bandwidth
 INC_BANDWIDTH=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/bandwidth/inc

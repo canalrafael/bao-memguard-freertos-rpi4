@@ -645,15 +645,15 @@ void free_data() {
   free(g_mem_ptr);
 }
 
-volatile int bandwidth_wrapper() {
+void bandwidth_wrapper() {
   static volatile uint64_t sum = 0;
   sum += bench_read(g_mem_ptr);
   sum += bench_write(g_mem_ptr);
 
-  return 0;
+  return;
 }
 
-volatile int dijkstra_wrapper() {
+void dijkstra_wrapper() {
   int i, j, k;
 
   for (i = 0, j = NUM_NODES / 2; i < 100; i++, j++) {
@@ -661,11 +661,11 @@ volatile int dijkstra_wrapper() {
     dijkstra(i, j);
   }
 
-  return 0;
+  return;
 }
 
 // -
-volatile int disparity_wrapper() {
+void disparity_wrapper() {
   I2D *imleft = (I2D *)img1;
   I2D *imright = (I2D *)img2;
   int WIN_SZ = 8, SHIFT = 64;
@@ -675,20 +675,20 @@ volatile int disparity_wrapper() {
   // Check if images are valid BMP images.
   if (imleft->height <= 0 || imleft->width <= 0 || signature[0] != 'B' ||
       signature[1] != 'M' || (bits_per_pixel != 24 && bits_per_pixel != 8)) {
-    return -1;
+    return;
   }
 
   if (imright->height <= 0 || imright->width <= 0 || signature[0] != 'B' ||
       signature[1] != 'M' || (bits_per_pixel != 24 && bits_per_pixel != 8)) {
-    return -1;
+    return;
   }
 
   I2D *retDisparity = getDisparity(imleft, imright, WIN_SZ, SHIFT);
-  return 0;
+  return;
 }
 
 // -
-volatile int fft_wrapper() {
+void fft_wrapper() {
   static uint32_t A_re[NUM_POINTS];
   static uint32_t A_im[NUM_POINTS];
   static uint32_t W_re[NUM_POINTS / 2];
@@ -700,18 +700,18 @@ volatile int fft_wrapper() {
   fft(n, A_re, A_im, W_re, W_im);
   permute_bitrev(n, A_re, A_im);
 
-  return 0;
+  return;
 }
 
 // -
-volatile int mser_wrapper() {
+void mser_wrapper() {
   //
   mser(It, 2);
-  return 0;
+  return;
 }
 
 // -
-volatile int qsort_wrapper() {
+void qsort_wrapper() {
   struct my3DVertexStruct array[QSORT_MAXARRAY];
 
   int numRows = sizeof(qsort_input_data) / sizeof(qsort_input_data[0]);
@@ -729,16 +729,16 @@ volatile int qsort_wrapper() {
   }
 
   qsort(array, count, sizeof(struct my3DVertexStruct), qsort_compare);
-  return 0;
+  return;
 }
 
-volatile int sha_wrapper() {
+void sha_wrapper() {
   SHA_INFO sha_info;
   sha_stream(&sha_info);
-  return 0;
+  return;
 }
 
-volatile int sorting_wrapper() {
+void sorting_wrapper() {
   int orig[MAX_SORTING], copy[MAX_SORTING], i;
 
   void *function[NUM_SORT] = {&selection_sort, &quick_sort,     &shell_sort,
@@ -753,5 +753,5 @@ volatile int sorting_wrapper() {
     execute_sort(orig, copy, MAX_SORTING, sort_name[i], function[i]);
   }
 
-  return 0;
+  return;
 }

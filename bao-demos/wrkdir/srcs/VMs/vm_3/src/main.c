@@ -75,94 +75,102 @@ int AdjMatrix[666][NUM_NODES];
 
 #define VM_NUM 3
 
-typedef struct {
-  TaskHandle_t task_handler[TASK_QNT];
-} Task_handlers;
-Task_handlers th[TASK_QNT] = {{NULL, NULL}};
+// typedef struct {
+//   TaskHandle_t task_handler[TASK_QNT];
+// } Task_handlers;
+// Task_handlers th[TASK_QNT] = {{NULL, NULL}};
 
 #if VM_3_REGULATION
-static void t0_suspend_task_budget_sgi() {
-  vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_0] = 1;
+static void suspend_task_budget_sgi() {
+  vm_conf[VM_NUM].sgi_suspend_task_budget = 1;
 }
 
-static void t1_suspend_task_budget_sgi() {
-  vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_1] = 1;
-}
+// static void t0_suspend_task_budget_sgi() {
+//   vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_0] = 1;
+// }
+//
+// static void t1_suspend_task_budget_sgi() {
+//   vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_1] = 1;
+// }
 #endif
 
 //================================================================================
 //                            Beginning BW
 //================================================================================
-void bandwdith_benchmark(void *pvParameters) {
-  TASK *task_conf = (TASK *)pvParameters;
-  volatile uint64_t sum = 0;
 
-  int *g_mem_ptr = (int *)malloc(BW_DEFAULT_ALLOC_SIZE);
-  memset((char *)g_mem_ptr, 1, BW_DEFAULT_ALLOC_SIZE);
+// void bandwdith_benchmark(void *pvParameters) {
+//   TASK *task_conf = (TASK *)pvParameters;
+//   volatile uint64_t sum = 0;
+//
+//   int *g_mem_ptr = (int *)malloc(BW_DEFAULT_ALLOC_SIZE);
+//   memset((char *)g_mem_ptr, 1, BW_DEFAULT_ALLOC_SIZE);
+//
+//   for (uint64_t i = 0; i < BW_DEFAULT_ALLOC_SIZE / sizeof(int); i++)
+//     g_mem_ptr[i] = i;
+//
+//   const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
+//   TickType_t xLastWakeTime = xTaskGetTickCount();
+//
+//   while (1) {
+//     for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
+//       TickType_t start = xTaskGetTickCount();
+//       TickType_t deadline = start + task_conf->deadline_ms;
+//
+//       start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_config_counter(
+//           task_conf->pmu_counter_a,
+//           vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
+//           vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
+//           task_conf->task_num);
+//       HC_PMU_start_counter(task_conf->pmu_counter_a);
+// #endif
+//       sum += bench_read(g_mem_ptr);
+//       sum += bench_write(g_mem_ptr);
+// #if VM_3_REGULATION
+//       HC_PMU_stop_counter(task_conf->pmu_counter_a);
+// #endif
+//       sum = 0;
+//       TickType_t end = xTaskGetTickCount();
+//
+//       // deadline
+//       if (!task_conf->show_exe_info) {
+//         vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
+//             get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//         vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] =
+//         start; vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe]
+//         =
+//             deadline;
+//         vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
+//
+//         if (end <= deadline)
+//           vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
+//         else {
+//           vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
+//           xLastWakeTime = end;
+//         }
+//       }
+//
+//       vTaskDelayUntil(&xLastWakeTime, xFrequency);
+//     }
+//
+//     xLastWakeTime = xTaskGetTickCount();
+//
+// #if !VM_3_REGULATION
+//     if (!task_conf->show_exe_info) {
+//       vTaskDelay(500);
+//       print_end_info_no_reg(VM_NUM, task_conf->task_num,
+//       pcTaskGetName(NULL));
+//     }
+//
+// #endif
+//     task_conf->show_exe_info = 1;
+//   }
+//
+//   free(g_mem_ptr);
+// }
 
-  for (uint64_t i = 0; i < BW_DEFAULT_ALLOC_SIZE / sizeof(int); i++)
-    g_mem_ptr[i] = i;
-
-  const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
-  TickType_t xLastWakeTime = xTaskGetTickCount();
-
-  while (1) {
-    for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
-      TickType_t start = xTaskGetTickCount();
-      TickType_t deadline = start + task_conf->deadline_ms;
-
-      start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-
-#if VM_3_REGULATION
-      HC_PMU_config_counter(
-          task_conf->pmu_counter_a,
-          vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
-          vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
-          task_conf->task_num);
-      HC_PMU_start_counter(task_conf->pmu_counter_a);
-#endif
-      sum += bench_read(g_mem_ptr);
-      sum += bench_write(g_mem_ptr);
-#if VM_3_REGULATION
-      HC_PMU_stop_counter(task_conf->pmu_counter_a);
-#endif
-      sum = 0;
-      TickType_t end = xTaskGetTickCount();
-
-      // deadline
-      if (!task_conf->show_exe_info) {
-        vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
-            get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-        vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] = start;
-        vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe] =
-            deadline;
-        vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
-
-        if (end <= deadline)
-          vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
-        else {
-          vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
-          xLastWakeTime = end;
-        }
-      }
-
-      vTaskDelayUntil(&xLastWakeTime, xFrequency);
-    }
-
-    xLastWakeTime = xTaskGetTickCount();
-
-#if !VM_3_REGULATION
-    if (!task_conf->show_exe_info) {
-      vTaskDelay(500);
-      print_end_info_no_reg(VM_NUM, task_conf->task_num, pcTaskGetName(NULL));
-    }
-
-#endif
-    task_conf->show_exe_info = 1;
-  }
-
-  free(g_mem_ptr);
-}
 //================================================================================
 //                              End BW
 //================================================================================
@@ -170,83 +178,88 @@ void bandwdith_benchmark(void *pvParameters) {
 //================================================================================
 //                          Beginning Disparity
 //================================================================================
-void disparity_benchmark(void *pvParameters) {
-  TASK *task_conf = (TASK *)pvParameters;
 
-  const TickType_t xFrequency = pdMS_TO_TICKS(PERIOD_MS_TASK_0);
-  TickType_t xLastWakeTime = xTaskGetTickCount();
+// void disparity_benchmark(void *pvParameters) {
+//   TASK *task_conf = (TASK *)pvParameters;
+//
+//   const TickType_t xFrequency = pdMS_TO_TICKS(PERIOD_MS_TASK_0);
+//   TickType_t xLastWakeTime = xTaskGetTickCount();
+//
+//   while (1) {
+//     for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
+//       TickType_t start = xTaskGetTickCount();
+//       TickType_t deadline = start + task_conf->deadline_ms;
+//
+//       start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_config_counter(
+//           task_conf->pmu_counter_a,
+//           vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
+//           vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
+//           task_conf->task_num);
+//       HC_PMU_start_counter(task_conf->pmu_counter_a);
+// #endif
+//       I2D *imleft = (I2D *)img1;
+//       I2D *imright = (I2D *)img2;
+//       int WIN_SZ = 8, SHIFT = 64;
+//       char signature[2] = {66, 77};
+//       short int bits_per_pixel = 24;
+//
+//       // Check if images are valid BMP images.
+//       if (imleft->height <= 0 || imleft->width <= 0 || signature[0] != 'B' ||
+//           signature[1] != 'M' ||
+//           (bits_per_pixel != 24 && bits_per_pixel != 8)) {
+//         continue;
+//       }
+//       if (imright->height <= 0 || imright->width <= 0 || signature[0] != 'B'
+//       ||
+//           signature[1] != 'M' ||
+//           (bits_per_pixel != 24 && bits_per_pixel != 8)) {
+//         continue;
+//       }
+//
+//       I2D *retDisparity = getDisparity(imleft, imright, WIN_SZ, SHIFT);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_stop_counter(task_conf->pmu_counter_a);
+// #endif
+//       TickType_t end = xTaskGetTickCount();
+//
+//       // deadline
+//       if (!task_conf->show_exe_info) {
+//         vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
+//             get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//         vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] =
+//         start; vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe]
+//         =
+//             deadline;
+//         vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
+//
+//         if (end <= deadline)
+//           vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
+//         else {
+//           vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
+//           xLastWakeTime = end;
+//         }
+//       }
+//
+//       vTaskDelayUntil(&xLastWakeTime, xFrequency);
+//     }
+//
+//     xLastWakeTime = xTaskGetTickCount();
+//
+// #if !VM_3_REGULATION
+//     if (!task_conf->show_exe_info) {
+//       vTaskDelay(1000);
+//       print_end_info_no_reg(VM_NUM, task_conf->task_num,
+//       pcTaskGetName(NULL));
+//     }
+// #endif
+//     task_conf->show_exe_info = 1;
+//   }
+// }
 
-  while (1) {
-    for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
-      TickType_t start = xTaskGetTickCount();
-      TickType_t deadline = start + task_conf->deadline_ms;
-
-      start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-
-#if VM_3_REGULATION
-      HC_PMU_config_counter(
-          task_conf->pmu_counter_a,
-          vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
-          vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
-          task_conf->task_num);
-      HC_PMU_start_counter(task_conf->pmu_counter_a);
-#endif
-      I2D *imleft = (I2D *)img1;
-      I2D *imright = (I2D *)img2;
-      int WIN_SZ = 8, SHIFT = 64;
-      char signature[2] = {66, 77};
-      short int bits_per_pixel = 24;
-
-      // Check if images are valid BMP images.
-      if (imleft->height <= 0 || imleft->width <= 0 || signature[0] != 'B' ||
-          signature[1] != 'M' ||
-          (bits_per_pixel != 24 && bits_per_pixel != 8)) {
-        continue;
-      }
-      if (imright->height <= 0 || imright->width <= 0 || signature[0] != 'B' ||
-          signature[1] != 'M' ||
-          (bits_per_pixel != 24 && bits_per_pixel != 8)) {
-        continue;
-      }
-
-      I2D *retDisparity = getDisparity(imleft, imright, WIN_SZ, SHIFT);
-
-#if VM_3_REGULATION
-      HC_PMU_stop_counter(task_conf->pmu_counter_a);
-#endif
-      TickType_t end = xTaskGetTickCount();
-
-      // deadline
-      if (!task_conf->show_exe_info) {
-        vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
-            get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-        vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] = start;
-        vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe] =
-            deadline;
-        vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
-
-        if (end <= deadline)
-          vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
-        else {
-          vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
-          xLastWakeTime = end;
-        }
-      }
-
-      vTaskDelayUntil(&xLastWakeTime, xFrequency);
-    }
-
-    xLastWakeTime = xTaskGetTickCount();
-
-#if !VM_3_REGULATION
-    if (!task_conf->show_exe_info) {
-      vTaskDelay(1000);
-      print_end_info_no_reg(VM_NUM, task_conf->task_num, pcTaskGetName(NULL));
-    }
-#endif
-    task_conf->show_exe_info = 1;
-  }
-}
 //================================================================================
 //                              End Disparity
 //================================================================================
@@ -264,83 +277,86 @@ unsigned char spairs_pt[8 * 1808];
 unsigned char sacc_pt[8 + 46464];
 unsigned char sell_pt[8 + 1080];
 
-void mser_benchmark(void *pvParameters) {
-  TASK *task_conf = (TASK *)pvParameters;
+// void mser_benchmark(void *pvParameters) {
+//   TASK *task_conf = (TASK *)pvParameters;
+//
+//   int i, j, k;
+//   I2D *I;
+//   I2D *It;
+//   int rows = 196, cols = 98;
+//
+//   I = (I2D *)mserb;
+//   rows = I->height;
+//   cols = I->width;
+//
+//   It = (I2D *)mserb1;
+//
+//   k = 0;
+//   for (i = 0; i < cols; i++) {
+//     for (j = 0; j < rows; j++) {
+//       asubsref(It, k++) = subsref(I, j, i);
+//     }
+//   }
+//
+//   const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
+//   TickType_t xLastWakeTime = xTaskGetTickCount();
+//
+//   while (1) {
+//     for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
+//       TickType_t start = xTaskGetTickCount();
+//       TickType_t deadline = start + task_conf->deadline_ms;
+//
+//       start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_config_counter(
+//           task_conf->pmu_counter_a,
+//           vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
+//           vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
+//           task_conf->task_num);
+//       HC_PMU_start_counter(task_conf->pmu_counter_a);
+// #endif
+//       mser(It, 2);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_stop_counter(task_conf->pmu_counter_a);
+// #endif
+//       TickType_t end = xTaskGetTickCount();
+//
+//       // deadline
+//       if (!task_conf->show_exe_info) {
+//         vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
+//             get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//         vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] =
+//         start; vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe]
+//         =
+//             deadline;
+//         vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
+//
+//         if (end <= deadline)
+//           vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
+//         else {
+//           vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
+//           xLastWakeTime = end;
+//         }
+//       }
+//
+//       vTaskDelayUntil(&xLastWakeTime, xFrequency);
+//     }
+//
+//     xLastWakeTime = xTaskGetTickCount();
+//
+// #if !VM_3_REGULATION
+//     if (!task_conf->show_exe_info) {
+//       vTaskDelay(1500);
+//       print_end_info_no_reg(VM_NUM, task_conf->task_num,
+//       pcTaskGetName(NULL));
+//     }
+// #endif
+//     task_conf->show_exe_info = 1;
+//   }
+// }
 
-  int i, j, k;
-  I2D *I;
-  I2D *It;
-  int rows = 196, cols = 98;
-
-  I = (I2D *)mserb;
-  rows = I->height;
-  cols = I->width;
-
-  It = (I2D *)mserb1;
-
-  k = 0;
-  for (i = 0; i < cols; i++) {
-    for (j = 0; j < rows; j++) {
-      asubsref(It, k++) = subsref(I, j, i);
-    }
-  }
-
-  const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
-  TickType_t xLastWakeTime = xTaskGetTickCount();
-
-  while (1) {
-    for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
-      TickType_t start = xTaskGetTickCount();
-      TickType_t deadline = start + task_conf->deadline_ms;
-
-      start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-
-#if VM_3_REGULATION
-      HC_PMU_config_counter(
-          task_conf->pmu_counter_a,
-          vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
-          vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
-          task_conf->task_num);
-      HC_PMU_start_counter(task_conf->pmu_counter_a);
-#endif
-      mser(It, 2);
-
-#if VM_3_REGULATION
-      HC_PMU_stop_counter(task_conf->pmu_counter_a);
-#endif
-      TickType_t end = xTaskGetTickCount();
-
-      // deadline
-      if (!task_conf->show_exe_info) {
-        vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
-            get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-        vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] = start;
-        vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe] =
-            deadline;
-        vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
-
-        if (end <= deadline)
-          vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
-        else {
-          vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
-          xLastWakeTime = end;
-        }
-      }
-
-      vTaskDelayUntil(&xLastWakeTime, xFrequency);
-    }
-
-    xLastWakeTime = xTaskGetTickCount();
-
-#if !VM_3_REGULATION
-    if (!task_conf->show_exe_info) {
-      vTaskDelay(1500);
-      print_end_info_no_reg(VM_NUM, task_conf->task_num, pcTaskGetName(NULL));
-    }
-#endif
-    task_conf->show_exe_info = 1;
-  }
-}
 //================================================================================
 //                              End MSER
 //================================================================================
@@ -348,74 +364,78 @@ void mser_benchmark(void *pvParameters) {
 //================================================================================
 //                              Beginning FFT
 //================================================================================
-void fft_benchmark(void *pvParameters) {
-  TASK *task_conf = (TASK *)pvParameters;
 
-  uint32_t A_re[NUM_POINTS];
-  uint32_t A_im[NUM_POINTS];
-  uint32_t W_re[NUM_POINTS / 2];
-  uint32_t W_im[NUM_POINTS / 2];
+// void fft_benchmark(void *pvParameters) {
+//   TASK *task_conf = (TASK *)pvParameters;
+//
+//   uint32_t A_re[NUM_POINTS];
+//   uint32_t A_im[NUM_POINTS];
+//   uint32_t W_re[NUM_POINTS / 2];
+//   uint32_t W_im[NUM_POINTS / 2];
+//
+//   const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
+//   TickType_t xLastWakeTime = xTaskGetTickCount();
+//
+//   while (1) {
+//     for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
+//       TickType_t start = xTaskGetTickCount();
+//       TickType_t deadline = start + task_conf->deadline_ms;
+//
+//       start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_config_counter(
+//           task_conf->pmu_counter_a,
+//           vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
+//           vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
+//           task_conf->task_num);
+//       HC_PMU_start_counter(task_conf->pmu_counter_a);
+// #endif
+//       int n = NUM_POINTS;
+//       init_array(n, A_re, A_im);
+//       compute_W(n, W_re, W_im);
+//       fft(n, A_re, A_im, W_re, W_im);
+//       permute_bitrev(n, A_re, A_im);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_stop_counter(task_conf->pmu_counter_a);
+// #endif
+//       TickType_t end = xTaskGetTickCount();
+//
+//       // deadline
+//       if (!task_conf->show_exe_info) {
+//         vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
+//             get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//         vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] =
+//         start; vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe]
+//         =
+//             deadline;
+//         vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
+//
+//         if (end <= deadline)
+//           vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
+//         else {
+//           vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
+//           xLastWakeTime = end;
+//         }
+//       }
+//
+//       vTaskDelayUntil(&xLastWakeTime, xFrequency);
+//     }
+//
+//     xLastWakeTime = xTaskGetTickCount();
+//
+// #if !VM_3_REGULATION
+//     if (!task_conf->show_exe_info) {
+//       vTaskDelay(2000);
+//       print_end_info_no_reg(VM_NUM, task_conf->task_num,
+//       pcTaskGetName(NULL));
+//     }
+// #endif
+//     task_conf->show_exe_info = 1;
+//   }
+// }
 
-  const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
-  TickType_t xLastWakeTime = xTaskGetTickCount();
-
-  while (1) {
-    for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
-      TickType_t start = xTaskGetTickCount();
-      TickType_t deadline = start + task_conf->deadline_ms;
-
-      start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-
-#if VM_3_REGULATION
-      HC_PMU_config_counter(
-          task_conf->pmu_counter_a,
-          vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
-          vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
-          task_conf->task_num);
-      HC_PMU_start_counter(task_conf->pmu_counter_a);
-#endif
-      int n = NUM_POINTS;
-      init_array(n, A_re, A_im);
-      compute_W(n, W_re, W_im);
-      fft(n, A_re, A_im, W_re, W_im);
-      permute_bitrev(n, A_re, A_im);
-
-#if VM_3_REGULATION
-      HC_PMU_stop_counter(task_conf->pmu_counter_a);
-#endif
-      TickType_t end = xTaskGetTickCount();
-
-      // deadline
-      if (!task_conf->show_exe_info) {
-        vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
-            get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-        vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] = start;
-        vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe] =
-            deadline;
-        vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
-
-        if (end <= deadline)
-          vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
-        else {
-          vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
-          xLastWakeTime = end;
-        }
-      }
-
-      vTaskDelayUntil(&xLastWakeTime, xFrequency);
-    }
-
-    xLastWakeTime = xTaskGetTickCount();
-
-#if !VM_3_REGULATION
-    if (!task_conf->show_exe_info) {
-      vTaskDelay(2000);
-      print_end_info_no_reg(VM_NUM, task_conf->task_num, pcTaskGetName(NULL));
-    }
-#endif
-    task_conf->show_exe_info = 1;
-  }
-}
 //================================================================================
 //                                End FFT
 //================================================================================
@@ -423,77 +443,81 @@ void fft_benchmark(void *pvParameters) {
 //================================================================================
 //                              Beginning sorting
 //================================================================================
-void sorting_benchmark(void *pvParameters) {
-  TASK *task_conf = (TASK *)pvParameters;
 
-  const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
-  TickType_t xLastWakeTime = xTaskGetTickCount();
+// void sorting_benchmark(void *pvParameters) {
+//   TASK *task_conf = (TASK *)pvParameters;
+//
+//   const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
+//   TickType_t xLastWakeTime = xTaskGetTickCount();
+//
+//   while (1) {
+//     for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
+//       TickType_t start = xTaskGetTickCount();
+//       TickType_t deadline = start + task_conf->deadline_ms;
+//
+//       start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_config_counter(
+//           task_conf->pmu_counter_a,
+//           vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
+//           vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
+//           task_conf->task_num);
+//       HC_PMU_start_counter(task_conf->pmu_counter_a);
+// #endif
+//       int orig[MAX_SORTING], copy[MAX_SORTING], i;
+//
+//       void *function[NUM_SORT] = {&selection_sort, &quick_sort,
+//                                   &shell_sort,     &stdlib_qsort,
+//                                   &insertion_sort, &bubble_sort};
+//       char *sort_name[NUM_SORT] = {"Selection sort", "Quicksort",
+//                                    "Shellsort",      "Qsort",
+//                                    "Insertion sort", "Bubble sort"};
+//
+//       fill_array(orig, MAX_SORTING);
+//
+//       for (i = 0; i < NUM_SORT; i++)
+//         execute_sort(orig, copy, MAX_SORTING, sort_name[i], function[i]);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_stop_counter(task_conf->pmu_counter_a);
+// #endif
+//       TickType_t end = xTaskGetTickCount();
+//
+//       // deadline
+//       if (!task_conf->show_exe_info) {
+//         vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
+//             get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//         vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] =
+//         start; vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe]
+//         =
+//             deadline;
+//         vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
+//
+//         if (end <= deadline)
+//           vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
+//         else {
+//           vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
+//           xLastWakeTime = end;
+//         }
+//       }
+//
+//       vTaskDelayUntil(&xLastWakeTime, xFrequency);
+//     }
+//
+//     xLastWakeTime = xTaskGetTickCount();
+//
+// #if !VM_3_REGULATION
+//     if (!task_conf->show_exe_info) {
+//       vTaskDelay(2500);
+//       print_end_info_no_reg(VM_NUM, task_conf->task_num,
+//       pcTaskGetName(NULL));
+//     }
+// #endif
+//     task_conf->show_exe_info = 1;
+//   }
+// }
 
-  while (1) {
-    for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
-      TickType_t start = xTaskGetTickCount();
-      TickType_t deadline = start + task_conf->deadline_ms;
-
-      start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-
-#if VM_3_REGULATION
-      HC_PMU_config_counter(
-          task_conf->pmu_counter_a,
-          vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
-          vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
-          task_conf->task_num);
-      HC_PMU_start_counter(task_conf->pmu_counter_a);
-#endif
-      int orig[MAX_SORTING], copy[MAX_SORTING], i;
-
-      void *function[NUM_SORT] = {&selection_sort, &quick_sort,
-                                  &shell_sort,     &stdlib_qsort,
-                                  &insertion_sort, &bubble_sort};
-      char *sort_name[NUM_SORT] = {"Selection sort", "Quicksort",
-                                   "Shellsort",      "Qsort",
-                                   "Insertion sort", "Bubble sort"};
-
-      fill_array(orig, MAX_SORTING);
-
-      for (i = 0; i < NUM_SORT; i++)
-        execute_sort(orig, copy, MAX_SORTING, sort_name[i], function[i]);
-
-#if VM_3_REGULATION
-      HC_PMU_stop_counter(task_conf->pmu_counter_a);
-#endif
-      TickType_t end = xTaskGetTickCount();
-
-      // deadline
-      if (!task_conf->show_exe_info) {
-        vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
-            get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-        vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] = start;
-        vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe] =
-            deadline;
-        vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
-
-        if (end <= deadline)
-          vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
-        else {
-          vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
-          xLastWakeTime = end;
-        }
-      }
-
-      vTaskDelayUntil(&xLastWakeTime, xFrequency);
-    }
-
-    xLastWakeTime = xTaskGetTickCount();
-
-#if !VM_3_REGULATION
-    if (!task_conf->show_exe_info) {
-      vTaskDelay(2500);
-      print_end_info_no_reg(VM_NUM, task_conf->task_num, pcTaskGetName(NULL));
-    }
-#endif
-    task_conf->show_exe_info = 1;
-  }
-}
 //================================================================================
 //                                End sorting
 //================================================================================
@@ -501,82 +525,86 @@ void sorting_benchmark(void *pvParameters) {
 //================================================================================
 //                              Beginning qsort
 //================================================================================
-void qsort_benchmark(void *pvParameters) {
-  TASK *task_conf = (TASK *)pvParameters;
 
-  const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
-  TickType_t xLastWakeTime = xTaskGetTickCount();
+// void qsort_benchmark(void *pvParameters) {
+//   TASK *task_conf = (TASK *)pvParameters;
+//
+//   const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
+//   TickType_t xLastWakeTime = xTaskGetTickCount();
+//
+//   while (1) {
+//     for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
+//       TickType_t start = xTaskGetTickCount();
+//       TickType_t deadline = start + task_conf->deadline_ms;
+//
+//       start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_config_counter(
+//           task_conf->pmu_counter_a,
+//           vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
+//           vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
+//           task_conf->task_num);
+//       HC_PMU_start_counter(task_conf->pmu_counter_a);
+// #endif
+//
+//       struct my3DVertexStruct array[QSORT_MAXARRAY];
+//
+//       int numRows = sizeof(qsort_input_data) / sizeof(qsort_input_data[0]);
+//       int count = 0;
+//
+//       // Process the array instead of reading from a file
+//       for (int i = 0; i < numRows && count < QSORT_MAXARRAY; i++) {
+//         array[count].x = qsort_input_data[i][0];
+//         array[count].y = qsort_input_data[i][1];
+//         array[count].z = qsort_input_data[i][2];
+//         array[count].distance = (array[count].x * array[count].x) +
+//                                 (array[count].y * array[count].y) +
+//                                 (array[count].z * array[count].z);
+//         count++;
+//       }
+//
+//       qsort(array, count, sizeof(struct my3DVertexStruct), qsort_compare);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_stop_counter(task_conf->pmu_counter_a);
+// #endif
+//       TickType_t end = xTaskGetTickCount();
+//
+//       // deadline
+//       if (!task_conf->show_exe_info) {
+//         vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
+//             get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//         vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] =
+//         start; vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe]
+//         =
+//             deadline;
+//         vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
+//
+//         if (end <= deadline)
+//           vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
+//         else {
+//           vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
+//           xLastWakeTime = end;
+//         }
+//       }
+//
+//       vTaskDelayUntil(&xLastWakeTime, xFrequency);
+//     }
+//
+//     xLastWakeTime = xTaskGetTickCount();
+//
+// #if !VM_3_REGULATION
+//     if (!task_conf->show_exe_info) {
+//       vTaskDelay(3000);
+//       print_end_info_no_reg(VM_NUM, task_conf->task_num,
+//       pcTaskGetName(NULL));
+//     }
+// #endif
+//     task_conf->show_exe_info = 1;
+//   }
+// }
 
-  while (1) {
-    for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
-      TickType_t start = xTaskGetTickCount();
-      TickType_t deadline = start + task_conf->deadline_ms;
-
-      start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-
-#if VM_3_REGULATION
-      HC_PMU_config_counter(
-          task_conf->pmu_counter_a,
-          vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
-          vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
-          task_conf->task_num);
-      HC_PMU_start_counter(task_conf->pmu_counter_a);
-#endif
-
-      struct my3DVertexStruct array[QSORT_MAXARRAY];
-
-      int numRows = sizeof(qsort_input_data) / sizeof(qsort_input_data[0]);
-      int count = 0;
-
-      // Process the array instead of reading from a file
-      for (int i = 0; i < numRows && count < QSORT_MAXARRAY; i++) {
-        array[count].x = qsort_input_data[i][0];
-        array[count].y = qsort_input_data[i][1];
-        array[count].z = qsort_input_data[i][2];
-        array[count].distance = (array[count].x * array[count].x) +
-                                (array[count].y * array[count].y) +
-                                (array[count].z * array[count].z);
-        count++;
-      }
-
-      qsort(array, count, sizeof(struct my3DVertexStruct), qsort_compare);
-
-#if VM_3_REGULATION
-      HC_PMU_stop_counter(task_conf->pmu_counter_a);
-#endif
-      TickType_t end = xTaskGetTickCount();
-
-      // deadline
-      if (!task_conf->show_exe_info) {
-        vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
-            get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-        vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] = start;
-        vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe] =
-            deadline;
-        vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
-
-        if (end <= deadline)
-          vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
-        else {
-          vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
-          xLastWakeTime = end;
-        }
-      }
-
-      vTaskDelayUntil(&xLastWakeTime, xFrequency);
-    }
-
-    xLastWakeTime = xTaskGetTickCount();
-
-#if !VM_3_REGULATION
-    if (!task_conf->show_exe_info) {
-      vTaskDelay(3000);
-      print_end_info_no_reg(VM_NUM, task_conf->task_num, pcTaskGetName(NULL));
-    }
-#endif
-    task_conf->show_exe_info = 1;
-  }
-}
 //================================================================================
 //                                End qsort
 //================================================================================
@@ -584,72 +612,76 @@ void qsort_benchmark(void *pvParameters) {
 //================================================================================
 //                              Beginning Dijkstra
 //================================================================================
-void dijkstra_benchmark(void *pvParameters) {
-  TASK *task_conf = (TASK *)pvParameters;
 
-  const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
-  TickType_t xLastWakeTime = xTaskGetTickCount();
+// void dijkstra_benchmark(void *pvParameters) {
+//   TASK *task_conf = (TASK *)pvParameters;
+//
+//   const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
+//   TickType_t xLastWakeTime = xTaskGetTickCount();
+//
+//   while (1) {
+//     for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
+//       TickType_t start = xTaskGetTickCount();
+//       TickType_t deadline = start + task_conf->deadline_ms;
+//
+//       start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_config_counter(
+//           task_conf->pmu_counter_a,
+//           vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
+//           vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
+//           task_conf->task_num);
+//       HC_PMU_start_counter(task_conf->pmu_counter_a);
+// #endif
+//
+//       int i, j, k;
+//
+//       for (i = 0, j = NUM_NODES / 2; i < 100; i++, j++) {
+//         j = j % NUM_NODES;
+//         dijkstra(i, j);
+//       }
+//
+// #if VM_3_REGULATION
+//       HC_PMU_stop_counter(task_conf->pmu_counter_a);
+// #endif
+//       TickType_t end = xTaskGetTickCount();
+//
+//       // deadline
+//       if (!task_conf->show_exe_info) {
+//         vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
+//             get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//         vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] =
+//         start; vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe]
+//         =
+//             deadline;
+//         vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
+//
+//         if (end <= deadline)
+//           vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
+//         else {
+//           vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
+//           xLastWakeTime = end;
+//         }
+//       }
+//
+//       vTaskDelayUntil(&xLastWakeTime, xFrequency);
+//     }
+//
+//     // xLastWakeTime = xTaskGetTickCount();
+//
+// #if !VM_3_REGULATION
+//     if (!task_conf->show_exe_info) {
+//       // vTaskDelay(3500);
+//       vTaskDelay(7000);
+//       print_end_info_no_reg(VM_NUM, task_conf->task_num,
+//       pcTaskGetName(NULL));
+//     }
+// #endif
+//     task_conf->show_exe_info = 1;
+//   }
+// }
 
-  while (1) {
-    for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
-      TickType_t start = xTaskGetTickCount();
-      TickType_t deadline = start + task_conf->deadline_ms;
-
-      start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-
-#if VM_3_REGULATION
-      HC_PMU_config_counter(
-          task_conf->pmu_counter_a,
-          vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
-          vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
-          task_conf->task_num);
-      HC_PMU_start_counter(task_conf->pmu_counter_a);
-#endif
-
-      int i, j, k;
-
-      for (i = 0, j = NUM_NODES / 2; i < 100; i++, j++) {
-        j = j % NUM_NODES;
-        dijkstra(i, j);
-      }
-
-#if VM_3_REGULATION
-      HC_PMU_stop_counter(task_conf->pmu_counter_a);
-#endif
-      TickType_t end = xTaskGetTickCount();
-
-      // deadline
-      if (!task_conf->show_exe_info) {
-        vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
-            get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-        vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] = start;
-        vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe] =
-            deadline;
-        vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
-
-        if (end <= deadline)
-          vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
-        else {
-          vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
-          xLastWakeTime = end;
-        }
-      }
-
-      vTaskDelayUntil(&xLastWakeTime, xFrequency);
-    }
-
-    // xLastWakeTime = xTaskGetTickCount();
-
-#if !VM_3_REGULATION
-    if (!task_conf->show_exe_info) {
-      // vTaskDelay(3500);
-      vTaskDelay(7000);
-      print_end_info_no_reg(VM_NUM, task_conf->task_num, pcTaskGetName(NULL));
-    }
-#endif
-    task_conf->show_exe_info = 1;
-  }
-}
 //================================================================================
 //                                End Dijkstra
 //================================================================================
@@ -657,66 +689,70 @@ void dijkstra_benchmark(void *pvParameters) {
 //================================================================================
 //                              Beginning SHA
 //================================================================================
-void sha_benchmark(void *pvParameters) {
-  TASK *task_conf = (TASK *)pvParameters;
 
-  const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
-  TickType_t xLastWakeTime = xTaskGetTickCount();
+// void sha_benchmark(void *pvParameters) {
+//   TASK *task_conf = (TASK *)pvParameters;
+//
+//   const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
+//   TickType_t xLastWakeTime = xTaskGetTickCount();
+//
+//   while (1) {
+//     for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
+//       TickType_t start = xTaskGetTickCount();
+//       TickType_t deadline = start + task_conf->deadline_ms;
+//
+//       start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_config_counter(
+//           task_conf->pmu_counter_a,
+//           vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
+//           vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
+//           task_conf->task_num);
+//       HC_PMU_start_counter(task_conf->pmu_counter_a);
+// #endif
+//       SHA_INFO sha_info;
+//       sha_stream(&sha_info);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_stop_counter(task_conf->pmu_counter_a);
+// #endif
+//       TickType_t end = xTaskGetTickCount();
+//       // deadline
+//       if (!task_conf->show_exe_info) {
+//         vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
+//             get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//         vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] =
+//         start; vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe]
+//         =
+//             deadline;
+//         vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
+//
+//         if (end <= deadline)
+//           vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
+//         else {
+//           vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
+//           xLastWakeTime = end;
+//         }
+//       }
+//
+//       vTaskDelayUntil(&xLastWakeTime, xFrequency);
+//     }
+//
+//     xLastWakeTime = xTaskGetTickCount();
+//
+// #if !VM_3_REGULATION
+//     if (!task_conf->show_exe_info) {
+//       // vTaskDelay(4000);
+//       vTaskDelay(8000);
+//       print_end_info_no_reg(VM_NUM, task_conf->task_num,
+//       pcTaskGetName(NULL));
+//     }
+// #endif
+//     task_conf->show_exe_info = 1;
+//   }
+// }
 
-  while (1) {
-    for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
-      TickType_t start = xTaskGetTickCount();
-      TickType_t deadline = start + task_conf->deadline_ms;
-
-      start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-
-#if VM_3_REGULATION
-      HC_PMU_config_counter(
-          task_conf->pmu_counter_a,
-          vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
-          vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
-          task_conf->task_num);
-      HC_PMU_start_counter(task_conf->pmu_counter_a);
-#endif
-      SHA_INFO sha_info;
-      sha_stream(&sha_info);
-
-#if VM_3_REGULATION
-      HC_PMU_stop_counter(task_conf->pmu_counter_a);
-#endif
-      TickType_t end = xTaskGetTickCount();
-      // deadline
-      if (!task_conf->show_exe_info) {
-        vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
-            get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-        vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] = start;
-        vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe] =
-            deadline;
-        vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
-
-        if (end <= deadline)
-          vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
-        else {
-          vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
-          xLastWakeTime = end;
-        }
-      }
-
-      vTaskDelayUntil(&xLastWakeTime, xFrequency);
-    }
-
-    xLastWakeTime = xTaskGetTickCount();
-
-#if !VM_3_REGULATION
-    if (!task_conf->show_exe_info) {
-      // vTaskDelay(4000);
-      vTaskDelay(8000);
-      print_end_info_no_reg(VM_NUM, task_conf->task_num, pcTaskGetName(NULL));
-    }
-#endif
-    task_conf->show_exe_info = 1;
-  }
-}
 //================================================================================
 //                                End SHA
 //================================================================================
@@ -724,154 +760,90 @@ void sha_benchmark(void *pvParameters) {
 //================================================================================
 //                           Beginning CTRL TASK
 //================================================================================
+
 #if VM_3_REGULATION
 void ctrl_task(void *pvParameters) {
   // task periodicity
-  const TickType_t xFrequency = pdMS_TO_TICKS(PERIOD_MS_TASK_CTRL);
-  TickType_t xLastWakeTime = xTaskGetTickCount();
+  const TickType_t frequency = pdMS_TO_TICKS(PERIOD_MS_TASK_CTRL);
+  TickType_t last_wake_time = xTaskGetTickCount();
 
   // check VM tasks' period
-  const TickType_t period_task_0 =
-      pdMS_TO_TICKS(VM_0_PERIOD_REGULATION_MS_TASK_0);
-  TickType_t last_check_time_task_0 = xTaskGetTickCount();
+  const TickType_t period_task_any = pdMS_TO_TICKS(PERIOD_MS_TASK_ANY);
+  TickType_t last_check_time_task_any = xTaskGetTickCount();
 
-  const TickType_t period_task_1 =
-      pdMS_TO_TICKS(VM_0_PERIOD_REGULATION_MS_TASK_1);
-  TickType_t last_check_time_task_1 = xTaskGetTickCount();
-
-  uint8_t get_budget_t0 = 0;
-  uint8_t get_budget_t1 = 0;
-
-  uint8_t info_showed_t0 = 0;
-  uint8_t info_showed_t1 = 0;
-
-  uint8_t idx_t0 = 0;
-  uint8_t idx_t1 = 0;
+  uint8_t get_budget = 0;
+  uint8_t info_showed = 0;
+  uint8_t idx = 0;
 
   while (1) {
     // ======================
     // T0
     // ======================
-    TickType_t current_time_task_0 = xTaskGetTickCount();
-    if ((current_time_task_0 - last_check_time_task_0) >= period_task_0 &&
-        !get_budget_t0) {
-      get_budget_t0 = 1;
-      last_check_time_task_0 = current_time_task_0;
-    } else if (vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_0] &&
-               !get_budget_t0) {
-      get_budget_t0 = 1;
+    TickType_t current_time_task_any = xTaskGetTickCount();
+    if ((current_time_task_any - last_check_time_task_any) >= period_task_any &&
+        !get_budget) {
+      get_budget = 1;
+      last_check_time_task_any = current_time_task_any;
+    } else if (vm_conf[VM_NUM].sgi_suspend_task_budget && !get_budget) {
+      get_budget = 1;
     }
 
-    if (get_budget_t0) {
-      vTaskSuspend(th->task_handler[TASK_0]);
-      BenchInfo info = get_benchmark_info(VM_NUM, TASK_0);
-      HC_regulator_budget_depleted(TASK_0, info.budget_formula);
+    if (get_budget) {
+      // suspend all tasks
+      for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
+        BenchInfo *info = get_benchmark_info(VM_NUM, task_num);
+        vTaskSuspend(info->task_handle);
+      }
 
-      vm_conf[VM_NUM].used_r_budget_period[TASK_0][idx_t0] =
-          HC_regulator_get_current_used_budget(TASK_0, READ);
-      vm_conf[VM_NUM].used_w_budget_period[TASK_0][idx_t0] =
-          HC_regulator_get_current_used_budget(TASK_0, WRITE);
+      HC_regulator_budget_depleted(UNUSED_ARG, get_budget_formula());
 
-      vm_conf[VM_NUM].new_read_budget[TASK_0] =
-          HC_regulator_get_new_budget(TASK_0, READ);
-      vm_conf[VM_NUM].new_write_budget[TASK_0] =
-          HC_regulator_get_new_budget(TASK_0, WRITE);
+      vm_conf[VM_NUM].used_r_budget_period[idx] =
+          HC_regulator_get_current_used_budget(UNUSED_ARG, READ);
+      vm_conf[VM_NUM].used_w_budget_period[idx] =
+          HC_regulator_get_current_used_budget(UNUSED_ARG, WRITE);
 
-      vm_conf[VM_NUM].calc_r_budget_period[TASK_0][idx_t0] =
-          vm_conf[VM_NUM].new_read_budget[TASK_0];
-      vm_conf[VM_NUM].calc_w_budget_period[TASK_0][idx_t0] =
-          vm_conf[VM_NUM].new_write_budget[TASK_0];
+      vm_conf[VM_NUM].new_read_budget =
+          HC_regulator_get_new_budget(UNUSED_ARG, READ);
+      vm_conf[VM_NUM].new_write_budget =
+          HC_regulator_get_new_budget(UNUSED_ARG, WRITE);
 
-      if (idx_t0 < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget[TASK_0] != 0 &&
-          vm_conf[VM_NUM].new_write_budget[TASK_0] != 0)
-        idx_t0++;
+      vm_conf[VM_NUM].calc_r_budget_period[idx] =
+          vm_conf[VM_NUM].new_read_budget;
+      vm_conf[VM_NUM].calc_w_budget_period[idx] =
+          vm_conf[VM_NUM].new_write_budget;
 
-      get_budget_t0 = 0;
-      vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_0] = 0;
-      vTaskResume(th->task_handler[TASK_0]);
-    }
+      if (idx < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget != 0 &&
+          vm_conf[VM_NUM].new_write_budget != 0)
+        idx++;
 
-    // ======================
-    // T1
-    // ======================
-    TickType_t current_time_task_1 = xTaskGetTickCount();
-    if ((current_time_task_1 - last_check_time_task_1) >= period_task_1 &&
-        !get_budget_t1) {
-      get_budget_t1 = 1;
-      last_check_time_task_1 = current_time_task_1;
-    } else if (vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_1] &&
-               !get_budget_t1) {
-      get_budget_t1 = 1;
-    }
+      get_budget = 0;
+      vm_conf[VM_NUM].sgi_suspend_task_budget = 0;
 
-    if (get_budget_t1) {
-      vTaskSuspend(th->task_handler[TASK_1]);
-      BenchInfo info = get_benchmark_info(VM_NUM, TASK_1);
-      HC_regulator_budget_depleted(TASK_1, info.budget_formula);
-
-      vm_conf[VM_NUM].used_r_budget_period[TASK_1][idx_t1] =
-          HC_regulator_get_current_used_budget(TASK_1, READ);
-      vm_conf[VM_NUM].used_w_budget_period[TASK_1][idx_t1] =
-          HC_regulator_get_current_used_budget(TASK_1, WRITE);
-
-      vm_conf[VM_NUM].new_read_budget[TASK_1] =
-          HC_regulator_get_new_budget(TASK_1, READ);
-      vm_conf[VM_NUM].new_write_budget[TASK_1] =
-          HC_regulator_get_new_budget(TASK_1, WRITE);
-
-      vm_conf[VM_NUM].calc_r_budget_period[TASK_1][idx_t1] =
-          vm_conf[VM_NUM].new_read_budget[TASK_1];
-      vm_conf[VM_NUM].calc_w_budget_period[TASK_1][idx_t1] =
-          vm_conf[VM_NUM].new_write_budget[TASK_1];
-
-      if (idx_t1 < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget[TASK_1] != 0 &&
-          vm_conf[VM_NUM].new_write_budget[TASK_1] != 0)
-        idx_t1++;
-
-      get_budget_t1 = 0;
-      vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_1] = 0;
-      vTaskResume(th->task_handler[TASK_1]);
+      // resume all tasks
+      for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
+        BenchInfo *info = get_benchmark_info(VM_NUM, task_num);
+        vTaskResume(info->task_handle);
+      }
     }
 
     // showing results
-    if (idx_t0 >= 10 && task_conf[TASK_0].show_exe_info && !info_showed_t0) {
+    if (idx >= 10 && /* task_conf.show_exe_info && */ !info_showed) {
       // vTaskDelay((3500));
-      // print_end_info_reg(VM_NUM, TASK_0, NULL);
-      vTaskDelay((3500));
-      BenchInfo info = get_benchmark_info(VM_NUM, TASK_0);
-      print_end_bench_info_reg(info);
 
-      idx_t0 = 0;
+      print_vm_info(vm_conf[VM_NUM]);
+      idx = 0;
 
-      formula_t formula = info.budget_formula + 1;
+      formula_t formula = get_budget_formula() + 1;
       if (formula >= FORMULA_COUNT) {
-        info_showed_t0 = 1;
+        info_showed = 1;
       } else {
-        task_conf[TASK_0].show_exe_info = 0;
-        set_benchmark_formula(VM_NUM, TASK_0, formula);
+        // task_conf.show_exe_info = 0;
+        set_budget_formula(formula);
       }
     }
 
-    if (idx_t1 >= 10 && task_conf[TASK_1].show_exe_info && !info_showed_t1) {
-      // vTaskDelay((4000));
-      // print_end_info_reg(VM_NUM, TASK_1, NULL);
-      vTaskDelay((4000));
-      BenchInfo info = get_benchmark_info(VM_NUM, TASK_1);
-      print_end_bench_info_reg(info);
-
-      idx_t1 = 0;
-
-      formula_t formula = info.budget_formula + 1;
-      if (formula >= FORMULA_COUNT) {
-        info_showed_t1 = 1;
-      } else {
-        task_conf[TASK_1].show_exe_info = 0;
-        set_benchmark_formula(VM_NUM, TASK_1, formula);
-      }
-    }
-
-    vTaskDelayUntil(&xLastWakeTime, xFrequency);
-    xLastWakeTime = xTaskGetTickCount();
+    vTaskDelayUntil(&last_wake_time, frequency);
+    last_wake_time = xTaskGetTickCount();
   }
 }
 #endif
@@ -879,81 +851,107 @@ void ctrl_task(void *pvParameters) {
 //                              End CTRL TASK
 //================================================================================
 
-void benchmark(void *pvParameters) {
-  TASK *task_conf = (TASK *)pvParameters;
-  BenchInfo info = get_benchmark_info(VM_NUM, task_conf->task_num);
+// void benchmark(void *pvParameters) {
+//   TASK *task_conf = (TASK *)pvParameters;
+//   BenchInfo info = get_benchmark_info(VM_NUM, task_conf->task_num);
+//
+//   const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
+//   TickType_t xLastWakeTime = xTaskGetTickCount();
+//
+//   while (1) {
+//     for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
+//       TickType_t start = xTaskGetTickCount();
+//       TickType_t deadline = start + task_conf->deadline_ms;
+//
+//       start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//
+// #if VM_3_REGULATION
+//       HC_PMU_config_counter(
+//           task_conf->pmu_counter_a,
+//           vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
+//           vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
+//           task_conf->task_num);
+//       HC_PMU_start_counter(task_conf->pmu_counter_a);
+// #endif
+//       info.function.pointer();
+// #if VM_3_REGULATION
+//       HC_PMU_stop_counter(task_conf->pmu_counter_a);
+// #endif
+//       TickType_t end = xTaskGetTickCount();
+//
+//       // deadline
+//       if (!task_conf->show_exe_info) {
+//         vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
+//             get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+//         vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] =
+//         start; vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe]
+//         =
+//             deadline;
+//         vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
+//
+//         if (end <= deadline)
+//           vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
+//         else {
+//           vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
+//           xLastWakeTime = end;
+//         }
+//       }
+//
+//       vTaskDelayUntil(&xLastWakeTime, xFrequency);
+//     }
+//
+//     xLastWakeTime = xTaskGetTickCount();
+//
+// #if !VM_3_REGULATION
+//     if (!task_conf->show_exe_info) {
+//       // vTaskDelay(3000);
+//       vTaskDelay(1000);
+//       print_end_info_no_reg(VM_NUM, task_conf->task_num,
+//       pcTaskGetName(NULL));
+//     }
+// #endif
+//     task_conf->show_exe_info = 1;
+//   }
+// }
 
-  const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
-  TickType_t xLastWakeTime = xTaskGetTickCount();
+void stress_task(void *pvParameters) {
+  BenchInfo *info = (BenchInfo *)pvParameters;
 
-  while (1) {
-    for (uint8_t bench_exe = 0; bench_exe < BENCHMARK_MAX_EXE; bench_exe++) {
-      TickType_t start = xTaskGetTickCount();
-      TickType_t deadline = start + task_conf->deadline_ms;
+  while (true) {
+    info->function.pointer(); // full core usage
+  }
+}
 
-      start_cycle_counting(task_conf->pmu_cpu_cycles_counter);
+void delayed_task(void *pvParameters) {
+  BenchInfo *info = (BenchInfo *)pvParameters;
 
-#if VM_3_REGULATION
-      HC_PMU_config_counter(
-          task_conf->pmu_counter_a,
-          vm_conf[VM_NUM].new_read_budget[task_conf->task_num],
-          vm_conf[VM_NUM].new_write_budget[task_conf->task_num], UNUSED_ARG,
-          task_conf->task_num);
-      HC_PMU_start_counter(task_conf->pmu_counter_a);
-#endif
-      info.function.pointer();
-#if VM_3_REGULATION
-      HC_PMU_stop_counter(task_conf->pmu_counter_a);
-#endif
-      TickType_t end = xTaskGetTickCount();
+  const TickType_t period = pdMS_TO_TICKS(PERIOD_MS_TASK_CTRL);
+  TickType_t last_wake_time = xTaskGetTickCount();
 
-      // deadline
-      if (!task_conf->show_exe_info) {
-        vm_conf[VM_NUM].cycle_per_period[task_conf->task_num][bench_exe] =
-            get_cycle_counting(task_conf->pmu_cpu_cycles_counter);
-        vm_conf[VM_NUM].task_start_time[task_conf->task_num][bench_exe] = start;
-        vm_conf[VM_NUM].task_deadline[task_conf->task_num][bench_exe] =
-            deadline;
-        vm_conf[VM_NUM].task_end_time[task_conf->task_num][bench_exe] = end;
+  while (true) {
+    info->function.pointer();
 
-        if (end <= deadline)
-          vm_conf[VM_NUM].deadline_met_counter[task_conf->task_num]++;
-        else {
-          vm_conf[VM_NUM].deadline_missed_counter[task_conf->task_num]++;
-          xLastWakeTime = end;
-        }
-      }
-
-      vTaskDelayUntil(&xLastWakeTime, xFrequency);
+    TickType_t now = xTaskGetTickCount();
+    if ((now - last_wake_time) > period) {
+      info->task_overruns += 1;
+      last_wake_time = now;
+    } else {
+      info->task_underruns += 1;
     }
 
-    xLastWakeTime = xTaskGetTickCount();
-
-#if !VM_3_REGULATION
-    if (!task_conf->show_exe_info) {
-      // vTaskDelay(3000);
-      vTaskDelay(1000);
-      print_end_info_no_reg(VM_NUM, task_conf->task_num, pcTaskGetName(NULL));
-    }
-#endif
-    task_conf->show_exe_info = 1;
+    vTaskDelayUntil(&last_wake_time, period);
   }
 }
 
 int main(void) {
   init_bench();
+
 #if VM_3_REGULATION
-  // T0
-  irq_set_handler(GUEST_SUSPEND_TASK_0_BUDGET_ID, t0_suspend_task_budget_sgi);
-  irq_enable(GUEST_SUSPEND_TASK_0_BUDGET_ID);
-  irq_set_prio(GUEST_SUSPEND_TASK_0_BUDGET_ID, 0);
+  irq_set_handler(GUEST_SUSPEND_BUDGET_ID, suspend_task_budget_sgi);
+  irq_enable(GUEST_SUSPEND_BUDGET_ID);
+  irq_set_prio(GUEST_SUSPEND_BUDGET_ID, 0);
 
-  // T1
-  irq_set_handler(GUEST_SUSPEND_TASK_1_BUDGET_ID, t1_suspend_task_budget_sgi);
-  irq_enable(GUEST_SUSPEND_TASK_1_BUDGET_ID);
-  irq_set_prio(GUEST_SUSPEND_TASK_1_BUDGET_ID, 0);
-
-  xTaskCreate(ctrl_task, "vm_ctrl_task", 1400, NULL, TASK_PRIORITY_1, NULL);
+  xTaskCreate(ctrl_task, "vm_ctrl_task", 1400, NULL, CTRL_TASK_PRIORITY, NULL);
 #endif
 
   // **************************** IMPORTANT *********************************
@@ -962,10 +960,21 @@ int main(void) {
   // The control task must only controls the same number of active tasks
   // ************************************************************************
 
-  xTaskCreate(benchmark, NULL, 400, (void *)&task_conf[1],
-              task_conf[1].priority, &th->task_handler[1]);
-  xTaskCreate(benchmark, NULL, 400, (void *)&task_conf[0],
-              task_conf[0].priority, &th->task_handler[0]);
+  for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
+    BenchInfo *info = get_benchmark_info(VM_NUM, task_num);
+    xTaskCreate(delayed_task,        //
+                info->function.name, //
+                TASK_STACK_SIZE,     //
+                info,                // pvParameters to delayed_task
+                OTHER_TASK_PRIORITY, // priority
+                info->task_handle    // where to store the retuned TaskHandler_t
+    );
+  }
+
+  // xTaskCreate(benchmark, NULL, 400, (void *)&task_conf[1],
+  //             task_conf[1].priority, &th->task_handler[1]);
+  // xTaskCreate(benchmark, NULL, 400, (void *)&task_conf[0],
+  //             task_conf[0].priority, &th->task_handler[0]);
 
   // xTaskCreate(bandwdith_benchmark, BANDWIDTH_TASK_NAME, 400,
   // (void*)&task_conf[0], task_conf[0].priority, &th->task_handler[0]);
@@ -986,8 +995,9 @@ int main(void) {
   // (void*)&task_conf[0], task_conf[0].priority, &th->task_handler[0]);
 
   vTaskStartScheduler();
-  while (1)
-    ;
+  while (true) {
+    //
+  }
   destroy_bench();
   return 0;
 }

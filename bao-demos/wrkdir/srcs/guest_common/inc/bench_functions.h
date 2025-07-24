@@ -84,14 +84,14 @@ volatile int my_quick_sort();
 
 ///////
 
-volatile int bandwidth_wrapper();
-volatile int dijkstra_wrapper();
-volatile int disparity_wrapper();
-volatile int fft_wrapper();
-volatile int mser_wrapper();
-volatile int qsort_wrapper();
-volatile int sha_wrapper();
-volatile int sorting_wrapper();
+void bandwidth_wrapper();
+void dijkstra_wrapper();
+void disparity_wrapper();
+void fft_wrapper();
+void mser_wrapper();
+void qsort_wrapper();
+void sha_wrapper();
+void sorting_wrapper();
 
 void init_data();
 void free_data();

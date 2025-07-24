@@ -11,14 +11,14 @@
 bool init = false;
 
 Function benchmark_functions[NUM_BENCHMARKS] = {
-    {bandwidth_wrapper, "bandwidth_wrapper"}, // OK
-    {fft_wrapper, "fft_wrapper"},             // -
-    {sorting_wrapper, "sorting_wrapper"},     // OK
-    {mser_wrapper, "mser_wrapper"},           // -
-    {qsort_wrapper, "qsort_wrapper"},         // -
-    {dijkstra_wrapper, "dijkstra_wrapper"},   // OK
-    {sha_wrapper, "sha_wrapper"},             // OK
-    {disparity_wrapper, "disparity_wrapper"}, // -
+    {0, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
+    {1, fft_wrapper, "fft_wrapper"},             // -
+    {2, sorting_wrapper, "sorting_wrapper"},     // OK
+    {3, mser_wrapper, "mser_wrapper"},           // -
+    {4, qsort_wrapper, "qsort_wrapper"},         // -
+    {5, dijkstra_wrapper, "dijkstra_wrapper"},   // OK
+    {6, sha_wrapper, "sha_wrapper"},             // OK
+    {7, disparity_wrapper, "disparity_wrapper"}, // -
 
     // {empty, "empty"},
     // {sum_array, "sum_array"},
@@ -79,6 +79,7 @@ Function benchmark_functions[NUM_BENCHMARKS] = {
 };
 
 BenchInfo benchmark_info[NUM_BENCHMARKS] = {};
+formula_t budget_formula = 0;
 
 ////////
 
@@ -91,22 +92,24 @@ int get_benchmark_index(int vm_num, int task_num) {
   return index;
 }
 
-void set_benchmark_formula(int vm_num, int task_num, formula_t formula) {
-  int index = get_benchmark_index(vm_num, task_num);
+void set_budget_formula(formula_t formula) {
   if (formula < 0 || formula >= FORMULA_COUNT) {
     printf("Invalid set_benchmark_formula call %d\n", formula);
     return;
   }
-  benchmark_info[index].budget_formula = formula;
+  budget_formula = formula;
 }
 
-BenchInfo get_benchmark_info(int vm_num, int task_num) {
+formula_t get_budget_formula() { return budget_formula; }
+
+BenchInfo *get_benchmark_info(int vm_num, int task_num) {
   if (!init) {
     printf("not initialized\n");
+    return NULL;
   }
   //
   int index = get_benchmark_index(vm_num, task_num);
-  return benchmark_info[index];
+  return &benchmark_info[index];
 }
 
 void init_bench() {
@@ -114,24 +117,26 @@ void init_bench() {
 
   // to flag erros
   for (int i = 0; i < NUM_BENCHMARKS; ++i) {
-    benchmark_info[i].function_index = -1;
+    benchmark_info[i].function.index = -1;
   }
 
   for (int vm_num = 0; vm_num < VM_QNT; ++vm_num) {
-    for (int task_num = 0; task_num < TASK_QNT; ++task_num) {
+    for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
       int index = get_benchmark_index(vm_num, task_num);
 
       benchmark_info[index].function = benchmark_functions[index];
-      benchmark_info[index].vm_num = vm_num;
-      benchmark_info[index].task_num = task_num;
+      benchmark_info[index].task_num = -1;
+      benchmark_info[index].task_handle = NULL;
       benchmark_info[index].budget_formula = 0;
-      benchmark_info[index].function_index = index;
+      benchmark_info[index].periodicity = 0;
+      benchmark_info[index].task_overruns = 0;
+      benchmark_info[index].task_underruns = 0;
     }
   }
 
   // checking
   for (int i = 0; i < NUM_BENCHMARKS; ++i) {
-    if (benchmark_info[i].function_index == -1) {
+    if (benchmark_info[i].function.index == -1) {
       printf("Invalid BenchInfo's initialization");
     }
   }

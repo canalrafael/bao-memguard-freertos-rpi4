@@ -1,10 +1,7 @@
 #include "../inc/dijkstra.h"
 
-
-
-void print_path (NODE *rgnNodes, int chNode)
-{
-	/* if (rgnNodes[chNode].iPrev != NONE) */
+void print_path(NODE *rgnNodes, int chNode) {
+  /* if (rgnNodes[chNode].iPrev != NONE) */
   /*   { */
   /*     print_path(rgnNodes, rgnNodes[chNode].iPrev); */
   /*   } */
@@ -12,12 +9,10 @@ void print_path (NODE *rgnNodes, int chNode)
   /* fflush(stdout); */
 }
 
-
-void enqueue (int iNode, int iDist, int iPrev)
-{
-	/* QITEM *qNew = (QITEM *) malloc(sizeof(QITEM)); */
+void enqueue(int iNode, int iDist, int iPrev) {
+  /* QITEM *qNew = (QITEM *) malloc(sizeof(QITEM)); */
   /* QITEM *qLast = qHead; */
-  
+
   /* if (!qNew)  */
   /*   { */
   /* 		// fprintf(stderr, "Out of memory.\n"); */
@@ -27,7 +22,7 @@ void enqueue (int iNode, int iDist, int iPrev)
   /* qNew->iDist = iDist; */
   /* qNew->iPrev = iPrev; */
   /* qNew->qNext = NULL; */
-  
+
   /* if (!qLast)  */
   /*   { */
   /*     qHead = qNew; */
@@ -41,11 +36,9 @@ void enqueue (int iNode, int iDist, int iPrev)
   //               ASSERT(g_qCount);
 }
 
+void dequeue(int *piNode, int *piDist, int *piPrev) {
+  /* QITEM *qKill = qHead; */
 
-void dequeue (int *piNode, int *piDist, int *piPrev)
-{
-	/* QITEM *qKill = qHead; */
-  
   /* if (qHead) */
   /*   { */
   /*     //                 ASSERT(g_qCount); */
@@ -58,17 +51,9 @@ void dequeue (int *piNode, int *piDist, int *piPrev)
   /*   } */
 }
 
+int qcount(void) { return (g_qCount); }
 
-int qcount (void)
-{
-	return(g_qCount);
-}
-
-int dijkstra(int chStart, int chEnd) 
-{
-  
-
-  
+int dijkstra(int chStart, int chEnd) {
   /* for (ch = 0; ch < NUM_NODES; ch++) */
   /*   { */
   /*     rgnNodes[ch].iDist = NONE; */
@@ -77,15 +62,16 @@ int dijkstra(int chStart, int chEnd)
 
   /* if (chStart == chEnd)  */
   /*   { */
-  /* 		//printf("Shortest path is 0 in cost. Just stay where you are.\n"); */
+  /* 		//printf("Shortest path is 0 in cost. Just stay where you
+   * are.\n"); */
   /*   } */
   /* else */
   /*   { */
   /*     rgnNodes[chStart].iDist = 0; */
   /*     rgnNodes[chStart].iPrev = NONE; */
-      
+
   /*     enqueue (chStart, 0, NONE); */
-      
+
   /*    while (qcount() > 0) */
   /* 	{ */
   /* 	  dequeue (&iNode, &iDist, &iPrev); */
@@ -103,18 +89,18 @@ int dijkstra(int chStart, int chEnd)
   /* 		} */
   /* 	    } */
   /* 	} */
-      
-	 /* printf("Shortest path is %d in cost. ", rgnNodes[chEnd].iDist); */
-      /* printf("Path is: "); */
-      /* print_path(rgnNodes, chEnd); */
-      /* printf("\n"); */
-    //}
+
+  /* printf("Shortest path is %d in cost. ", rgnNodes[chEnd].iDist); */
+  /* printf("Path is: "); */
+  /* print_path(rgnNodes, chEnd); */
+  /* printf("\n"); */
+  //}
 }
 
 /* int main(int argc, char *argv[]) { */
 /* 	int i,j,k; */
 /*   FILE *fp; */
-  
+
 /*   if (argc<2) { */
 /*     fprintf(stderr, "Usage: dijkstra <filename>\n"); */
 /*     fprintf(stderr, "Only supports matrix size is #define'd.\n"); */
@@ -138,6 +124,5 @@ int dijkstra(int chStart, int chEnd)
 /*       dijkstra(i,j); */
 /*   } */
 /*   exit(0); */
-  
 
 /* } */

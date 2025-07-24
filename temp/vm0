@@ -1,0 +1,138 @@
+#define VM_NUM 0
+
+#if VM_0_REGULATION
+// sgi software generated interruption
+static void suspend_task_budget_sgi() {
+  vm_conf[VM_NUM].sgi_suspend_task_budget = 1;
+}
+#endif
+
+#if VM_0_REGULATION
+void ctrl_task(void *pvParameters) {
+  TickType_t const xFrequency = pdMS_TO_TICKS(PERIOD_MS_TASK_CTRL);
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  TickType_t const period_task_other = pdMS_TO_TICKS(PERIOD_MS_TASK_ANY);
+  TickType_t last_check_time = xTaskGetTickCount();
+
+  uint8_t get_budget = 0;
+  uint8_t info_showed = 0;
+  uint8_t idx = 0;
+
+  while (1) {
+    TickType_t current_time = xTaskGetTickCount();
+    if ((current_time - last_check_time) >= period_task_other && !get_budget) {
+      get_budget = 1;
+      last_check_time = current_time;
+    } else if (vm_conf[VM_NUM].sgi_suspend_task_budget && !get_budget) {
+      get_budget = 1;
+    }
+
+    if (get_budget) {
+      // suspend all tasks
+      for (int task_index = 0; task_index < TASK_QUANTITY; ++task_index) {
+        BenchInfo *info = get_benchmark_info(VM_NUM, task_index);
+        vTaskSuspend(info->task_handle);
+      }
+
+      HC_regulator_budget_depleted(UNUSED_ARG, get_budget_formula());
+
+      vm_conf[VM_NUM].used_r_budget_period[idx] =
+          HC_regulator_get_current_used_budget(UNUSED_ARG, READ);
+      vm_conf[VM_NUM].used_w_budget_period[idx] =
+          HC_regulator_get_current_used_budget(UNUSED_ARG, WRITE);
+
+      vm_conf[VM_NUM].new_read_budget =
+          HC_regulator_get_new_budget(UNUSED_ARG, READ);
+      vm_conf[VM_NUM].new_write_budget =
+          HC_regulator_get_new_budget(UNUSED_ARG, WRITE);
+
+      vm_conf[VM_NUM].calc_r_budget_period[idx] =
+          vm_conf[VM_NUM].new_read_budget;
+      vm_conf[VM_NUM].calc_w_budget_period[idx] =
+          vm_conf[VM_NUM].new_write_budget;
+
+      if (idx < PERIOD_QNT) {
+        bool invalid_read = vm_conf[VM_NUM].new_read_budget == 0;
+        if (invalid_read) {
+          printf("new_read_budget == 0, for idx %d\n", idx);
+        }
+
+        bool invalid_write = vm_conf[VM_NUM].new_write_budget == 0;
+        if (invalid_write) {
+          printf("new_write_budget == 0, for idx %d\n", idx);
+        }
+
+        if (!invalid_read && !invalid_write) {
+          idx++;
+        }
+      }
+    }
+
+    get_budget = 0;
+    vm_conf[VM_NUM].sgi_suspend_task_budget = 0;
+
+    // resume all tasks
+    for (int task_index = 0; task_index < TASK_QUANTITY; ++task_index) {
+      BenchInfo *info = get_benchmark_info(VM_NUM, task_index);
+      vTaskResume(info->task_handle);
+    }
+
+    // showing results
+    if (idx >= 10 && /* task_conf[TASK_0].show_exe_info && */ !info_showed) {
+      vTaskDelay((100));
+      print_vm_info(vm_conf[VM_NUM]);
+
+      idx = 0;
+      formula_t formula = get_budget_formula() + 1;
+      if (formula >= FORMULA_COUNT) {
+        info_showed = 1;
+      } else {
+        set_budget_formula(formula);
+      }
+    }
+
+    vTaskDelayUntil(&xLastWakeTime, xFrequency);
+    xLastWakeTime = xTaskGetTickCount();
+  }
+}
+#endif
+
+void delayed_task(void *pvParameters) {
+  BenchInfo *info = (BenchInfo *)pvParameters;
+
+  TickType_t const frequency = pdMS_TO_TICKS(info->periodicity);
+  TickType_t last_wake_time = xTaskGetTickCount();
+
+  while (true) {
+    info->function.pointer();
+
+    // // Add delay or break condition if needed
+    // vTaskDelay(pdMS_TO_TICKS(100));
+
+    TickType_t now = xTaskGetTickCount();
+    if (now - last_wake_time > frequency) {
+      info->task_overruns += 1;
+      last_wake_time = now; // Overrun detected, avoid catch-up
+    } else {
+      info->task_underruns += 1;
+      last_wake_time += frequency;
+    }
+
+    vTaskDelayUntil(&last_wake_time, frequency);
+    // break; // if one-shot
+  }
+
+  vTaskDelete(NULL); // Delete self if loop exits
+}
+
+void stress_task(void *pvParameters) {
+  BenchInfo *info = (BenchInfo *)pvParameters;
+
+  while (true) {
+    info->function.pointer(); // total cpu usage
+  }
+
+  vTaskDelete(NULL); // Delete self if loop exits
+}
+
