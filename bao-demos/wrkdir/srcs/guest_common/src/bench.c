@@ -11,14 +11,22 @@
 bool init = false;
 
 Function benchmark_functions[NUM_BENCHMARKS] = {
-    {0, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
+    {0, fft_wrapper, "fft_wrapper"},             // -
     {1, fft_wrapper, "fft_wrapper"},             // -
-    {2, sorting_wrapper, "sorting_wrapper"},     // OK
-    {3, mser_wrapper, "mser_wrapper"},           // -
-    {4, qsort_wrapper, "qsort_wrapper"},         // -
-    {5, dijkstra_wrapper, "dijkstra_wrapper"},   // OK
-    {6, sha_wrapper, "sha_wrapper"},             // OK
-    {7, disparity_wrapper, "disparity_wrapper"}, // -
+    {2, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
+    {3, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
+    {4, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
+    {5, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
+    {6, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
+    {7, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
+
+    // {1, fft_wrapper, "fft_wrapper"},             // -
+    // {2, sorting_wrapper, "sorting_wrapper"},     // OK
+    // {3, mser_wrapper, "mser_wrapper"},           // -
+    // {4, qsort_wrapper, "qsort_wrapper"},         // -
+    // {5, dijkstra_wrapper, "dijkstra_wrapper"},   // OK
+    // {6, sha_wrapper, "sha_wrapper"},             // OK
+    // {7, disparity_wrapper, "disparity_wrapper"}, // -
 
     // {empty, "empty"},
     // {sum_array, "sum_array"},

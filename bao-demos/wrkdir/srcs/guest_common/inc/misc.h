@@ -16,6 +16,7 @@ void print_end_info_reg(const uint8_t vm_num, const uint8_t task_num,
 
 void print_end_bench_info_reg(BenchInfo info);
 void print_csv_header();
+void print_vm_header();
 
 void print_vm_info(struct VM vm_info);
 

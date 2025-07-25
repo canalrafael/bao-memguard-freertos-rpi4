@@ -101,7 +101,7 @@
 
 // Periodicity of each task
 // #define PERIOD_MS_TASK_0 30
-#define PERIOD_MS_TASK_ANY 100
+#define PERIOD_MS_TASK_ANY 30
 #define PERIOD_MS_TASK_CTRL 10
 
 // The time of the period for each task to run (old value 100)
@@ -141,12 +141,11 @@
 
 struct VM {
   uint8_t pmu_counter_pair_rw;
-
-  const uint32_t r_fac;
-  const uint32_t w_fac;
+  uint32_t r_fac;
+  uint32_t w_fac;
   uint8_t sgi_suspend_task_budget;
-  const uint32_t total_read_allowed_budget;
-  const uint32_t total_write_allowed_budget;
+  uint32_t total_read_allowed_budget;
+  uint32_t total_write_allowed_budget;
   uint32_t new_read_budget;
   uint32_t new_write_budget;
   uint32_t deadline_met_counter;

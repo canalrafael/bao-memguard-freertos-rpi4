@@ -61,6 +61,12 @@
 #include <budget.h>
 #include <data.h>
 
+#if 0
+#define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
+#else
+#define PRINT(fmt, ...) ((void)0)
+#endif
+
 //=================================================================================
 
 QITEM *qHead = NULL;
@@ -85,6 +91,15 @@ TaskHandle_t task_handlers[TASK_QUANTITY];
 static void suspend_task_budget_sgi() {
   vm_conf[VM_NUM].sgi_suspend_task_budget = 1;
 }
+
+void config_counter() {
+  HC_PMU_config_counter(PMU_COUNTER_PAIR_RW, vm_conf[VM_NUM].new_read_budget,
+                        vm_conf[VM_NUM].new_write_budget, UNUSED_ARG,
+                        UNUSED_ARG);
+}
+
+void start_counter() { HC_PMU_start_counter(vm_conf->pmu_counter_pair_rw); }
+void stop_counter() { HC_PMU_stop_counter(vm_conf->pmu_counter_pair_rw); }
 
 // static void t0_suspend_task_budget_sgi() {
 //   vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_0] = 1;
@@ -789,13 +804,18 @@ void ctrl_task(void *pvParameters) {
     if (get_budget) {
       // suspend all tasks
       for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-        printf("suspending task %d\n", task_num);
+        PRINT("suspending task %d\n", task_num);
         vTaskSuspend(task_handlers[task_num]);
       }
 
-      printf("calling HC_regulator_get_new_budget\n");
+      PRINT("calling HC_regulator_get_new_budget\n");
       HC_regulator_budget_depleted(UNUSED_ARG, get_budget_formula());
-      printf("done\n");
+      if (vm_conf[VM_NUM].new_read_budget + vm_conf[VM_NUM].new_write_budget ==
+          0) {
+        PRINT("invalid HC_Regulator_budget_depleted call, returning\n");
+        break;
+      }
+      PRINT("done\n");
 
       vm_conf[VM_NUM].used_r_budget_period[idx] =
           HC_regulator_get_current_used_budget(UNUSED_ARG, READ);
@@ -813,24 +833,25 @@ void ctrl_task(void *pvParameters) {
           vm_conf[VM_NUM].new_write_budget;
 
       if (vm_conf[VM_NUM].new_read_budget == 0) {
-        printf("new read budget == 0\n");
+        // printf("new read budget == 0\n");
       }
       if (vm_conf[VM_NUM].new_write_budget == 0) {
-        printf("new write budget == 0\n");
+        // printf("new write budget == 0\n");
       }
       if (idx < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget != 0 &&
           vm_conf[VM_NUM].new_write_budget != 0) {
 
         idx++;
-        printf("idx++ to %d", idx);
+        // printf("idx++ to %d", idx);
       }
 
       get_budget = 0;
       vm_conf[VM_NUM].sgi_suspend_task_budget = 0;
+      config_counter();
 
       // resume all tasks
       for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-        printf("resuming task %d\n", task_num);
+        // printf("resuming task %d\n", task_num);
         vTaskResume(task_handlers[task_num]);
       }
     }
@@ -839,7 +860,7 @@ void ctrl_task(void *pvParameters) {
     if (idx >= 10 && /* task_conf.show_exe_info && */ !info_showed) {
       // vTaskDelay((3500));
 
-      printf("showing results");
+      // printf("showing results\n");
       print_vm_info(vm_conf[VM_NUM]);
       idx = 0;
 
@@ -855,6 +876,8 @@ void ctrl_task(void *pvParameters) {
     vTaskDelayUntil(&last_wake_time, frequency);
     last_wake_time = xTaskGetTickCount();
   }
+
+  vTaskDelete(NULL);
 }
 #endif
 //================================================================================
@@ -955,19 +978,17 @@ void delayed_task(void *pvParameters) {
 
 int main(void) {
   init_bench();
+  print_vm_header();
 
 #if VM_0_REGULATION
-  HC_PMU_config_counter(PMU_COUNTER_PAIR_RW, vm_conf[VM_NUM].new_read_budget,
-                        vm_conf[VM_NUM].new_write_budget, UNUSED_ARG,
-                        UNUSED_ARG);
-
   irq_set_handler(GUEST_SUSPEND_BUDGET_ID, suspend_task_budget_sgi);
   irq_enable(GUEST_SUSPEND_BUDGET_ID);
   irq_set_prio(GUEST_SUSPEND_BUDGET_ID, 0);
 
+  config_counter();
   xTaskCreate(ctrl_task, "vm_ctrl_task", 1400, NULL, CTRL_TASK_PRIORITY, NULL);
 
-  HC_PMU_start_counter(vm_conf->pmu_counter_pair_rw);
+  start_counter();
 #endif
 
   for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
@@ -989,7 +1010,7 @@ int main(void) {
   }
 
 #ifdef VM_0_REGULATION
-  HC_PMU_stop_counter(vm_conf->pmu_counter_pair_rw);
+  stop_counter();
 #endif
 
   // **************************** IMPORTANT *********************************

@@ -79,44 +79,26 @@ inline static uint32_t get_operation_usage(const uint8_t cpu_id,
                                            const uint8_t task_num,
                                            uint8_t op_type)
 {
-    uint32_t r_reg = 0;
-    uint32_t w_reg = 0;
-
-    uint32_t counter_t_a;
-    uint32_t counter_t_b;
-
-    // if (task_num == 0) {
-
-    counter_t_a = PMU_get_counter_value(0);
-    counter_t_b = PMU_get_counter_value(1);
-
-    r_reg = MAX_INT - counter_t_a;
-    w_reg = MAX_INT - counter_t_b;
-
-    // } else {
-    //     counter_t_a = PMU_get_counter_value(2);
-    //     counter_t_b = PMU_get_counter_value(3);
-    //
-    //     r_reg = MAX_INT - counter_t_a;
-    //     w_reg = MAX_INT - counter_t_b;
-    // }
-
-    // printk("\n===============================================\n");
-    // printk("CPU: %d,  Task: %d", cpu_id, task_num);
-    // printk("Counters: R = %d, W = %d\n", counter_t_a, counter_t_b);
-    // printk("===============================================\n");
-
-    counter_t_a = counter_t_b = 0;
-    return op_type == READ ? (MAX_INT - r_reg) : (MAX_INT - w_reg);
+    uint32_t pmu_counter_0 = PMU_get_counter_value(0);
+    uint32_t pmu_counter_1 = PMU_get_counter_value(1);
+    uint32_t r_reg = (uint32_t)MAX_INT - pmu_counter_0;
+    uint32_t w_reg = (uint32_t)MAX_INT - pmu_counter_1;
+    return op_type == READ ? r_reg : w_reg;
 }
 
 inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
 {
-    printk("[BAO] ewma, cpu %d, task %d\n", cpu_id, task_num_);
+    // printk("[BAO] ewma, cpu %d, task %d\n", cpu_id, task_num_);
+    // PMU_print_all_counters();
     const uint32_t current_read_usage =
         get_operation_usage(cpu_id, UNUSED_ARG, READ);
+
+    if (current_read_usage == 0) {
+        printk("[BAO] current_read_usage == 0\n");
+    }
+
     if (current_read_usage != 0 && current_read_usage < MARGIN) {
-        printk("[BAO] current_read_usage != 0\n");
+        // printk("[BAO] OK current_read_usage != 0\n");
         reg_conf[cpu_id].vm.current_used_read_budget = current_read_usage;
         reg_conf[cpu_id].vm.total_used_read_budget += current_read_usage;
         reg_conf[cpu_id].ewma.previous_predicted_read_budget =
@@ -136,8 +118,13 @@ inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
     // WRITE
     const uint32_t current_write_usage =
         get_operation_usage(cpu_id, UNUSED_ARG, WRITE);
+
+    if (current_write_usage == 0) {
+        printk("[BAO] current_write_usage == 0\n");
+    }
+
     if (current_write_usage != 0 && current_write_usage < MARGIN) {
-        printk("[BAO] current_write_usage != 0\n");
+        // printk("[BAO] OK current_write_usage != 0\n");
         reg_conf[cpu_id].vm.current_used_write_budget = current_write_usage;
         reg_conf[cpu_id].vm.total_used_write_budget += current_write_usage;
         reg_conf[cpu_id].ewma.previous_predicted_write_budget =
@@ -629,11 +616,6 @@ inline static void pic(const uint8_t cpu_id, const uint8_t task_num)
 
 void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
 {
-    printk("[BAO] regulator_budget_depleted, task %d, formula %d\n", task_num,
-           formula);
-
-    // formula_t used = get_current_formula();
-    int ewma_n = 0, sw_n = 0, ambp_n = 0, afc_n = 0, lr_n = 0, pic_n = 0;
     switch (formula) {
         case EWMA_FORMULA:
             ewma(cpu()->id, task_num);
@@ -662,6 +644,7 @@ void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
 
     // if (task_num == 0)
     PMU_reset_counter(0);
+    PMU_reset_counter(1);
     // else
     //     PMU_reset_counter(2);
 

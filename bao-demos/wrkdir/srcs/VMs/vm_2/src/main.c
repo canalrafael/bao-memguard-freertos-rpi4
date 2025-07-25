@@ -957,7 +957,7 @@ int main(void) {
     BenchInfo *info = add_benchmark_info(VM_NUM, task_num, NULL);
     TaskHandle_t handler;
     xTaskCreate(
-        delayed_task,            //
+        stress_task,             //
         info->function.name,     //
         TASK_STACK_SIZE,         //
         info,                    // pvParameters to delayed_task
