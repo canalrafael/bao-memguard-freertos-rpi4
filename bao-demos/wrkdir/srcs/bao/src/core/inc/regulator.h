@@ -146,3 +146,19 @@ uint32_t regulator_get_total_used_budget(const uint8_t task_num,
                                          const uint8_t op_type);
 
 #endif
+
+#if 1
+#define PRINT(fmt, ...) printk("[BAO] " fmt "\n", ##__VA_ARGS__)
+#else
+#define PRINT(fmt, ...) ((void)0)
+#endif
+
+void print_VM(const struct VM *vm, bool before);
+void print_EWMA(const struct EWMA *e, bool before);
+void print_SW(const struct SW *s, bool before);
+void print_AMBP(const struct AMBP *a, bool before);
+void print_AFC(const struct AFC *c, bool before);
+void print_LR(const struct LR *l, bool before);
+void print_PIC(const struct PIC *p, bool before);
+void print_Regulation_config(const struct Regulation_config *rc,
+                             const char *message);

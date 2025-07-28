@@ -1,0 +1,3270 @@
+
+1290240 bytes read in 90 ms (13.7 MiB/s)
+## Starting application at 0x00200000 ...
+BENCH_ARRAY_INDEX 0
+budget_function,total_used_budget_r,total_used_budget_w,used_budget_per_period_read[0],used_budget_per_period_read[1],used_budget_per_period_read[2],used_budget_per_period_read[3],used_budget_per_period_read[4],used_budget_per_period_read[5],used_budget_per_period_read[6],used_budget_per_period_read[7],used_budget_per_period_read[8],used_budget_per_period_read[9],used_budget_per_period_write[0],used_budget_per_period_write[1],used_budget_per_period_write[2],used_budget_per_period_write[3],used_budget_per_period_write[4],used_budget_per_period_write[5],used_budget_per_period_write[6],used_budget_per_period_write[7],used_budget_per_period_write[8],used_budget_per_period_write[9],total_used_budget_rw_per_index[0],total_used_budget_rw_per_index[1],total_used_budget_rw_per_index[2],total_used_budget_rw_per_index[3],total_used_budget_rw_per_index[4],total_used_budget_rw_per_index[5],total_used_budget_rw_per_index[6],total_used_budget_rw_per_index[7],total_used_budget_rw_per_index[8],total_used_budget_rw_per_index[9],
+[BAO] regulator_budget_depleted	 formula 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 250000
+[BAO]   defined_pmu_write_val           = 250000
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 0
+[BAO]   new_write_budget                = 0
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 0
+[BAO]   previous_predicted_write_budget = 0
+[BAO]   new_read_budget                 = 0
+[BAO]   new_write_budget                = 0
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 0
+[BAO]   previous_predicted_write_budget = 0
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 250000
+[BAO]   defined_pmu_write_val           = 250000
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 0
+[BAO]   previous_predicted_write_budget = 0
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 49800
+[BAO]   previous_predicted_write_budget = 49714
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+EWMA,697202,695997,249002,49800,49800,49800,49800,49800,49800,49800,49800,49800,248571,49714,49714,49714,49714,49714,49714,49714,49714,49714,497573,99514,99514,99514,99514,99514,99514,99514,99514,99514,
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] SW: BEFORE
+[BAO]   current_read_array_size = 0
+[BAO]   current_write_array_size = 0
+[BAO]   read_index              = 0
+[BAO]   write_index             = 0
+[BAO] SW: AFTER
+[BAO]   current_read_array_size = 1
+[BAO]     read_usage[u]       = 0
+[BAO]   current_write_array_size = 1
+[BAO]     write_usage[u]      = 0
+[BAO]   read_index              = 1
+[BAO]   write_index             = 1
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] SW: BEFORE
+[BAO]   current_read_array_size = 1
+[BAO]     read_usage[u]       = 0
+[BAO]   current_write_array_size = 1
+[BAO]     write_usage[u]      = 0
+[BAO]   read_index              = 1
+[BAO]   write_index             = 1
+[BAO] SW: AFTER
+[BAO]   current_read_array_size = 2
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]   current_write_array_size = 2
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]   read_index              = 2
+[BAO]   write_index             = 2
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] SW: BEFORE
+[BAO]   current_read_array_size = 2
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]   current_write_array_size = 2
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]   read_index              = 2
+[BAO]   write_index             = 2
+[BAO] SW: AFTER
+[BAO]   current_read_array_size = 3
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]   current_write_array_size = 3
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]   read_index              = 3
+[BAO]   write_index             = 3
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] SW: BEFORE
+[BAO]   current_read_array_size = 3
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]   current_write_array_size = 3
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]   read_index              = 3
+[BAO]   write_index             = 3
+[BAO] SW: AFTER
+[BAO]   current_read_array_size = 4
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]   current_write_array_size = 4
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]   read_index              = 4
+[BAO]   write_index             = 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] SW: BEFORE
+[BAO]   current_read_array_size = 4
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]   current_write_array_size = 4
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]   read_index              = 4
+[BAO]   write_index             = 4
+[BAO] SW: AFTER
+[BAO]   current_read_array_size = 5
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]     read_usage[u]       = 4
+[BAO]   current_write_array_size = 5
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]     write_usage[u]      = 4
+[BAO]   read_index              = 5
+[BAO]   write_index             = 5
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] SW: BEFORE
+[BAO]   current_read_array_size = 5
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]     read_usage[u]       = 4
+[BAO]   current_write_array_size = 5
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]     write_usage[u]      = 4
+[BAO]   read_index              = 5
+[BAO]   write_index             = 5
+[BAO] SW: AFTER
+[BAO]   current_read_array_size = 6
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]     read_usage[u]       = 4
+[BAO]     read_usage[u]       = 5
+[BAO]   current_write_array_size = 6
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]     write_usage[u]      = 4
+[BAO]     write_usage[u]      = 5
+[BAO]   read_index              = 6
+[BAO]   write_index             = 6
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] SW: BEFORE
+[BAO]   current_read_array_size = 6
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]     read_usage[u]       = 4
+[BAO]     read_usage[u]       = 5
+[BAO]   current_write_array_size = 6
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]     write_usage[u]      = 4
+[BAO]     write_usage[u]      = 5
+[BAO]   read_index              = 6
+[BAO]   write_index             = 6
+[BAO] SW: AFTER
+[BAO]   current_read_array_size = 7
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]     read_usage[u]       = 4
+[BAO]     read_usage[u]       = 5
+[BAO]     read_usage[u]       = 6
+[BAO]   current_write_array_size = 7
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]     write_usage[u]      = 4
+[BAO]     write_usage[u]      = 5
+[BAO]     write_usage[u]      = 6
+[BAO]   read_index              = 7
+[BAO]   write_index             = 7
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] SW: BEFORE
+[BAO]   current_read_array_size = 7
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]     read_usage[u]       = 4
+[BAO]     read_usage[u]       = 5
+[BAO]     read_usage[u]       = 6
+[BAO]   current_write_array_size = 7
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]     write_usage[u]      = 4
+[BAO]     write_usage[u]      = 5
+[BAO]     write_usage[u]      = 6
+[BAO]   read_index              = 7
+[BAO]   write_index             = 7
+[BAO] SW: AFTER
+[BAO]   current_read_array_size = 8
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]     read_usage[u]       = 4
+[BAO]     read_usage[u]       = 5
+[BAO]     read_usage[u]       = 6
+[BAO]     read_usage[u]       = 7
+[BAO]   current_write_array_size = 8
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]     write_usage[u]      = 4
+[BAO]     write_usage[u]      = 5
+[BAO]     write_usage[u]      = 6
+[BAO]     write_usage[u]      = 7
+[BAO]   read_index              = 8
+[BAO]   write_index             = 8
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] SW: BEFORE
+[BAO]   current_read_array_size = 8
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]     read_usage[u]       = 4
+[BAO]     read_usage[u]       = 5
+[BAO]     read_usage[u]       = 6
+[BAO]     read_usage[u]       = 7
+[BAO]   current_write_array_size = 8
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]     write_usage[u]      = 4
+[BAO]     write_usage[u]      = 5
+[BAO]     write_usage[u]      = 6
+[BAO]     write_usage[u]      = 7
+[BAO]   read_index              = 8
+[BAO]   write_index             = 8
+[BAO] SW: AFTER
+[BAO]   current_read_array_size = 9
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]     read_usage[u]       = 4
+[BAO]     read_usage[u]       = 5
+[BAO]     read_usage[u]       = 6
+[BAO]     read_usage[u]       = 7
+[BAO]     read_usage[u]       = 8
+[BAO]   current_write_array_size = 9
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]     write_usage[u]      = 4
+[BAO]     write_usage[u]      = 5
+[BAO]     write_usage[u]      = 6
+[BAO]     write_usage[u]      = 7
+[BAO]     write_usage[u]      = 8
+[BAO]   read_index              = 9
+[BAO]   write_index             = 9
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] SW: BEFORE
+[BAO]   current_read_array_size = 9
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]     read_usage[u]       = 4
+[BAO]     read_usage[u]       = 5
+[BAO]     read_usage[u]       = 6
+[BAO]     read_usage[u]       = 7
+[BAO]     read_usage[u]       = 8
+[BAO]   current_write_array_size = 9
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]     write_usage[u]      = 4
+[BAO]     write_usage[u]      = 5
+[BAO]     write_usage[u]      = 6
+[BAO]     write_usage[u]      = 7
+[BAO]     write_usage[u]      = 8
+[BAO]   read_index              = 9
+[BAO]   write_index             = 9
+[BAO] SW: AFTER
+[BAO]   current_read_array_size = 10
+[BAO]     read_usage[u]       = 0
+[BAO]     read_usage[u]       = 1
+[BAO]     read_usage[u]       = 2
+[BAO]     read_usage[u]       = 3
+[BAO]     read_usage[u]       = 4
+[BAO]     read_usage[u]       = 5
+[BAO]     read_usage[u]       = 6
+[BAO]     read_usage[u]       = 7
+[BAO]     read_usage[u]       = 8
+[BAO]     read_usage[u]       = 9
+[BAO]   current_write_array_size = 10
+[BAO]     write_usage[u]      = 0
+[BAO]     write_usage[u]      = 1
+[BAO]     write_usage[u]      = 2
+[BAO]     write_usage[u]      = 3
+[BAO]     write_usage[u]      = 4
+[BAO]     write_usage[u]      = 5
+[BAO]     write_usage[u]      = 6
+[BAO]     write_usage[u]      = 7
+[BAO]     write_usage[u]      = 8
+[BAO]     write_usage[u]      = 9
+[BAO]   read_index              = 0
+[BAO]   write_index             = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+SW,498000,497140,49800,49800,49800,49800,49800,49800,49800,49800,49800,49800,49714,49714,49714,49714,49714,49714,49714,49714,49714,49714,99514,99514,99514,99514,99514,99514,99514,99514,99514,99514,
+[BAO] regulator_budget_depleted	 formula 2
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 49800
+[BAO]   new_write_budget                = 49714
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AMBP: BEFORE
+[BAO]   budget_read_limit                  = 100
+[BAO]   budget_write_limit                 = 100
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 0
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] AMBP: AFTER
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 10022
+[BAO]   qnt_budget_read_limit_reached      = 1
+[BAO]   qnt_budget_write_limit_reached     = 1
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 49800
+[BAO]   defined_pmu_write_val           = 49714
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 10022
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 2
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 10022
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 10022
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AMBP: BEFORE
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 10022
+[BAO]   qnt_budget_read_limit_reached      = 1
+[BAO]   qnt_budget_write_limit_reached     = 1
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] AMBP: AFTER
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 10022
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 0
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 10022
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 1002200
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 2
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 1002200
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 1002200
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AMBP: BEFORE
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 10022
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 0
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] AMBP: AFTER
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 208457
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 1
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 1002200
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 208457
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 2
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 208457
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 208457
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AMBP: BEFORE
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 208457
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 1
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] AMBP: AFTER
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 208457
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 0
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 208457
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 20845700
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 2
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 20845700
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 20845700
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AMBP: BEFORE
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 208457
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 0
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] AMBP: AFTER
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 4335905
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 1
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 20845700
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 4335905
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 2
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 4335905
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 4335905
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AMBP: BEFORE
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 4335905
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 1
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] AMBP: AFTER
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 4335905
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 0
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 4335905
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 4093770
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 2
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 4093770
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 4093770
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AMBP: BEFORE
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 4335905
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 0
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] AMBP: AFTER
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 4335905
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 0
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 4093770
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 2883095
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 2
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 2883095
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 2883095
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AMBP: BEFORE
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 4335905
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 0
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] AMBP: AFTER
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 4335905
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 0
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 2883095
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 426326450
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 2
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 426326450
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 426326450
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AMBP: BEFORE
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 4335905
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 0
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] AMBP: AFTER
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 88734014
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 1
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 426326450
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 88734014
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 2
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 88734014
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 88734014
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AMBP: BEFORE
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 88734014
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 1
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] AMBP: AFTER
+[BAO]   budget_read_limit                  = 10040
+[BAO]   budget_write_limit                 = 88734014
+[BAO]   qnt_budget_read_limit_reached      = 0
+[BAO]   qnt_budget_write_limit_reached     = 0
+[BAO]   penalty_by_reaching_budget_read_limit  = 0
+[BAO]   penalty_by_reaching_budget_write_limit = 0
+[BAO]   alpha                              = 2
+[BAO]   scaling_factor                     = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 88734014
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 283466808
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+AMBP,140160,548489327,49800,10040,10040,10040,10040,10040,10040,10040,10040,10040,49714,10022,1002200,208457,20845700,4335905,4093770,2883095,426326450,88734014,99514,20062,1012240,218497,20855740,4345945,4103810,2893135,426336490,88744054,
+[BAO] regulator_budget_depleted	 formula 3
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 283466808
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 10040
+[BAO]   new_write_budget                = 283466808
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AFC: BEFORE
+[BAO]   previous_read_budget   = 0
+[BAO]   previous_write_budget  = 0
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] AFC: AFTER
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 10040
+[BAO]   defined_pmu_write_val           = 283466808
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 3
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AFC: BEFORE
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] AFC: AFTER
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 3
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AFC: BEFORE
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] AFC: AFTER
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 3
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AFC: BEFORE
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] AFC: AFTER
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 3
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AFC: BEFORE
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] AFC: AFTER
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 3
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AFC: BEFORE
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] AFC: AFTER
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 3
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AFC: BEFORE
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] AFC: AFTER
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 3
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AFC: BEFORE
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] AFC: AFTER
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 3
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AFC: BEFORE
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] AFC: AFTER
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 3
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] AFC: BEFORE
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] AFC: AFTER
+[BAO]   previous_read_budget   = 2008
+[BAO]   previous_write_budget  = 56693361
+[BAO]   proportional_gain      = 2
+[BAO]   scaling_factor         = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+AFC,28112,793707057,10040,2008,2008,2008,2008,2008,2008,2008,2008,2008,283466808,56693361,56693361,56693361,56693361,56693361,56693361,56693361,56693361,56693361,283476848,56695369,56695369,56695369,56695369,56695369,56695369,56695369,56695369,56695369,
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 0
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 1
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 1
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 2
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 2
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 3
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 3
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 4
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 4
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 5
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 5
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 6
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 6
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 7
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 7
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 8
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 8
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+LR,20080,566933610,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,56693361,56693361,56693361,56693361,56693361,56693361,56693361,56693361,56693361,56693361,56695369,56695369,56695369,56695369,56695369,56695369,56695369,56695369,56695369,56695369,
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] regulator_budget_depleted	 formula 4
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO]   total_used_write_budget         = u
+[BAO]   total_calculated_new_read_budget = u
+[BAO]   total_calculated_new_write_budget= u
+[BAO] LR: BEFORE
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] LR: AFTER
+[BAO]   current_read_array_size  = 9
+[BAO]     t_vector[u]    = 0
+[BAO]     read_usage[u]  = 0
+[BAO]     t_vector[u]    = 1
+[BAO]     read_usage[u]  = 1
+[BAO]     t_vector[u]    = 2
+[BAO]     read_usage[u]  = 2
+[BAO]     t_vector[u]    = 3
+[BAO]     read_usage[u]  = 3
+[BAO]     t_vector[u]    = 4
+[BAO]     read_usage[u]  = 4
+[BAO]     t_vector[u]    = 5
+[BAO]     read_usage[u]  = 5
+[BAO]     t_vector[u]    = 6
+[BAO]     read_usage[u]  = 6
+[BAO]     t_vector[u]    = 7
+[BAO]     read_usage[u]  = 7
+[BAO]     t_vector[u]    = 8
+[BAO]     read_usage[u]  = 8
+[BAO]   current_write_array_size = 0
+[BAO]   total_read_exec          = 0
+[BAO]   total_write_exec         = 0
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 2008
+[BAO]   defined_pmu_write_val           = 56693361
+[BAO]   current_used_read_budget        = u
+[BAO]   current_used_write_budget       = u
+[BAO]   new_read_budget                 = 2008
+[BAO]   new_write_budget                = 56693361
+[BAO]   total_used_read_budget          = u
+[BAO] 

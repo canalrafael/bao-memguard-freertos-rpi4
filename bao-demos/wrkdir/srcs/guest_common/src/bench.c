@@ -87,7 +87,7 @@ Function benchmark_functions[NUM_BENCHMARKS] = {
 };
 
 BenchInfo benchmark_info[NUM_BENCHMARKS];
-formula_t budget_formula = 0;
+formula_t budget_formula = PIC_FORMULA;
 
 ////////
 
@@ -130,7 +130,7 @@ BenchInfo *add_benchmark_info(int vm_num, int task_num, void *handler) {
   info.function = benchmark_functions[index];
   info.task_num = task_num;
   // info.task_handle = handler;
-  info.budget_formula = 0;
+  // info.budget_formula = AFC_FORMULA;
   // info.periodicity;
   info.task_overruns = 0;
   info.task_underruns = 0;
@@ -151,7 +151,7 @@ void init_bench() {
       benchmark_info[index].function.pointer = (void *)MAX_INT;
       benchmark_info[index].task_num = -1;
       // benchmark_info[index].task_handle = (void *)MAX_INT;
-      benchmark_info[index].budget_formula = -1;
+      // benchmark_info[index].budget_formula = -1;
       // benchmark_info[index].periodicity = 0;
       benchmark_info[index].task_overruns = -1;
       benchmark_info[index].task_underruns = -1;

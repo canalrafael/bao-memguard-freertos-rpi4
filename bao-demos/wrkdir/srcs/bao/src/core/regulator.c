@@ -5,6 +5,124 @@
 
 struct Regulation_config reg_conf[VM_QNT];
 
+void print_VM(const struct VM *vm, bool before)
+{
+    PRINT("VM: %s", (before ? "BEFORE" : "AFTER"));
+    PRINT("  depleated_op_type               = %u", vm->depleated_op_type);
+    PRINT("  defined_pmu_read_val            = %u", vm->defined_pmu_read_val);
+    PRINT("  defined_pmu_write_val           = %u", vm->defined_pmu_write_val);
+    PRINT("  current_used_read_budget        = %llu",
+          vm->current_used_read_budget);
+    PRINT("  current_used_write_budget       = %llu",
+          vm->current_used_write_budget);
+    PRINT("  new_read_budget                 = %u", vm->new_read_budget);
+    PRINT("  new_write_budget                = %u", vm->new_write_budget);
+    PRINT("  total_used_read_budget          = %llu",
+          vm->total_used_read_budget);
+    PRINT("  total_used_write_budget         = %llu",
+          vm->total_used_write_budget);
+    PRINT("  total_calculated_new_read_budget = %llu",
+          vm->total_calculated_new_read_budget);
+    PRINT("  total_calculated_new_write_budget= %llu",
+          vm->total_calculated_new_write_budget);
+}
+
+void print_EWMA(const struct EWMA *e, bool before)
+{
+    PRINT("EWMA: %s", (before ? "BEFORE" : "AFTER"));
+    PRINT("  previous_predicted_read_budget  = %u",
+          e->previous_predicted_read_budget);
+    PRINT("  previous_predicted_write_budget = %u",
+          e->previous_predicted_write_budget);
+    PRINT("  new_read_budget                 = %u", e->new_read_budget);
+    PRINT("  new_write_budget                = %u", e->new_write_budget);
+    PRINT("  alpha                           = %u", e->alpha);
+    PRINT("  scaling_factor                  = %u", e->scaling_factor);
+}
+
+void print_SW(const struct SW *s, bool before)
+{
+    PRINT("SW: %s", (before ? "BEFORE" : "AFTER"));
+    size_t i;
+    PRINT("  current_read_array_size = %u", s->current_read_array_size);
+    for (i = 0; i < s->current_read_array_size && i < SW_MAX_ARRAY_SIZE; ++i) {
+        PRINT("    read_usage[%zu]       = %u", i, s->read_usage[i]);
+    }
+    PRINT("  current_write_array_size = %u", s->current_write_array_size);
+    for (i = 0; i < s->current_write_array_size && i < SW_MAX_ARRAY_SIZE; ++i) {
+        PRINT("    write_usage[%zu]      = %u", i, s->write_usage[i]);
+    }
+    PRINT("  read_index              = %u", s->read_index);
+    PRINT("  write_index             = %u", s->write_index);
+}
+
+void print_AMBP(const struct AMBP *a, bool before)
+{
+    PRINT("AMBP: %s", (before ? "BEFORE" : "AFTER"));
+    PRINT("  budget_read_limit                  = %u", a->budget_read_limit);
+    PRINT("  budget_write_limit                 = %u", a->budget_write_limit);
+    PRINT("  qnt_budget_read_limit_reached      = %u",
+          a->qnt_budget_read_limit_reached);
+    PRINT("  qnt_budget_write_limit_reached     = %u",
+          a->qnt_budget_write_limit_reached);
+    PRINT("  penalty_by_reaching_budget_read_limit  = %u",
+          a->penalty_by_reaching_budget_read_limit);
+    PRINT("  penalty_by_reaching_budget_write_limit = %u",
+          a->penalty_by_reaching_budget_write_limit);
+    PRINT("  alpha                              = %u", a->alpha);
+    PRINT("  scaling_factor                     = %u", a->scaling_factor);
+}
+
+void print_AFC(const struct AFC *c, bool before)
+{
+    PRINT("AFC: %s", (before ? "BEFORE" : "AFTER"));
+    PRINT("  previous_read_budget   = %u", c->previous_read_budget);
+    PRINT("  previous_write_budget  = %u", c->previous_write_budget);
+    PRINT("  proportional_gain      = %u", c->proportional_gain);
+    PRINT("  scaling_factor         = %u", c->scaling_factor);
+}
+
+void print_LR(const struct LR *l, bool before)
+{
+    PRINT("LR: %s", (before ? "BEFORE" : "AFTER"));
+    size_t i;
+    PRINT("  current_read_array_size  = %u", l->current_read_array_size);
+    for (i = 0; i < l->current_read_array_size && i < LR_MAX_QNT_ACCESS; ++i) {
+        PRINT("    t_vector[%zu]    = %u", i, l->t_vector[i]);
+        PRINT("    read_usage[%zu]  = %u", i, l->read_usage[i]);
+    }
+    PRINT("  current_write_array_size = %u", l->current_write_array_size);
+    for (i = 0; i < l->current_write_array_size && i < LR_MAX_QNT_ACCESS; ++i) {
+        PRINT("    write_usage[%zu] = %u", i, l->write_usage[i]);
+    }
+    PRINT("  total_read_exec          = %u", l->total_read_exec);
+    PRINT("  total_write_exec         = %u", l->total_write_exec);
+}
+
+void print_PIC(const struct PIC *p, bool before)
+{
+    PRINT("PIC: %s", (before ? "BEFORE" : "AFTER"));
+    PRINT("  accumulated_read_error  = %u", p->accumulated_read_error);
+    PRINT("  accumulated_write_error = %u", p->accumulated_write_error);
+    PRINT("  kp                      = %u", p->kp);
+    PRINT("  ki                      = %u", p->ki);
+    PRINT("  scaling_factor          = %u", p->scaling_factor);
+}
+
+void print_Regulation_config(const struct Regulation_config *rc,
+                             const char *message)
+{
+    PRINT("=== RegulationConfig ===", message);
+    // print_VM(&rc->vm);
+    // print_EWMA(&rc->ewma);
+    // print_SW(&rc->sw);
+    // print_AMBP(&rc->ambp);
+    // print_AFC(&rc->afc);
+    // print_LR(&rc->lr);
+    // print_PIC(&rc->pic);
+    PRINT("========================");
+}
+
 void init_regulation_config()
 {
     for (uint8_t vm_num = 0; vm_num < VM_QNT; vm_num++) {
@@ -88,8 +206,11 @@ inline static uint32_t get_operation_usage(const uint8_t cpu_id,
 
 inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
 {
+    print_EWMA(&reg_conf[cpu()->id].ewma, true);
+
     // printk("[BAO] ewma, cpu %d, task %d\n", cpu_id, task_num_);
     // PMU_print_all_counters();
+
     const uint32_t current_read_usage =
         get_operation_usage(cpu_id, UNUSED_ARG, READ);
 
@@ -140,10 +261,14 @@ inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
         reg_conf[cpu_id].vm.new_write_budget =
             reg_conf[cpu_id].ewma.new_write_budget;
     }
+
+    print_EWMA(&reg_conf[cpu()->id].ewma, false);
 }
 
 inline static void sw(const uint8_t cpu_id, const uint8_t task_num_)
 {
+    print_SW(&reg_conf[cpu()->id].sw, true);
+
     // READ
     const uint32_t current_read_usage =
         get_operation_usage(cpu_id, UNUSED_ARG, READ);
@@ -437,10 +562,14 @@ inline static void sw(const uint8_t cpu_id, const uint8_t task_num_)
     /* 	reg_conf[cpu_id].vm.new_write_budget = lowest_avg; */
     /* 	reg_conf[cpu_id].sw.current_write_array_size = 0; */
     /* } */
+
+    print_SW(&reg_conf[cpu()->id].sw, false);
 }
 
 inline static void ambp(const uint8_t cpu_id, const uint8_t task_num)
 {
+    print_AMBP(&reg_conf[cpu()->id].ambp, true);
+
     // READ
     const uint32_t current_read_usage =
         get_operation_usage(cpu_id, task_num, READ);
@@ -509,10 +638,14 @@ inline static void ambp(const uint8_t cpu_id, const uint8_t task_num)
                 reg_conf[cpu_id].ambp.scaling_factor;
         }
     }
+
+    print_AMBP(&reg_conf[cpu()->id].ambp, false);
 }
 
 inline static void afc(const uint8_t cpu_id, const uint8_t task_num)
 {
+    print_AFC(&reg_conf[cpu()->id].afc, true);
+
     // READ
     const uint32_t current_read_usage =
         get_operation_usage(cpu_id, task_num, READ);
@@ -549,10 +682,14 @@ inline static void afc(const uint8_t cpu_id, const uint8_t task_num)
         reg_conf[cpu_id].afc.previous_write_budget = new_write_budget;
         reg_conf[cpu_id].vm.new_write_budget = new_write_budget;
     }
+
+    print_AFC(&reg_conf[cpu()->id].afc, false);
 }
 
 inline static void lr(const uint8_t cpu_id, const uint8_t task_num)
 {
+    print_LR(&reg_conf[cpu()->id].lr, true);
+
     uint32_t r = 0, w = 0;
 
     // READ
@@ -574,15 +711,21 @@ inline static void lr(const uint8_t cpu_id, const uint8_t task_num)
         for (uint8_t i = 0; i < LR_MAX_QNT_ACCESS; i++)
             reg_conf[cpu_id].lr.t_vector[i] += 1;
     }
+
+    print_LR(&reg_conf[cpu()->id].lr, false);
 }
 
 inline static void pic(const uint8_t cpu_id, const uint8_t task_num)
 {
+    print_PIC(&reg_conf[cpu()->id].pic, true);
+
     // READ
     const uint32_t current_read_usage =
         get_operation_usage(cpu_id, task_num, READ);
     if (current_read_usage != 0 && current_read_usage < MARGIN) {
         const uint32_t read_error = MAX_INT - current_read_usage;
+        PRINT("(READ ERROR) %d", read_error);
+        PRINT("(CURRENT READ USAGE) %d", current_read_usage);
         reg_conf[cpu_id].pic.accumulated_read_error += read_error;
         reg_conf[cpu_id].vm.current_used_read_budget = current_read_usage;
         reg_conf[cpu_id].vm.total_used_read_budget += current_read_usage;
@@ -612,26 +755,32 @@ inline static void pic(const uint8_t cpu_id, const uint8_t task_num)
 
         reg_conf[cpu_id].vm.new_write_budget = write_error + write_adjust;
     }
+
+    print_PIC(&reg_conf[cpu()->id].pic, false);
 }
 
 void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
 {
+    // print_Regulation_config(&reg_conf[cpu()->id], "BEFORE");
+
+    PRINT("regulator_budget_depleted\t formula %d", formula);
+    print_VM(&reg_conf[cpu()->id].vm, true);
     switch (formula) {
-        case EWMA_FORMULA:
-            ewma(cpu()->id, task_num);
-            break;
-        case SW_FORMULA:
-            sw(cpu()->id, task_num);
-            break;
-        case AMBP_FORMULA:
-            ambp(cpu()->id, task_num);
-            break;
-        case AFC_FORMULA:
-            afc(cpu()->id, task_num);
-            break;
-        case LR_FORMULA:
-            lr(cpu()->id, task_num);
-            break;
+        // case EWMA_FORMULA:
+        //     ewma(cpu()->id, task_num);
+        //     break;
+        // case SW_FORMULA:
+        //     sw(cpu()->id, task_num);
+        //     break;
+        // case AMBP_FORMULA:
+        //     ambp(cpu()->id, task_num);
+        //     break;
+        // case AFC_FORMULA:
+        //     afc(cpu()->id, task_num);
+        //     break;
+        // case LR_FORMULA:
+        //     lr(cpu()->id, task_num);
+        //     break;
         case PIC_FORMULA:
             pic(cpu()->id, task_num);
             break;
@@ -639,6 +788,8 @@ void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
             printk("something has gone very wrong!\n");
             break;
     }
+    print_VM(&reg_conf[cpu()->id].vm, false);
+    // print_Regulation_config(&reg_conf[cpu()->id], "AFTER");
 
     reg_conf[cpu()->id].vm.depleated_op_type = UNKNOWN_VALUE;
 
