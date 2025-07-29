@@ -6,19 +6,15 @@
 
 // Global variables for all benchmark functions
 #define NUM_BENCHMARKS 8
-#define MAX_TASKS 8
+#define MAX_TASKS 4
 
 bool init = false;
 
 Function benchmark_functions[NUM_BENCHMARKS] = {
     {0, fft_wrapper, "fft_wrapper"},             // -
-    {1, fft_wrapper, "fft_wrapper"},             // -
+    {1, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
     {2, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
     {3, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
-    {4, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
-    {5, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
-    {6, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
-    {7, bandwidth_wrapper, "bandwidth_wrapper"}, // OK
 
     // {1, fft_wrapper, "fft_wrapper"},             // -
     // {2, sorting_wrapper, "sorting_wrapper"},     // OK
@@ -92,7 +88,8 @@ formula_t budget_formula = EWMA_FORMULA;
 ////////
 
 int get_benchmark_index(int vm_num, int task_num) {
-  int index = (vm_num * 2 + task_num) + (MAX_TASKS * BENCH_ARRAY_INDEX);
+  int index =
+      (vm_num * TASK_QUANTITY + task_num) + (MAX_TASKS * BENCH_ARRAY_INDEX);
   if (index < 0 || index >= NUM_BENCHMARKS) {
     printf("Invalid get_benchmark_index call %d\n", index);
     return 0;
@@ -124,14 +121,14 @@ BenchInfo *get_benchmark_info(int vm_num, int task_num) {
   return benchInfo;
 }
 
-BenchInfo *add_benchmark_info(int vm_num, int task_num, void *handler) {
+BenchInfo *add_benchmark_info(int vm_num, int task_num, int periodicity) {
   BenchInfo info;
   int index = get_benchmark_index(vm_num, task_num);
   info.function = benchmark_functions[index];
   info.task_num = task_num;
   // info.task_handle = handler;
   // info.budget_formula = AFC_FORMULA;
-  // info.periodicity;
+  info.periodicity = periodicity;
   info.task_overruns = 0;
   info.task_underruns = 0;
 
@@ -152,7 +149,7 @@ void init_bench() {
       benchmark_info[index].task_num = -1;
       // benchmark_info[index].task_handle = (void *)MAX_INT;
       // benchmark_info[index].budget_formula = -1;
-      // benchmark_info[index].periodicity = 0;
+      benchmark_info[index].periodicity = 0;
       benchmark_info[index].task_overruns = -1;
       benchmark_info[index].task_underruns = -1;
     }

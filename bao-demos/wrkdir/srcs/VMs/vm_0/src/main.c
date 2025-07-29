@@ -966,7 +966,7 @@ void stress_task(void *pvParameters) {
 void delayed_task(void *pvParameters) {
   BenchInfo *info = (BenchInfo *)pvParameters;
 
-  const TickType_t period = pdMS_TO_TICKS(PERIOD_MS_TASK_CTRL);
+  const TickType_t period = pdMS_TO_TICKS(info->periodicity);
   TickType_t last_wake_time = xTaskGetTickCount();
 
   while (true) {
@@ -999,7 +999,7 @@ int main(void) {
 #endif
 
   for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-    BenchInfo *info = add_benchmark_info(VM_NUM, task_num, NULL);
+    BenchInfo *info = add_benchmark_info(VM_NUM, task_num, PERIOD_MS_TASK_ANY);
     TaskHandle_t handler;
     xTaskCreate(
         delayed_task,            //

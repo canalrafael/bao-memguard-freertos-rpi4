@@ -17,12 +17,12 @@ typedef struct {
   int task_num;
   // TaskHandle_t task_handle;
   // formula_t budget_formula;
-  // int periodicity;
+  int periodicity;
   int task_overruns;
   int task_underruns;
 } BenchInfo;
 
-BenchInfo *add_benchmark_info(int vm_num, int task_num, void *handler);
+BenchInfo *add_benchmark_info(int vm_num, int task_num, int periodicity);
 BenchInfo *get_benchmark_info(int vm_num, int task_num);
 
 // formula handling
