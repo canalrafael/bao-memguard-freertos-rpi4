@@ -87,7 +87,7 @@ Function benchmark_functions[NUM_BENCHMARKS] = {
 };
 
 BenchInfo benchmark_info[NUM_BENCHMARKS];
-formula_t budget_formula = PIC_FORMULA;
+formula_t budget_formula = EWMA_FORMULA;
 
 ////////
 

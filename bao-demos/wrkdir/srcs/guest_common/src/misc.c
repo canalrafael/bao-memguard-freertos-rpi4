@@ -103,16 +103,19 @@
 ///
 ///
 typedef struct {
-  int64_t used_budget_per_period_read[BENCHMARK_MAX_EXE];
-  int64_t used_budget_per_period_write[BENCHMARK_MAX_EXE];
-  int64_t total_used_budget_rw_per_index[BENCHMARK_MAX_EXE];
   int64_t total_used_budget_r;
   int64_t total_used_budget_w;
 
-  // int calc_per_period_read[BENCHMARK_MAX_EXE];
-  // int calc_per_period_write[BENCHMARK_MAX_EXE];
-  // int total_calc_rw_per_index[BENCHMARK_MAX_EXE];
-  // int total_calc_rw;
+  int64_t total_calc_r;
+  int64_t total_calc_w;
+
+  int64_t used_budget_per_period_read[BENCHMARK_MAX_EXE];
+  int64_t used_budget_per_period_write[BENCHMARK_MAX_EXE];
+  // int64_t total_used_budget_rw_per_index[BENCHMARK_MAX_EXE];
+
+  int64_t calc_per_period_read[BENCHMARK_MAX_EXE];
+  int64_t calc_per_period_write[BENCHMARK_MAX_EXE];
+  // int64_t total_calc_rw_per_index[BENCHMARK_MAX_EXE];
 
   // int clock_per_period[BENCHMARK_MAX_EXE];
   // int total_clock;
@@ -132,30 +135,32 @@ void write_used_budget(struct VM vm_info, BenchmarkData *d) {
 
     d->used_budget_per_period_read[i] = period_read_used;
     d->used_budget_per_period_write[i] = period_write_used;
-    d->total_used_budget_rw_per_index[i] = period_read_used + period_write_used;
+    // d->total_used_budget_rw_per_index[i] = period_read_used +
+    // period_write_used;
   }
   d->total_used_budget_r = total_read_used;
   d->total_used_budget_w = total_write_used;
 }
 
-// void write_calc_budget(struct VM vm_info, BenchmarkData *d) {
-//   // printf("\tCalc per period \n\t\tr ");
-//
-//   uint64_t total_calc_read = 0;
-//   uint64_t total_calc_write = 0;
-//   for (uint8_t i = 0; i < PERIOD_QNT; i++) {
-//     uint64_t period_calc_read = vm_info.calc_r_budget_period[i];
-//     uint64_t period_calc_write = vm_info.calc_w_budget_period[i];
-//
-//     total_calc_read += period_calc_read;
-//     total_calc_write += period_calc_write;
-//
-//     d->calc_per_period_read[i] = period_calc_read;
-//     d->calc_per_period_write[i] = period_calc_write;
-//     d->total_calc_rw_per_index[i] = period_calc_read + period_calc_write;
-//   }
-//   d->total_calc_rw = total_calc_read + total_calc_write;
-// }
+void write_calc_budget(struct VM vm_info, BenchmarkData *d) {
+  // printf("\tCalc per period \n\t\tr ");
+
+  uint64_t total_calc_read = 0;
+  uint64_t total_calc_write = 0;
+  for (uint8_t i = 0; i < PERIOD_QNT; i++) {
+    uint64_t period_calc_read = vm_info.calc_r_budget_period[i];
+    uint64_t period_calc_write = vm_info.calc_w_budget_period[i];
+
+    total_calc_read += period_calc_read;
+    total_calc_write += period_calc_write;
+
+    d->calc_per_period_read[i] = period_calc_read;
+    d->calc_per_period_write[i] = period_calc_write;
+    // d->total_calc_rw_per_index[i] = period_calc_read + period_calc_write;
+  }
+  d->total_calc_r = total_calc_read;
+  d->total_calc_w = total_calc_write;
+}
 
 // void write_clock_cycle(struct VM info, BenchmarkData *d) {
 //   // printf("\tClock per period \n\t\t");
@@ -260,6 +265,7 @@ void write_used_budget(struct VM vm_info, BenchmarkData *d) {
 void print_vm_header() {
   printf("budget_function,");
   printf("total_used_budget_r,total_used_budget_w,");
+  printf("total_calc_r,total_calc_w,");
 
   for (int i = 0; i < PERIOD_QNT; i++) {
     printf("used_budget_per_period_read[%d],", i);
@@ -268,7 +274,10 @@ void print_vm_header() {
     printf("used_budget_per_period_write[%d],", i);
   }
   for (int i = 0; i < PERIOD_QNT; i++) {
-    printf("total_used_budget_rw_per_index[%d],", i);
+    printf("calc_per_period_read[%d],", i);
+  }
+  for (int i = 0; i < PERIOD_QNT; i++) {
+    printf("calc_per_period_write[%d],", i);
   }
 
   printf("\n");
@@ -286,12 +295,15 @@ void print_vm_info(struct VM vm_info) {
 
   BenchmarkData info;
   write_used_budget(vm_info, &info);
+  write_calc_budget(vm_info, &info);
 
   printf("%s,", get_formula_name(get_budget_formula()));
   printf("%lu,%lu,", info.total_used_budget_r, info.total_used_budget_w);
+  printf("%lu,%lu,", info.total_calc_r, info.total_calc_w);
   print_array(info.used_budget_per_period_read);
   print_array(info.used_budget_per_period_write);
-  print_array(info.total_used_budget_rw_per_index);
+  print_array(info.calc_per_period_read);
+  print_array(info.calc_per_period_write);
 
   printf("\n");
 }

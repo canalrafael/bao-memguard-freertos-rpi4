@@ -102,6 +102,7 @@ void print_LR(const struct LR *l, bool before)
 void print_PIC(const struct PIC *p, bool before)
 {
     PRINT("PIC: %s", (before ? "BEFORE" : "AFTER"));
+    // PMU_print_all_counters();
     PRINT("  accumulated_read_error  = %u", p->accumulated_read_error);
     PRINT("  accumulated_write_error = %u", p->accumulated_write_error);
     PRINT("  kp                      = %u", p->kp);
@@ -199,10 +200,26 @@ inline static uint32_t get_operation_usage(const uint8_t cpu_id,
 {
     uint32_t pmu_counter_0 = PMU_get_counter_value(0);
     uint32_t pmu_counter_1 = PMU_get_counter_value(1);
-    uint32_t r_reg = (uint32_t)MAX_INT - pmu_counter_0;
-    uint32_t w_reg = (uint32_t)MAX_INT - pmu_counter_1;
+    uint32_t r_reg = MAX_INT - pmu_counter_0;
+    uint32_t w_reg = MAX_INT - pmu_counter_1;
     return op_type == READ ? r_reg : w_reg;
 }
+
+// inline static uint32_t get_operation_usage(const uint8_t cpu_id,
+//                                            const uint8_t task_num,
+//                                            uint8_t op_type)
+// {
+//     uint32_t r_reg = 0;
+//     uint32_t w_reg = 0;
+//     uint32_t counter_t_a;
+//     uint32_t counter_t_b;
+//     counter_t_a = PMU_get_counter_value(0);
+//     counter_t_b = PMU_get_counter_value(1);
+//     r_reg = MAX_INT - counter_t_a;
+//     w_reg = MAX_INT - counter_t_b;
+//     counter_t_a = counter_t_b = 0;
+//     return op_type == READ ? (MAX_INT - r_reg) : (MAX_INT - w_reg);
+// }
 
 inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
 {
@@ -722,10 +739,10 @@ inline static void pic(const uint8_t cpu_id, const uint8_t task_num)
     // READ
     const uint32_t current_read_usage =
         get_operation_usage(cpu_id, task_num, READ);
+    PRINT("(CURRENT READ USAGE) %u", current_read_usage);
     if (current_read_usage != 0 && current_read_usage < MARGIN) {
         const uint32_t read_error = MAX_INT - current_read_usage;
-        PRINT("(READ ERROR) %d", read_error);
-        PRINT("(CURRENT READ USAGE) %d", current_read_usage);
+        PRINT("(READ ERROR) %u", read_error);
         reg_conf[cpu_id].pic.accumulated_read_error += read_error;
         reg_conf[cpu_id].vm.current_used_read_budget = current_read_usage;
         reg_conf[cpu_id].vm.total_used_read_budget += current_read_usage;
@@ -741,6 +758,7 @@ inline static void pic(const uint8_t cpu_id, const uint8_t task_num)
     // WRITE
     const uint32_t current_write_usage =
         get_operation_usage(cpu_id, task_num, WRITE);
+    PRINT("(CURRENT WRITE USAGE) %u", current_write_usage);
     if (current_write_usage != 0 && current_write_usage < MARGIN) {
         uint32_t write_error = MAX_INT - current_write_usage;
         reg_conf[cpu_id].pic.accumulated_write_error += write_error;
@@ -766,24 +784,24 @@ void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
     PRINT("regulator_budget_depleted\t formula %d", formula);
     print_VM(&reg_conf[cpu()->id].vm, true);
     switch (formula) {
-        // case EWMA_FORMULA:
-        //     ewma(cpu()->id, task_num);
-        //     break;
-        // case SW_FORMULA:
-        //     sw(cpu()->id, task_num);
-        //     break;
-        // case AMBP_FORMULA:
-        //     ambp(cpu()->id, task_num);
-        //     break;
-        // case AFC_FORMULA:
-        //     afc(cpu()->id, task_num);
-        //     break;
-        // case LR_FORMULA:
-        //     lr(cpu()->id, task_num);
-        //     break;
-        case PIC_FORMULA:
-            pic(cpu()->id, task_num);
+        case EWMA_FORMULA:
+            ewma(cpu()->id, task_num);
             break;
+        case SW_FORMULA:
+            sw(cpu()->id, task_num);
+            break;
+        case AMBP_FORMULA:
+            ambp(cpu()->id, task_num);
+            break;
+        case AFC_FORMULA:
+            afc(cpu()->id, task_num);
+            break;
+        case LR_FORMULA:
+            lr(cpu()->id, task_num);
+            break;
+        // case PIC_FORMULA:
+        //     pic(cpu()->id, task_num);
+        //     break;
         default:
             printk("something has gone very wrong!\n");
             break;

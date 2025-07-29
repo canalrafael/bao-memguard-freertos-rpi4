@@ -5,28 +5,28 @@
 
 const char *get_formula_name(formula_t formula) {
   switch (formula) {
-  // case EWMA_FORMULA:
-  //   return "EWMA";
-  //   break;
-  // case SW_FORMULA:
-  //   return "SW";
-  //   break;
-  // // case AMBP_FORMULA:
-  // //   return "AMBP";
-  // //   break;
-  // case AFC_FORMULA:
-  //   return "AFC";
-  //   break;
-  // case LR_FORMULA:
-  //   return "LR";
-  //   break;
-  case PIC_FORMULA:
-    return "PIC";
+  case EWMA_FORMULA:
+    return "EWMA";
     break;
-  default:
-    printf("invalid formula name %d, returning UNDEFINED\n", formula);
-    return "UNDEFINED";
+  case SW_FORMULA:
+    return "SW";
     break;
+  case AMBP_FORMULA:
+    return "AMBP";
+    break;
+  case AFC_FORMULA:
+    return "AFC";
+    break;
+  case LR_FORMULA:
+    return "LR";
+    break;
+    // case PIC_FORMULA:
+    //   return "PIC";
+    //   break;
+    // default:
+    //   printf("invalid formula name %d, returning UNDEFINED\n", formula);
+    //   return "UNDEFINED";
+    //   break;
   }
 }
 

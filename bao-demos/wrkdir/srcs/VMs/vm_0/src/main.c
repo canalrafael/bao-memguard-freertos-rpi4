@@ -84,6 +84,7 @@ int AdjMatrix[666][NUM_NODES];
 
 // typedef struct {
 TaskHandle_t task_handlers[TASK_QUANTITY];
+bool started_counter = 0;
 // } Task_handlers;
 // Task_handlers task_handlers[TASK_QUANTITY] = {{NULL, NULL}};
 
@@ -98,7 +99,11 @@ void config_counter() {
                         UNUSED_ARG);
 }
 
-void start_counter() { HC_PMU_start_counter(vm_conf->pmu_counter_pair_rw); }
+void start_counter() {
+  started_counter = 1;
+  HC_PMU_start_counter(vm_conf->pmu_counter_pair_rw);
+}
+
 void stop_counter() { HC_PMU_stop_counter(vm_conf->pmu_counter_pair_rw); }
 
 // static void t0_suspend_task_budget_sgi() {
@@ -793,12 +798,15 @@ void ctrl_task(void *pvParameters) {
 
   while (1) {
     TickType_t current_time_task_any = xTaskGetTickCount();
-    if ((current_time_task_any - last_check_time_task_any) >= period_task_any &&
-        !get_budget) {
-      get_budget = 1;
-      last_check_time_task_any = current_time_task_any;
-    } else if (vm_conf[VM_NUM].sgi_suspend_task_budget && !get_budget) {
-      get_budget = 1;
+    if (started_counter == 1) {
+      if ((current_time_task_any - last_check_time_task_any) >=
+              period_task_any &&
+          !get_budget) {
+        get_budget = 1;
+        last_check_time_task_any = current_time_task_any;
+      } else if (vm_conf[VM_NUM].sgi_suspend_task_budget && !get_budget) {
+        get_budget = 1;
+      }
     }
 
     if (get_budget) {
@@ -986,9 +994,8 @@ int main(void) {
   irq_set_prio(GUEST_SUSPEND_BUDGET_ID, 0);
 
   config_counter();
-  xTaskCreate(ctrl_task, "vm_ctrl_task", 1400, NULL, CTRL_TASK_PRIORITY, NULL);
-
   start_counter();
+  xTaskCreate(ctrl_task, "vm_ctrl_task", 1400, NULL, CTRL_TASK_PRIORITY, NULL);
 #endif
 
   for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
