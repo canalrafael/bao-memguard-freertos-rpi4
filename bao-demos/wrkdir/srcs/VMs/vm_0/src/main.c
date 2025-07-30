@@ -970,7 +970,6 @@ void delayed_task(void *pvParameters) {
   const TickType_t period = pdMS_TO_TICKS(info->periodicity);
   TickType_t last_wake_time = xTaskGetTickCount();
 
-  config_counter();
   while (true) {
     start_counter();
     info->function.pointer();
@@ -997,6 +996,7 @@ int main(void) {
   irq_enable(GUEST_SUSPEND_BUDGET_ID);
   irq_set_prio(GUEST_SUSPEND_BUDGET_ID, 0);
 
+  config_counter();
   xTaskCreate(ctrl_task, "vm_ctrl_task", 1400, NULL, CTRL_TASK_PRIORITY, NULL);
 #endif
 
