@@ -194,32 +194,32 @@ void init_regulation_config()
     }
 }
 
-inline static uint32_t get_operation_usage(const uint8_t cpu_id,
-                                           const uint8_t task_num,
-                                           uint8_t op_type)
-{
-    uint32_t pmu_counter_0 = PMU_get_counter_value(0);
-    uint32_t pmu_counter_1 = PMU_get_counter_value(1);
-    uint32_t r_reg = MAX_INT - pmu_counter_0;
-    uint32_t w_reg = MAX_INT - pmu_counter_1;
-    return op_type == READ ? r_reg : w_reg;
-}
-
 // inline static uint32_t get_operation_usage(const uint8_t cpu_id,
 //                                            const uint8_t task_num,
 //                                            uint8_t op_type)
 // {
-//     uint32_t r_reg = 0;
-//     uint32_t w_reg = 0;
-//     uint32_t counter_t_a;
-//     uint32_t counter_t_b;
-//     counter_t_a = PMU_get_counter_value(0);
-//     counter_t_b = PMU_get_counter_value(1);
-//     r_reg = MAX_INT - counter_t_a;
-//     w_reg = MAX_INT - counter_t_b;
-//     counter_t_a = counter_t_b = 0;
-//     return op_type == READ ? (MAX_INT - r_reg) : (MAX_INT - w_reg);
+//     uint32_t pmu_counter_0 = PMU_get_counter_value(0);
+//     uint32_t pmu_counter_1 = PMU_get_counter_value(1);
+//     uint32_t r_reg = MAX_INT - pmu_counter_0;
+//     uint32_t w_reg = MAX_INT - pmu_counter_1;
+//     return op_type == READ ? r_reg : w_reg;
 // }
+
+inline static uint32_t get_operation_usage(const uint8_t cpu_id,
+                                           const uint8_t task_num,
+                                           uint8_t op_type)
+{
+    uint32_t r_reg = 0;
+    uint32_t w_reg = 0;
+    uint32_t counter_t_a;
+    uint32_t counter_t_b;
+    counter_t_a = PMU_get_counter_value(0);
+    counter_t_b = PMU_get_counter_value(1);
+    r_reg = MAX_INT - counter_t_a;
+    w_reg = MAX_INT - counter_t_b;
+    counter_t_a = counter_t_b = 0;
+    return op_type == READ ? (MAX_INT - r_reg) : (MAX_INT - w_reg);
+}
 
 inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
 {

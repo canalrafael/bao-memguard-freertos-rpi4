@@ -109,15 +109,15 @@ typedef struct {
   int64_t total_calc_r;
   int64_t total_calc_w;
 
-  int64_t used_budget_per_period_read[BENCHMARK_MAX_EXE];
-  int64_t used_budget_per_period_write[BENCHMARK_MAX_EXE];
-  // int64_t total_used_budget_rw_per_index[BENCHMARK_MAX_EXE];
+  int64_t used_budget_per_period_read[PERIOD_QNT];
+  int64_t used_budget_per_period_write[PERIOD_QNT];
+  // int64_t total_used_budget_rw_per_index[PERIOD_QNT];
 
-  int64_t calc_per_period_read[BENCHMARK_MAX_EXE];
-  int64_t calc_per_period_write[BENCHMARK_MAX_EXE];
-  // int64_t total_calc_rw_per_index[BENCHMARK_MAX_EXE];
+  int64_t calc_per_period_read[PERIOD_QNT];
+  int64_t calc_per_period_write[PERIOD_QNT];
+  // int64_t total_calc_rw_per_index[PERIOD_QNT];
 
-  // int clock_per_period[BENCHMARK_MAX_EXE];
+  // int clock_per_period[PERIOD_QNT];
   // int total_clock;
 } BenchmarkData;
 
@@ -186,10 +186,10 @@ void write_calc_budget(struct VM vm_info, BenchmarkData *d) {
 //
 // #define append_array(arr) \
 //   do { \
-//     for (size_t __i = 0; __i < BENCHMARK_MAX_EXE; ++__i) { \
+//     for (size_t __i = 0; __i < PERIOD_QNT; ++__i) { \
 //       current += snprintf(current, buffer + sizeof(buffer) - current, "%d", \
 //                           (arr)[__i]); \
-//       if (__i + 1 < BENCHMARK_MAX_EXE) \
+//       if (__i + 1 < PERIOD_QNT) \
 //         *current++ = ','; \
 //     } \
 //     *current++ = ','; /* comma after array */ \
@@ -250,15 +250,15 @@ void write_calc_budget(struct VM vm_info, BenchmarkData *d) {
 //          "Budget Function");
 //
 //   // benchmark header
-//   print_header_array("used_budget_per_period_read", BENCHMARK_MAX_EXE);
-//   print_header_array("used_budget_per_period_write", BENCHMARK_MAX_EXE);
-//   print_header_array("total_used_budget_rw_per_index", BENCHMARK_MAX_EXE);
+//   print_header_array("used_budget_per_period_read", PERIOD_QNT);
+//   print_header_array("used_budget_per_period_write", PERIOD_QNT);
+//   print_header_array("total_used_budget_rw_per_index", PERIOD_QNT);
 //   printf("total_used_budget_rw,");
-//   print_header_array("calc_per_period_read", BENCHMARK_MAX_EXE);
-//   print_header_array("calc_per_period_write", BENCHMARK_MAX_EXE);
-//   print_header_array("total_calc_rw_per_index", BENCHMARK_MAX_EXE);
+//   print_header_array("calc_per_period_read", PERIOD_QNT);
+//   print_header_array("calc_per_period_write", PERIOD_QNT);
+//   print_header_array("total_calc_rw_per_index", PERIOD_QNT);
 //   printf("total_calc_rw,");
-//   print_header_array("clock_per_period", BENCHMARK_MAX_EXE);
+//   print_header_array("clock_per_period", PERIOD_QNT);
 //   printf("total_clock\n"); // no end comma
 // }
 
