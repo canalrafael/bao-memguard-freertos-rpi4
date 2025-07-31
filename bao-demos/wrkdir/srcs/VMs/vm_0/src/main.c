@@ -90,7 +90,7 @@ bool started_counter = 0;
 
 #if VM_0_REGULATION
 static void suspend_task_budget_sgi() {
-  PRINT("OVERFLOW SIGNAL");
+  PRINT("OVERFLOW SIGNAL\n");
   vm_conf[VM_NUM].sgi_suspend_task_budget = 1;
 }
 
@@ -803,21 +803,21 @@ void ctrl_task(void *pvParameters) {
       if ((current_time_task_any - last_check_time_task_any) >=
               period_task_any &&
           !get_budget) {
-        // PRINT("get budget TIMEOUT: \n");
-        // PRINT("(current_time_task_any - last_check_time_task_any) >= "
-        //       "period_task_any\n");
-        // PRINT("(%lu - %lu) >= %lu | %lu >= %lu\n", current_time_task_any,
-        //       last_check_time_task_any, period_task_any,
-        //       (current_time_task_any - last_check_time_task_any),
-        //       period_task_any);
-        // get_budget = 1;
+        PRINT("get budget TIMEOUT: \n");
+        PRINT("(current_time_task_any - last_check_time_task_any) >= "
+              "period_task_any\n");
+        PRINT("(%lu - %lu) >= %lu | %lu >= %lu\n", current_time_task_any,
+              last_check_time_task_any, period_task_any,
+              (current_time_task_any - last_check_time_task_any),
+              period_task_any);
+        get_budget = 1;
         last_check_time_task_any = current_time_task_any;
       } else if (vm_conf[VM_NUM].sgi_suspend_task_budget && !get_budget) {
         PRINT("get budget OVERFLOW\n");
         get_budget = 1;
       } else {
         static int number = 0;
-        PRINT("NOTHING %d", number++);
+        PRINT("NOTHING %d\n", number++);
       }
     }
 
@@ -850,7 +850,6 @@ void ctrl_task(void *pvParameters) {
           vm_conf[VM_NUM].new_write_budget != 0) {
 
         idx++;
-        printf("++idx to %d\n", idx);
       }
 
       // if (vm_conf[VM_NUM].new_read_budget + vm_conf[VM_NUM].new_write_budget
@@ -879,8 +878,10 @@ void ctrl_task(void *pvParameters) {
       // printf("showing results\n");
       print_vm_info(vm_conf[VM_NUM]);
       BenchInfo *info = get_benchmark_info(VM_NUM, UNUSED_ARG);
-      printf("TASK: OVER %d | UNDER %d\n", info->task_overruns,
-             info->task_underruns);
+      PRINT("TASK: OVER %d | UNDER %d\n", info->task_overruns,
+            info->task_underruns);
+      info->task_overruns = 0;
+      info->task_underruns = 0;
       idx = 0;
 
       formula_t formula = get_budget_formula() + 1;
@@ -1002,9 +1003,9 @@ int main(void) {
   print_vm_header();
 
 #if VM_0_REGULATION
-  irq_set_handler(GUEST_SUSPEND_BUDGET_ID, suspend_task_budget_sgi);
-  irq_enable(GUEST_SUSPEND_BUDGET_ID);
-  irq_set_prio(GUEST_SUSPEND_BUDGET_ID, 0);
+  irq_set_handler(GUEST_PMU_0_OR_1_OVERFLOWED, suspend_task_budget_sgi);
+  irq_enable(GUEST_PMU_0_OR_1_OVERFLOWED);
+  irq_set_prio(GUEST_PMU_0_OR_1_OVERFLOWED, 0);
 
   config_counter();
   xTaskCreate(ctrl_task, "vm_ctrl_task", 1400, NULL, CTRL_TASK_PRIORITY, NULL);

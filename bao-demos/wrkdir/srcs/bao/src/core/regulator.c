@@ -11,19 +11,18 @@ void print_VM(const struct VM *vm, bool before)
     PRINT("  depleated_op_type               = %u", vm->depleated_op_type);
     PRINT("  defined_pmu_read_val            = %u", vm->defined_pmu_read_val);
     PRINT("  defined_pmu_write_val           = %u", vm->defined_pmu_write_val);
-    PRINT("  current_used_read_budget        = %llu",
+    PRINT("  current_used_read_budget        = %u",
           vm->current_used_read_budget);
-    PRINT("  current_used_write_budget       = %llu",
+    PRINT("  current_used_write_budget       = %u",
           vm->current_used_write_budget);
     PRINT("  new_read_budget                 = %u", vm->new_read_budget);
     PRINT("  new_write_budget                = %u", vm->new_write_budget);
-    PRINT("  total_used_read_budget          = %llu",
-          vm->total_used_read_budget);
-    PRINT("  total_used_write_budget         = %llu",
+    PRINT("  total_used_read_budget          = %u", vm->total_used_read_budget);
+    PRINT("  total_used_write_budget         = %u",
           vm->total_used_write_budget);
-    PRINT("  total_calculated_new_read_budget = %llu",
+    PRINT("  total_calculated_new_read_budget = %u",
           vm->total_calculated_new_read_budget);
-    PRINT("  total_calculated_new_write_budget= %llu",
+    PRINT("  total_calculated_new_write_budget= %u",
           vm->total_calculated_new_write_budget);
 }
 
@@ -232,11 +231,11 @@ inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
         get_operation_usage(cpu_id, UNUSED_ARG, READ);
 
     if (current_read_usage == 0) {
-        printk("[BAO] current_read_usage == 0\n");
+        PRINT("[BAO] current_read_usage == 0");
     }
 
     if (current_read_usage != 0 && current_read_usage < MARGIN) {
-        printk("[BAO] OK current_read_usage != 0\n");
+        PRINT("[BAO] OK current_read_usage != 0");
         reg_conf[cpu_id].vm.current_used_read_budget = current_read_usage;
         reg_conf[cpu_id].vm.total_used_read_budget += current_read_usage;
         reg_conf[cpu_id].ewma.previous_predicted_read_budget =
@@ -258,11 +257,11 @@ inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
         get_operation_usage(cpu_id, UNUSED_ARG, WRITE);
 
     if (current_write_usage == 0) {
-        printk("[BAO] current_write_usage == 0\n");
+        PRINT("[BAO] current_write_usage == 0");
     }
 
     if (current_write_usage != 0 && current_write_usage < MARGIN) {
-        printk("[BAO] OK current_write_usage != 0\n");
+        PRINT("[BAO] OK current_write_usage != 0");
         reg_conf[cpu_id].vm.current_used_write_budget = current_write_usage;
         reg_conf[cpu_id].vm.total_used_write_budget += current_write_usage;
         reg_conf[cpu_id].ewma.previous_predicted_write_budget =
@@ -782,9 +781,37 @@ void print_counters(bool before)
     PMU_print_all_counters(before ? "BEFORE" : "AFTER");
 }
 
+void reset_regulation_vm_values(int vm_num)
+{
+    reg_conf[vm_num].vm.defined_pmu_read_val = 250000;
+    reg_conf[vm_num].vm.defined_pmu_write_val = 250000;
+    reg_conf[vm_num].vm.depleated_op_type = UNKNOWN_VALUE;
+    reg_conf[vm_num].vm.current_used_read_budget = 0;
+    reg_conf[vm_num].vm.current_used_write_budget = 0;
+    reg_conf[vm_num].vm.total_used_read_budget = 0;
+    reg_conf[vm_num].vm.total_used_write_budget = 0;
+    reg_conf[vm_num].vm.total_calculated_new_read_budget = 0;
+    reg_conf[vm_num].vm.total_calculated_new_write_budget = 0;
+    reg_conf[vm_num].vm.new_read_budget = 0;
+    reg_conf[vm_num].vm.new_write_budget = 0;
+}
+
 void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
 {
     // print_Regulation_config(&reg_conf[cpu()->id], "BEFORE");
+    // HACK:
+    static int previous_formula = -1;
+    if (previous_formula == -1 || previous_formula != formula) {
+        PRINT("Formula changed from %d to %d, reseting vm values",
+              previous_formula, formula);
+        PRINT("----");
+        print_VM(&reg_conf[cpu()->id].vm, true);
+        reset_regulation_vm_values(cpu()->id);
+        print_VM(&reg_conf[cpu()->id].vm, false);
+        PRINT("----");
+
+        previous_formula = formula;
+    }
 
     PRINT("regulator_budget_depleted\t formula %d", formula);
     print_VM(&reg_conf[cpu()->id].vm, true);
@@ -812,7 +839,6 @@ void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
             printk("something has gone very wrong!\n");
             break;
     }
-    print_VM(&reg_conf[cpu()->id].vm, false);
     // print_Regulation_config(&reg_conf[cpu()->id], "AFTER");
 
     reg_conf[cpu()->id].vm.depleated_op_type = UNKNOWN_VALUE;
@@ -820,6 +846,9 @@ void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
     // if (task_num == 0)
     PMU_reset_counter(0);
     PMU_reset_counter(1);
+
+    print_VM(&reg_conf[cpu()->id].vm, false);
+    print_counters(false);
     // else
     //     PMU_reset_counter(2);
 

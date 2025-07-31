@@ -22,7 +22,7 @@
 
 #define PMU_COUNTER_PAIR_RW 0
 
-#define GUEST_SUSPEND_BUDGET_ID 0
+#define GUEST_PMU_0_OR_1_OVERFLOWED 0
 // #define GUEST_RESUME_TASK_0_ID 0
 // #define GUEST_SUSPEND_TASK_0_BUDGET_ID 1
 //
@@ -90,7 +90,7 @@
 #define EXEC_VM_0 1
 #define EXEC_VM_1 1
 #define EXEC_VM_2 1
-#define EXEC_VM_3 0
+#define EXEC_VM_3 1
 
 #define VM_0_REGULATION 1
 #define VM_1_REGULATION 0

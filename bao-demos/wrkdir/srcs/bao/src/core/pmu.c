@@ -36,9 +36,11 @@ void PMU_interrupt_handler()
     PMU_interrupt_disable(cpu()->id);
 
     if (overflow_reg_val & (1 << 0) || overflow_reg_val & (1 << 1))
-        vcpu_inject_irq(cpu()->vcpu, GUEST_SUSPEND_TASK_0_BUDGET_ID);
-    else
-        vcpu_inject_irq(cpu()->vcpu, GUEST_SUSPEND_TASK_1_BUDGET_ID);
+        vcpu_inject_irq(cpu()->vcpu, GUEST_PMU_0_OR_1_OVERFLOWED);
+    else {
+        PRINT("\n\nINVALID PMU_interrupt_handler call, undefined.\n\n");
+        // vcpu_inject_irq(cpu()->vcpu, GUEST_SUSPEND_TASK_1_BUDGET_ID);
+    }
 }
 
 void PMU_config()
