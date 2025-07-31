@@ -162,7 +162,7 @@ void PMU_reset_all_counters()
         "msr pmevcntr5_el0, %0\n\t" : : "r"(0) :);
 }
 
-void PMU_print_all_counters()
+void PMU_print_all_counters(const char* msg)
 {
     uint32_t c0, c1, c2, c3, c4, c5;
     c0 = c1 = c2 = c3 = c4 = c5 = 0;
@@ -175,7 +175,11 @@ void PMU_print_all_counters()
         "mrs %5, pmevcntr5_el0\n\t" : "=r"(c0),
         "=r"(c1), "=r"(c2), "=r"(c3), "=r"(c4), "=r"(c5)::);
 
-    printk(
-        "\nCounters:\n C0: %u\n C1: %u\n C2: %u\n C3: %u\n C4: %u\n C5: %u\n",
-        c0, c1, c2, c3, c4, c5);
+    PRINT("Counters: %s", msg);
+    PRINT("C0: %u", c0);
+    PRINT("C1: %u", c1);
+    PRINT("C2: %u", c2);
+    PRINT("C3: %u", c3);
+    PRINT("C4: %u", c4);
+    PRINT("C5: %u", c5);
 }

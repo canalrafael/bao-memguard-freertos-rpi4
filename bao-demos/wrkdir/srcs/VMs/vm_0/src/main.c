@@ -61,7 +61,7 @@
 #include <budget.h>
 #include <data.h>
 
-#if 0
+#if 1
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)
@@ -90,18 +90,19 @@ bool started_counter = 0;
 
 #if VM_0_REGULATION
 static void suspend_task_budget_sgi() {
+  PRINT("OVERFLOW SIGNAL");
   vm_conf[VM_NUM].sgi_suspend_task_budget = 1;
 }
 
 void config_counter() {
-  HC_PMU_config_counter(PMU_COUNTER_PAIR_RW, vm_conf[VM_NUM].new_read_budget,
-                        vm_conf[VM_NUM].new_write_budget, UNUSED_ARG,
-                        UNUSED_ARG);
+  HC_PMU_config_counter(
+      vm_conf[VM_NUM].pmu_counter_pair_rw, vm_conf[VM_NUM].new_read_budget,
+      vm_conf[VM_NUM].new_write_budget, UNUSED_ARG, UNUSED_ARG);
 }
 
 void start_counter() {
   started_counter = 1;
-  HC_PMU_start_counter(vm_conf->pmu_counter_pair_rw);
+  HC_PMU_start_counter(vm_conf[VM_NUM].pmu_counter_pair_rw);
 }
 
 void stop_counter() { HC_PMU_stop_counter(vm_conf->pmu_counter_pair_rw); }
@@ -802,10 +803,21 @@ void ctrl_task(void *pvParameters) {
       if ((current_time_task_any - last_check_time_task_any) >=
               period_task_any &&
           !get_budget) {
-        get_budget = 1;
+        // PRINT("get budget TIMEOUT: \n");
+        // PRINT("(current_time_task_any - last_check_time_task_any) >= "
+        //       "period_task_any\n");
+        // PRINT("(%lu - %lu) >= %lu | %lu >= %lu\n", current_time_task_any,
+        //       last_check_time_task_any, period_task_any,
+        //       (current_time_task_any - last_check_time_task_any),
+        //       period_task_any);
+        // get_budget = 1;
         last_check_time_task_any = current_time_task_any;
       } else if (vm_conf[VM_NUM].sgi_suspend_task_budget && !get_budget) {
+        PRINT("get budget OVERFLOW\n");
         get_budget = 1;
+      } else {
+        static int number = 0;
+        PRINT("NOTHING %d", number++);
       }
     }
 
@@ -818,12 +830,6 @@ void ctrl_task(void *pvParameters) {
 
       PRINT("calling HC_regulator_get_new_budget\n");
       HC_regulator_budget_depleted(UNUSED_ARG, get_budget_formula());
-      if (vm_conf[VM_NUM].new_read_budget + vm_conf[VM_NUM].new_write_budget ==
-          0) {
-        PRINT("invalid HC_Regulator_budget_depleted call, returning\n");
-        break;
-      }
-      PRINT("done\n");
 
       vm_conf[VM_NUM].used_r_budget_period[idx] =
           HC_regulator_get_current_used_budget(UNUSED_ARG, READ);
@@ -840,18 +846,19 @@ void ctrl_task(void *pvParameters) {
       vm_conf[VM_NUM].calc_w_budget_period[idx] =
           vm_conf[VM_NUM].new_write_budget;
 
-      if (vm_conf[VM_NUM].new_read_budget == 0) {
-        // printf("new read budget == 0\n");
-      }
-      if (vm_conf[VM_NUM].new_write_budget == 0) {
-        // printf("new write budget == 0\n");
-      }
       if (idx < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget != 0 &&
           vm_conf[VM_NUM].new_write_budget != 0) {
 
         idx++;
-        // printf("idx++ to %d", idx);
+        printf("++idx to %d\n", idx);
       }
+
+      // if (vm_conf[VM_NUM].new_read_budget + vm_conf[VM_NUM].new_write_budget
+      // ==
+      //     0) {
+      //   // PRINT("invalid HC_Regulator_budget_depleted call, returning\n");
+      // }
+      PRINT("done\n");
 
       get_budget = 0;
       vm_conf[VM_NUM].sgi_suspend_task_budget = 0;
@@ -871,6 +878,9 @@ void ctrl_task(void *pvParameters) {
 
       // printf("showing results\n");
       print_vm_info(vm_conf[VM_NUM]);
+      BenchInfo *info = get_benchmark_info(VM_NUM, UNUSED_ARG);
+      printf("TASK: OVER %d | UNDER %d\n", info->task_overruns,
+             info->task_underruns);
       idx = 0;
 
       formula_t formula = get_budget_formula() + 1;

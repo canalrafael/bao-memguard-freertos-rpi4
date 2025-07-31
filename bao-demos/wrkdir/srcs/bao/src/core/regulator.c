@@ -223,7 +223,7 @@ inline static uint32_t get_operation_usage(const uint8_t cpu_id,
 
 inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
 {
-    print_EWMA(&reg_conf[cpu()->id].ewma, true);
+    print_EWMA(&reg_conf[cpu_id].ewma, true);
 
     // printk("[BAO] ewma, cpu %d, task %d\n", cpu_id, task_num_);
     // PMU_print_all_counters();
@@ -236,7 +236,7 @@ inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
     }
 
     if (current_read_usage != 0 && current_read_usage < MARGIN) {
-        // printk("[BAO] OK current_read_usage != 0\n");
+        printk("[BAO] OK current_read_usage != 0\n");
         reg_conf[cpu_id].vm.current_used_read_budget = current_read_usage;
         reg_conf[cpu_id].vm.total_used_read_budget += current_read_usage;
         reg_conf[cpu_id].ewma.previous_predicted_read_budget =
@@ -262,7 +262,7 @@ inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
     }
 
     if (current_write_usage != 0 && current_write_usage < MARGIN) {
-        // printk("[BAO] OK current_write_usage != 0\n");
+        printk("[BAO] OK current_write_usage != 0\n");
         reg_conf[cpu_id].vm.current_used_write_budget = current_write_usage;
         reg_conf[cpu_id].vm.total_used_write_budget += current_write_usage;
         reg_conf[cpu_id].ewma.previous_predicted_write_budget =
@@ -279,12 +279,12 @@ inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
             reg_conf[cpu_id].ewma.new_write_budget;
     }
 
-    print_EWMA(&reg_conf[cpu()->id].ewma, false);
+    print_EWMA(&reg_conf[cpu_id].ewma, false);
 }
 
 inline static void sw(const uint8_t cpu_id, const uint8_t task_num_)
 {
-    print_SW(&reg_conf[cpu()->id].sw, true);
+    print_SW(&reg_conf[cpu_id].sw, true);
 
     // READ
     const uint32_t current_read_usage =
@@ -580,12 +580,12 @@ inline static void sw(const uint8_t cpu_id, const uint8_t task_num_)
     /* 	reg_conf[cpu_id].sw.current_write_array_size = 0; */
     /* } */
 
-    print_SW(&reg_conf[cpu()->id].sw, false);
+    print_SW(&reg_conf[cpu_id].sw, false);
 }
 
 inline static void ambp(const uint8_t cpu_id, const uint8_t task_num)
 {
-    print_AMBP(&reg_conf[cpu()->id].ambp, true);
+    print_AMBP(&reg_conf[cpu_id].ambp, true);
 
     // READ
     const uint32_t current_read_usage =
@@ -656,12 +656,12 @@ inline static void ambp(const uint8_t cpu_id, const uint8_t task_num)
         }
     }
 
-    print_AMBP(&reg_conf[cpu()->id].ambp, false);
+    print_AMBP(&reg_conf[cpu_id].ambp, false);
 }
 
 inline static void afc(const uint8_t cpu_id, const uint8_t task_num)
 {
-    print_AFC(&reg_conf[cpu()->id].afc, true);
+    print_AFC(&reg_conf[cpu_id].afc, true);
 
     // READ
     const uint32_t current_read_usage =
@@ -700,12 +700,12 @@ inline static void afc(const uint8_t cpu_id, const uint8_t task_num)
         reg_conf[cpu_id].vm.new_write_budget = new_write_budget;
     }
 
-    print_AFC(&reg_conf[cpu()->id].afc, false);
+    print_AFC(&reg_conf[cpu_id].afc, false);
 }
 
 inline static void lr(const uint8_t cpu_id, const uint8_t task_num)
 {
-    print_LR(&reg_conf[cpu()->id].lr, true);
+    print_LR(&reg_conf[cpu_id].lr, true);
 
     uint32_t r = 0, w = 0;
 
@@ -729,12 +729,12 @@ inline static void lr(const uint8_t cpu_id, const uint8_t task_num)
             reg_conf[cpu_id].lr.t_vector[i] += 1;
     }
 
-    print_LR(&reg_conf[cpu()->id].lr, false);
+    print_LR(&reg_conf[cpu_id].lr, false);
 }
 
 inline static void pic(const uint8_t cpu_id, const uint8_t task_num)
 {
-    print_PIC(&reg_conf[cpu()->id].pic, true);
+    print_PIC(&reg_conf[cpu_id].pic, true);
 
     // READ
     const uint32_t current_read_usage =
@@ -774,7 +774,12 @@ inline static void pic(const uint8_t cpu_id, const uint8_t task_num)
         reg_conf[cpu_id].vm.new_write_budget = write_error + write_adjust;
     }
 
-    print_PIC(&reg_conf[cpu()->id].pic, false);
+    print_PIC(&reg_conf[cpu_id].pic, false);
+}
+
+void print_counters(bool before)
+{
+    PMU_print_all_counters(before ? "BEFORE" : "AFTER");
 }
 
 void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
@@ -783,6 +788,7 @@ void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
 
     PRINT("regulator_budget_depleted\t formula %d", formula);
     print_VM(&reg_conf[cpu()->id].vm, true);
+    print_counters(true);
     switch (formula) {
         case EWMA_FORMULA:
             ewma(cpu()->id, task_num);

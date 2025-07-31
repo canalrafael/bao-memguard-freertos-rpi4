@@ -112,6 +112,9 @@ void init(cpuid_t cpu_id, paddr_t load_addr)
         /* ASM("msr PMCCFILTR_EL0, %0" :: "r" (0x1 << 27)); */
         /* ASM("msr PMCNTENSET_el0, %0" :: "r" (1 << 31)); */
 
+        // printk("sizeof(uint64_t) %d\n", sizeof(uint64_t));
+        // printk("sizeof(unsigned long long) %d\n", sizeof(unsigned long
+        // long));
         printk("BENCH_ARRAY_INDEX %d\n", BENCH_ARRAY_INDEX);
         init_regulation_config();
 

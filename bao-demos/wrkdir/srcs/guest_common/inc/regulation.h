@@ -88,8 +88,8 @@
 // =======================================
 
 #define EXEC_VM_0 1
-#define EXEC_VM_1 0
-#define EXEC_VM_2 0
+#define EXEC_VM_1 1
+#define EXEC_VM_2 1
 #define EXEC_VM_3 0
 
 #define VM_0_REGULATION 1
@@ -97,11 +97,11 @@
 #define VM_2_REGULATION 0
 #define VM_3_REGULATION 0
 
-#define PERIOD_QNT 50
+#define PERIOD_QNT 15
 
 // Periodicity of each task
 // #define PERIOD_MS_TASK_0 30
-#define PERIOD_MS_TASK_PHONY 100
+#define PERIOD_MS_TASK_PHONY 30
 #define PERIOD_MS_TASK_ANY 30
 #define PERIOD_MS_TASK_CTRL 10
 
