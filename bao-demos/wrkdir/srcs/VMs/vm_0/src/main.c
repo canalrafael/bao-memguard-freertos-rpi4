@@ -61,7 +61,7 @@
 #include <budget.h>
 #include <data.h>
 
-#if 1
+#if 0
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)
@@ -984,6 +984,7 @@ void delayed_task(void *pvParameters) {
   while (true) {
     start_counter();
     info->function.pointer();
+    stop_counter();
 
     TickType_t now = xTaskGetTickCount();
     if ((now - last_wake_time) > period) {
@@ -993,7 +994,6 @@ void delayed_task(void *pvParameters) {
       info->task_underruns += 1;
     }
 
-    stop_counter();
     vTaskDelayUntil(&last_wake_time, period);
   }
 }

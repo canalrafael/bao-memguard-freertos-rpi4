@@ -781,38 +781,8 @@ void print_counters(bool before)
     PMU_print_all_counters(before ? "BEFORE" : "AFTER");
 }
 
-void reset_regulation_vm_values(int vm_num)
-{
-    reg_conf[vm_num].vm.defined_pmu_read_val = 250000;
-    reg_conf[vm_num].vm.defined_pmu_write_val = 250000;
-    reg_conf[vm_num].vm.depleated_op_type = UNKNOWN_VALUE;
-    reg_conf[vm_num].vm.current_used_read_budget = 0;
-    reg_conf[vm_num].vm.current_used_write_budget = 0;
-    reg_conf[vm_num].vm.total_used_read_budget = 0;
-    reg_conf[vm_num].vm.total_used_write_budget = 0;
-    reg_conf[vm_num].vm.total_calculated_new_read_budget = 0;
-    reg_conf[vm_num].vm.total_calculated_new_write_budget = 0;
-    reg_conf[vm_num].vm.new_read_budget = 0;
-    reg_conf[vm_num].vm.new_write_budget = 0;
-}
-
 void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
 {
-    // print_Regulation_config(&reg_conf[cpu()->id], "BEFORE");
-    // HACK:
-    static int previous_formula = -1;
-    if (previous_formula == -1 || previous_formula != formula) {
-        PRINT("Formula changed from %d to %d, reseting vm values",
-              previous_formula, formula);
-        PRINT("----");
-        print_VM(&reg_conf[cpu()->id].vm, true);
-        reset_regulation_vm_values(cpu()->id);
-        print_VM(&reg_conf[cpu()->id].vm, false);
-        PRINT("----");
-
-        previous_formula = formula;
-    }
-
     PRINT("regulator_budget_depleted\t formula %d", formula);
     print_VM(&reg_conf[cpu()->id].vm, true);
     print_counters(true);
