@@ -11,10 +11,14 @@
 bool init = false;
 
 Function benchmark_functions[NUM_BENCHMARKS] = {
-    {0, fft_wrapper, ""},       // -
-    {1, fft_wrapper, ""},       // OK
-    {2, bandwidth_wrapper, ""}, // OK
-    {3, bandwidth_wrapper, ""}, // OK
+    {0, fft_wrapper, ""}, // -
+    {1, fft_wrapper, ""}, // OK
+    {2, fft_wrapper, ""}, // OK
+    {3, fft_wrapper, ""}, // OK
+    {4, fft_wrapper, ""}, // OK
+    {5, fft_wrapper, ""}, // OK
+    {6, fft_wrapper, ""}, // OK
+    {7, fft_wrapper, ""}, // OK
 
     // {1, fft_wrapper, "fft_wrapper"},             // -
     // {2, sorting_wrapper, "sorting_wrapper"},     // OK

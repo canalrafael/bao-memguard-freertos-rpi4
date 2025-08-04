@@ -798,6 +798,7 @@ void ctrl_task(void *pvParameters) {
   uint8_t idx = 0;
 
   while (1) {
+    stop_counter();
     TickType_t current_time_task_any = xTaskGetTickCount();
     if (started_counter == 1) {
       if ((current_time_task_any - last_check_time_task_any) >=
@@ -893,6 +894,7 @@ void ctrl_task(void *pvParameters) {
       }
     }
 
+    start_counter();
     vTaskDelayUntil(&last_wake_time, frequency);
     last_wake_time = xTaskGetTickCount();
   }
@@ -982,9 +984,7 @@ void delayed_task(void *pvParameters) {
   TickType_t last_wake_time = xTaskGetTickCount();
 
   while (true) {
-    start_counter();
     info->function.pointer();
-    stop_counter();
 
     TickType_t now = xTaskGetTickCount();
     if ((now - last_wake_time) > period) {
