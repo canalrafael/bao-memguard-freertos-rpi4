@@ -148,7 +148,7 @@ uint32_t regulator_get_total_used_budget(const uint8_t task_num,
 
 #endif
 
-#if 0
+#if 1
 #define PRINT(fmt, ...) printk("[BAO] " fmt "\n", ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)

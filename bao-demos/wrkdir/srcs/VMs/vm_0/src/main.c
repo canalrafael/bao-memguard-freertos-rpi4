@@ -61,7 +61,7 @@
 #include <budget.h>
 #include <data.h>
 
-#if 0
+#if 1
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)
@@ -102,13 +102,23 @@ void config_counter() {
 }
 
 void start_counter() {
-  PRINT("Started counter.\n");
   HC_PMU_start_counter(vm_conf[VM_NUM].pmu_counter_pair_rw);
+  PRINT("Started counter.\n");
+  // resume all tasks
+  for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
+    // printf("resuming task %d\n", task_num);
+    vTaskResume(task_handlers[task_num]);
+  }
 }
 
 void stop_counter() {
-  PRINT("Stoped counter.\n");
+  // suspend all tasks
+  for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
+    PRINT("suspending task %d\n", task_num);
+    vTaskSuspend(task_handlers[task_num]);
+  }
   HC_PMU_stop_counter(vm_conf->pmu_counter_pair_rw);
+  PRINT("Stoped counter.\n");
 }
 
 // static void t0_suspend_task_budget_sgi() {
@@ -805,7 +815,8 @@ void ctrl_task(void *pvParameters) {
     TickType_t current_time_task_any = xTaskGetTickCount();
     if ((current_time_task_any - last_check_time_task_any) >= period_task_any &&
         !get_budget) {
-      PRINT("get budget TIMEOUT: \n");
+      stop_counter();
+      PRINT("control TIMEOUT: \n");
       PRINT("(current_time_task_any - last_check_time_task_any) >= "
             "period_task_any\n");
       PRINT("(%lu - %lu) >= %lu | %lu >= %lu\n", current_time_task_any,
@@ -815,7 +826,8 @@ void ctrl_task(void *pvParameters) {
       get_budget = 1;
       last_check_time_task_any = current_time_task_any;
     } else if (vm_conf[VM_NUM].sgi_suspend_task_budget && !get_budget) {
-      PRINT("get budget OVERFLOW\n");
+      stop_counter();
+      PRINT("control OVERFLOW\n");
       get_budget = 1;
     } else {
       static int number = 0;
@@ -823,12 +835,6 @@ void ctrl_task(void *pvParameters) {
     }
 
     if (get_budget) {
-      // suspend all tasks
-      for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-        PRINT("suspending task %d\n", task_num);
-        vTaskSuspend(task_handlers[task_num]);
-      }
-      stop_counter();
 
       PRINT("calling HC_regulator_get_new_budget\n");
       HC_regulator_budget_depleted(UNUSED_ARG, get_budget_formula());
@@ -883,11 +889,6 @@ void ctrl_task(void *pvParameters) {
 
       config_counter();
       start_counter();
-      // resume all tasks
-      for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-        // printf("resuming task %d\n", task_num);
-        vTaskResume(task_handlers[task_num]);
-      }
     }
 
     vTaskDelayUntil(&last_wake_time, frequency);
