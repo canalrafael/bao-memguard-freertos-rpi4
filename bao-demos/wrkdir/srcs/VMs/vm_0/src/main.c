@@ -61,7 +61,7 @@
 #include <budget.h>
 #include <data.h>
 
-#if 0
+#if 1
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)
@@ -95,6 +95,7 @@ static void suspend_task_budget_sgi() {
 }
 
 void config_counter() {
+  PRINT("Configured counter.\n");
   HC_PMU_config_counter(
       vm_conf[VM_NUM].pmu_counter_pair_rw, vm_conf[VM_NUM].new_read_budget,
       vm_conf[VM_NUM].new_write_budget, UNUSED_ARG, UNUSED_ARG);
@@ -102,10 +103,14 @@ void config_counter() {
 
 void start_counter() {
   started_counter = 1;
+  PRINT("Started counter.\n");
   HC_PMU_start_counter(vm_conf[VM_NUM].pmu_counter_pair_rw);
 }
 
-void stop_counter() { HC_PMU_stop_counter(vm_conf->pmu_counter_pair_rw); }
+void stop_counter() {
+  PRINT("Stoped counter.\n");
+  HC_PMU_stop_counter(vm_conf->pmu_counter_pair_rw);
+}
 
 // static void t0_suspend_task_budget_sgi() {
 //   vm_conf[VM_NUM].sgi_suspend_task_budget[TASK_0] = 1;
@@ -984,7 +989,9 @@ void delayed_task(void *pvParameters) {
   TickType_t last_wake_time = xTaskGetTickCount();
 
   while (true) {
+    start_counter();
     info->function.pointer();
+    stop_counter();
 
     TickType_t now = xTaskGetTickCount();
     if ((now - last_wake_time) > period) {
