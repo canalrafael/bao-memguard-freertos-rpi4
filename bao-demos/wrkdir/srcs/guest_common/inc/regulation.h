@@ -137,7 +137,7 @@
    INCREMENT_IF_EXEC_VM_3)
 
 #define VM_QNT 4
-#define TASK_QUANTITY 2
+#define TASK_QUANTITY 1
 // #define BENCHMARK_QNT 8
 
 struct VM {

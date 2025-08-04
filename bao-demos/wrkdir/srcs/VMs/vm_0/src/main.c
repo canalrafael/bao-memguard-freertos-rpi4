@@ -61,7 +61,7 @@
 #include <budget.h>
 #include <data.h>
 
-#if 1
+#if 0
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)
@@ -102,7 +102,6 @@ void config_counter() {
 }
 
 void start_counter() {
-  started_counter = 1;
   PRINT("Started counter.\n");
   HC_PMU_start_counter(vm_conf[VM_NUM].pmu_counter_pair_rw);
 }
@@ -803,36 +802,33 @@ void ctrl_task(void *pvParameters) {
   uint8_t idx = 0;
 
   while (1) {
-    stop_counter();
     TickType_t current_time_task_any = xTaskGetTickCount();
-    if (started_counter == 1) {
-      if ((current_time_task_any - last_check_time_task_any) >=
-              period_task_any &&
-          !get_budget) {
-        PRINT("get budget TIMEOUT: \n");
-        PRINT("(current_time_task_any - last_check_time_task_any) >= "
-              "period_task_any\n");
-        PRINT("(%lu - %lu) >= %lu | %lu >= %lu\n", current_time_task_any,
-              last_check_time_task_any, period_task_any,
-              (current_time_task_any - last_check_time_task_any),
-              period_task_any);
-        get_budget = 1;
-        last_check_time_task_any = current_time_task_any;
-      } else if (vm_conf[VM_NUM].sgi_suspend_task_budget && !get_budget) {
-        PRINT("get budget OVERFLOW\n");
-        get_budget = 1;
-      } else {
-        static int number = 0;
-        PRINT("NOTHING %d\n", number++);
-      }
+    if ((current_time_task_any - last_check_time_task_any) >= period_task_any &&
+        !get_budget) {
+      PRINT("get budget TIMEOUT: \n");
+      PRINT("(current_time_task_any - last_check_time_task_any) >= "
+            "period_task_any\n");
+      PRINT("(%lu - %lu) >= %lu | %lu >= %lu\n", current_time_task_any,
+            last_check_time_task_any, period_task_any,
+            (current_time_task_any - last_check_time_task_any),
+            period_task_any);
+      get_budget = 1;
+      last_check_time_task_any = current_time_task_any;
+    } else if (vm_conf[VM_NUM].sgi_suspend_task_budget && !get_budget) {
+      PRINT("get budget OVERFLOW\n");
+      get_budget = 1;
+    } else {
+      static int number = 0;
+      PRINT("NOTHING %d\n", number++);
     }
 
     if (get_budget) {
       // suspend all tasks
-      // for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-      //   PRINT("suspending task %d\n", task_num);
-      //   vTaskSuspend(task_handlers[task_num]);
-      // }
+      for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
+        PRINT("suspending task %d\n", task_num);
+        vTaskSuspend(task_handlers[task_num]);
+      }
+      stop_counter();
 
       PRINT("calling HC_regulator_get_new_budget\n");
       HC_regulator_budget_depleted(UNUSED_ARG, get_budget_formula());
@@ -854,52 +850,46 @@ void ctrl_task(void *pvParameters) {
 
       if (idx < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget != 0 &&
           vm_conf[VM_NUM].new_write_budget != 0) {
-
         idx++;
       }
 
-      // if (vm_conf[VM_NUM].new_read_budget + vm_conf[VM_NUM].new_write_budget
-      // ==
-      //     0) {
-      //   // PRINT("invalid HC_Regulator_budget_depleted call, returning\n");
-      // }
       PRINT("done\n");
 
       get_budget = 0;
       vm_conf[VM_NUM].sgi_suspend_task_budget = 0;
+
+      // showing results
+      if (idx >= PERIOD_QNT && !info_showed) {
+        /* && task_conf.show_exe_info && */
+        // vTaskDelay((3500));
+
+        // printf("showing results\n");
+        print_vm_info(vm_conf[VM_NUM]);
+        BenchInfo *info = get_benchmark_info(VM_NUM, UNUSED_ARG);
+        PRINT("TASK: OVER %d | UNDER %d\n", info->task_overruns,
+              info->task_underruns);
+        info->task_overruns = 0;
+        info->task_underruns = 0;
+        idx = 0;
+
+        formula_t formula = get_budget_formula() + 1;
+        if (formula >= FORMULA_COUNT) {
+          info_showed = 1;
+        } else {
+          // task_conf.show_exe_info = 0;
+          set_budget_formula(formula);
+        }
+      }
+
       config_counter();
-
+      start_counter();
       // resume all tasks
-      // for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-      //   // printf("resuming task %d\n", task_num);
-      //   vTaskResume(task_handlers[task_num]);
-      // }
-    }
-
-    // showing results
-    if (idx >= PERIOD_QNT &&
-        /* task_conf.show_exe_info && */ !info_showed) {
-      // vTaskDelay((3500));
-
-      // printf("showing results\n");
-      print_vm_info(vm_conf[VM_NUM]);
-      BenchInfo *info = get_benchmark_info(VM_NUM, UNUSED_ARG);
-      PRINT("TASK: OVER %d | UNDER %d\n", info->task_overruns,
-            info->task_underruns);
-      info->task_overruns = 0;
-      info->task_underruns = 0;
-      idx = 0;
-
-      formula_t formula = get_budget_formula() + 1;
-      if (formula >= FORMULA_COUNT) {
-        info_showed = 1;
-      } else {
-        // task_conf.show_exe_info = 0;
-        set_budget_formula(formula);
+      for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
+        // printf("resuming task %d\n", task_num);
+        vTaskResume(task_handlers[task_num]);
       }
     }
 
-    start_counter();
     vTaskDelayUntil(&last_wake_time, frequency);
     last_wake_time = xTaskGetTickCount();
   }
@@ -989,9 +979,7 @@ void delayed_task(void *pvParameters) {
   TickType_t last_wake_time = xTaskGetTickCount();
 
   while (true) {
-    start_counter();
     info->function.pointer();
-    stop_counter();
 
     TickType_t now = xTaskGetTickCount();
     if ((now - last_wake_time) > period) {
@@ -1014,7 +1002,6 @@ int main(void) {
   irq_enable(GUEST_PMU_0_OR_1_OVERFLOWED);
   irq_set_prio(GUEST_PMU_0_OR_1_OVERFLOWED, 0);
 
-  config_counter();
   xTaskCreate(ctrl_task, "vm_ctrl_task", 1400, NULL, CTRL_TASK_PRIORITY, NULL);
 #endif
 
@@ -1035,10 +1022,6 @@ int main(void) {
       return 0;
     }
   }
-
-#ifdef VM_0_REGULATION
-  stop_counter();
-#endif
 
   // **************************** IMPORTANT *********************************
   // Task 0 MUST always use task_conf[0]
@@ -1069,7 +1052,11 @@ int main(void) {
   // xTaskCreate(sha_benchmark,       SHA_TASK_NAME,       400,
   // (void*)&task_conf[0], task_conf[0].priority, &th->task_handler[0]);
 
+  config_counter();
+  start_counter();
+
   vTaskStartScheduler();
+  printf("\n\n\nShould never reach here.\n\n\n");
   while (true) {
     //
   }
