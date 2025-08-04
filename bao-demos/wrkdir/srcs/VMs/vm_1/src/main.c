@@ -1002,6 +1002,7 @@ int main(void) {
   // (void*)&task_conf[0], task_conf[0].priority, &th->task_handler[0]);
 
   vTaskStartScheduler();
+  printf("\n\nSHOULD NEVER REACH HERE\n\n");
   while (true) {
     //
   }

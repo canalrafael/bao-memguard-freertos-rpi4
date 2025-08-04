@@ -668,7 +668,7 @@ inline static void afc(const uint8_t cpu_id, const uint8_t task_num)
     if (current_read_usage != 0 && current_read_usage < MARGIN) {
         reg_conf[cpu_id].vm.total_used_read_budget += current_read_usage;
         reg_conf[cpu_id].vm.current_used_read_budget = current_read_usage;
-        const uint32_t read_error =
+        const int32_t read_error =
             current_read_usage - reg_conf[cpu_id].afc.previous_read_budget;
 
         const uint32_t new_read_budget =
@@ -687,7 +687,7 @@ inline static void afc(const uint8_t cpu_id, const uint8_t task_num)
         reg_conf[cpu_id].vm.total_used_write_budget += current_write_usage;
         reg_conf[cpu_id].vm.current_used_write_budget = current_write_usage;
 
-        const uint32_t write_error =
+        const int32_t write_error =
             current_write_usage - reg_conf[cpu_id].afc.previous_write_budget;
 
         const uint32_t new_write_budget =

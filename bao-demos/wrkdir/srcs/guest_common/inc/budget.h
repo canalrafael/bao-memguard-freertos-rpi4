@@ -13,9 +13,9 @@
 typedef enum {
   EWMA_FORMULA,
   SW_FORMULA,
-  AFC_FORMULA,
   LR_FORMULA,
   AMBP_FORMULA,
+  AFC_FORMULA,
   // PIC_FORMULA,
   // FORMULA_COUNT,
 } formula_t;

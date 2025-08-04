@@ -823,10 +823,10 @@ void ctrl_task(void *pvParameters) {
 
     if (get_budget) {
       // suspend all tasks
-      for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-        PRINT("suspending task %d\n", task_num);
-        vTaskSuspend(task_handlers[task_num]);
-      }
+      // for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
+      //   PRINT("suspending task %d\n", task_num);
+      //   vTaskSuspend(task_handlers[task_num]);
+      // }
 
       PRINT("calling HC_regulator_get_new_budget\n");
       HC_regulator_budget_depleted(UNUSED_ARG, get_budget_formula());
@@ -864,10 +864,10 @@ void ctrl_task(void *pvParameters) {
       config_counter();
 
       // resume all tasks
-      for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-        // printf("resuming task %d\n", task_num);
-        vTaskResume(task_handlers[task_num]);
-      }
+      // for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
+      //   // printf("resuming task %d\n", task_num);
+      //   vTaskResume(task_handlers[task_num]);
+      // }
     }
 
     // showing results

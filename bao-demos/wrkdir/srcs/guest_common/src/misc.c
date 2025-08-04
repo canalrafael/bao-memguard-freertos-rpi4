@@ -117,8 +117,8 @@ typedef struct {
   int64_t calc_per_period_write[PERIOD_QNT];
   // int64_t total_calc_rw_per_index[PERIOD_QNT];
 
-  // int clock_per_period[PERIOD_QNT];
-  // int total_clock;
+  int64_t clock_per_period[PERIOD_QNT];
+  int64_t total_clock;
 } BenchmarkData;
 
 void write_used_budget(struct VM vm_info, BenchmarkData *d) {
@@ -162,20 +162,19 @@ void write_calc_budget(struct VM vm_info, BenchmarkData *d) {
   d->total_calc_w = total_calc_write;
 }
 
-// void write_clock_cycle(struct VM info, BenchmarkData *d) {
-//   // printf("\tClock per period \n\t\t");
-//
-//   uint64_t total_clock = 0;
-//   for (uint8_t i = 0; i < PERIOD_QNT; i++) {
-//     uint64_t clock_period =
-//         vm_info[info.vm_num].cycle_per_period[info.task_num][i];
-//     total_clock += clock_period;
-//
-//     d->clock_per_period[i] = clock_period;
-//   }
-//
-//   d->total_clock = total_clock;
-// }
+void write_clock_cycle(struct VM vm_info, BenchmarkData *d) {
+  // printf("\tClock per period \n\t\t");
+
+  uint64_t total_clock = 0;
+  for (uint8_t i = 0; i < PERIOD_QNT; i++) {
+    uint64_t clock_period = vm_info.cycle_per_period[i];
+    total_clock += clock_period;
+
+    d->clock_per_period[i] = clock_period;
+  }
+
+  d->total_clock = total_clock;
+}
 
 // void print_value_array(int *values, int size, char buffer[], char current[])
 // {
@@ -266,6 +265,7 @@ void print_vm_header() {
   printf("budget_function,");
   printf("total_used_budget_r,total_used_budget_w,");
   printf("total_calc_r,total_calc_w,");
+  // printf("total_clock,");
 
   for (int i = 0; i < PERIOD_QNT; i++) {
     printf("used_budget_per_period_read[%d],", i);
@@ -279,7 +279,10 @@ void print_vm_header() {
   for (int i = 0; i < PERIOD_QNT; i++) {
     printf("calc_per_period_write[%d],", i);
   }
-
+  // for (int i = 0; i < PERIOD_QNT; i++) {
+  //   printf("clock_per_period[%d],", i);
+  // }
+  //
   printf("\n");
 }
 
@@ -296,14 +299,17 @@ void print_vm_info(struct VM vm_info) {
   BenchmarkData info;
   write_used_budget(vm_info, &info);
   write_calc_budget(vm_info, &info);
+  // write_clock_cycle(vm_info, &info);
 
   printf("%s,", get_formula_name(get_budget_formula()));
   printf("%lu,%lu,", info.total_used_budget_r, info.total_used_budget_w);
   printf("%lu,%lu,", info.total_calc_r, info.total_calc_w);
+  // printf("%lu,", info.total_clock);
   print_array(info.used_budget_per_period_read);
   print_array(info.used_budget_per_period_write);
   print_array(info.calc_per_period_read);
   print_array(info.calc_per_period_write);
+  // print_array(info.clock_per_period);
 
   printf("\n");
 }
