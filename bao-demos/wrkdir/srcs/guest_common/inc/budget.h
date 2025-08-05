@@ -11,9 +11,9 @@
 //
 #define FORMULA_COUNT 5
 typedef enum {
+  LR_FORMULA,
   EWMA_FORMULA,
   SW_FORMULA,
-  LR_FORMULA,
   AMBP_FORMULA,
   AFC_FORMULA,
   // PIC_FORMULA,

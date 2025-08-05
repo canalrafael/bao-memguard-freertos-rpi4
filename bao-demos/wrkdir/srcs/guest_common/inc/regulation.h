@@ -97,7 +97,7 @@
 #define VM_2_REGULATION 0
 #define VM_3_REGULATION 0
 
-#define PERIOD_QNT 15
+#define PERIOD_QNT 10
 
 // Periodicity of each task
 // #define PERIOD_MS_TASK_0 30

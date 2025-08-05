@@ -1,0 +1,32 @@
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+
+
+U-Boot 2022.10 (May 01 2024 - 17:26:49 -0300)
+
+DRAM:  7.1 GiB
+RPI 4 Model B (0xd03115)
+Core:  202 devices, 16 uclasses, devicetree: board
+MMC:   mmcnr@7e300000: 1, emmc2@7e340000: 0
+Loading Environment from FAT... ** No partition table - mmc 0 **
+In:    serial
+Out:   serial
+Err:   serial
+Net:   eth0: ethernet@7d580000
+PCIe BRCM: link up, 5.0 Gbps x1 (SSC)
+starting USB...
+Bus xhci_pci: Register 5000420 NbrPorts 5
+Starting the controller
+USB XHCI 1.00
+scanning bus xhci_pci for devices... 2 USB Device(s) found
+       scanning usb for storage devices... 0 Storage Device(s) found
+Hit any key to stop autoboot:  2  0
+U-Boot> fatload mmc 0 0x200000 bao.bin; go 0x200000
+1290240 bytes read in 95 ms (13 MiB/s)
+## Starting application at 0x00200000 ...
+BENCH_ARRAY_INDEX 0
+budget_function,total_used_budget_r,total_used_budget_w,total_calc_r,total_calc_w,used_budget_per_period_read[0],used_budget_per_period_read[1],used_budget_per_period_read[2],used_budget_per_period_read[3],used_budget_per_period_read[4],used_budget_per_period_read[5],used_budget_per_period_read[6],used_budget_per_period_read[7],used_budget_per_period_read[8],used_budget_per_period_read[9],used_budget_per_period_write[0],used_budget_per_period_write[1],used_budget_per_period_write[2],used_budget_per_period_write[3],used_budget_per_period_write[4],used_budget_per_period_write[5],used_budget_per_period_write[6],used_budget_per_period_write[7],used_budget_per_period_write[8],used_budget_per_period_write[9],calc_per_period_read[0],calc_per_period_read[1],calc_per_period_read[2],calc_per_period_read[3],calc_per_period_read[4],calc_per_period_read[5],calc_per_period_read[6],calc_per_period_read[7],calc_per_period_read[8],calc_per_period_read[9],calc_per_period_write[0],calc_per_period_write[1],calc_per_period_write[2],calc_per_period_write[3],calc_per_period_write[4],calc_per_period_write[5],calc_per_period_write[6],calc_per_period_write[7],calc_per_period_write[8],calc_per_period_write[9],
+EWMA,10105411,7726296,5571224,3752822,1284920,175821,1303108,1303108,1109337,1109337,976017,976017,933873,933873,912752,912752,891359,891359,757640,757640,665564,665564,635833,635833,299769,274979,480604,480604,606350,606350,680283,680283,731001,731001,182550,182550,324311,324311,410976,410976,461893,461893,496681,496681,
+SW,3837191,5267600,3120386,2454136,71218,603478,96217,96217,1020252,226081,226081,1042745,227451,227451,64385,454824,454824,454824,632358,632358,632358,647223,647223,647223,678157,386461,256971,256971,256971,256971,256971,256971,256971,256971,407608,227392,227392,227392,227392,227392,227392,227392,227392,227392,
+AMBP,3758217,9337551,3694450,301196781,639796,1434568,75049,75049,137529,245768,122923,307310,19306,700919,226473,1012342,1012342,1012342,1012342,1012342,1012342,1012342,1012342,1012342,128039,389344,389344,389344,389344,389344,389344,389344,389344,451659,45374,238767,37362925,37362925,37675325,38216520,37602295,38524230,37084210,37084210,
+AFC,5377762,6433887,4264267,3284381,1256890,255169,952611,61324,1935972,77331,77331,181206,48054,531874,860350,21882,687835,687835,1279880,1279880,1279880,39429,39429,257487,266924,264573,402180,334009,654401,538987,538987,467431,383556,413219,172070,142033,251193,251193,456930,456930,456930,373430,373430,350242,

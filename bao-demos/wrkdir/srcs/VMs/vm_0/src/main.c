@@ -854,9 +854,11 @@ void ctrl_task(void *pvParameters) {
       vm_conf[VM_NUM].calc_w_budget_period[idx] =
           vm_conf[VM_NUM].new_write_budget;
 
+      PRINT("idx %d\n", idx);
       if (idx < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget != 0 &&
           vm_conf[VM_NUM].new_write_budget != 0) {
         idx++;
+        PRINT("idx to %d\n", idx);
       }
 
       PRINT("done\n");
@@ -881,8 +883,11 @@ void ctrl_task(void *pvParameters) {
         formula_t formula = get_budget_formula() + 1;
         if (formula >= FORMULA_COUNT) {
           info_showed = 1;
+          PRINT("INFO SHOWED. END.\n");
         } else {
           // task_conf.show_exe_info = 0;
+          PRINT("set budget formula from %d to %d\n", //
+                get_budget_formula(), formula);       //
           set_budget_formula(formula);
         }
       }

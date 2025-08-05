@@ -217,6 +217,14 @@ inline static uint32_t get_operation_usage(const uint8_t cpu_id,
     r_reg = MAX_INT - counter_t_a;
     w_reg = MAX_INT - counter_t_b;
     counter_t_a = counter_t_b = 0;
+    if (op_type == READ) {
+        PRINT("get_operation_usage READ MAX_INT %d - r_reg %d == %d", MAX_INT,
+              r_reg, MAX_INT - r_reg);
+    } else {
+        PRINT("get_operation_usage WRITE MAX_INT %d - w_reg %d == %d", MAX_INT,
+              w_reg, MAX_INT - w_reg);
+    }
+
     return op_type == READ ? (MAX_INT - r_reg) : (MAX_INT - w_reg);
 }
 
@@ -786,6 +794,24 @@ void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
     PRINT("regulator_budget_depleted\t formula %d", formula);
     print_VM(&reg_conf[cpu()->id].vm, true);
     print_counters(true);
+
+    static int last_formula = -1;
+    if (last_formula != formula) {
+        last_formula = formula;
+        reg_conf[cpu()->id].vm.depleated_op_type = UNKNOWN_VALUE;
+        reg_conf[cpu()->id].vm.current_used_read_budget = 0;
+        reg_conf[cpu()->id].vm.current_used_write_budget = 0;
+        reg_conf[cpu()->id].vm.total_used_read_budget = 0;
+        reg_conf[cpu()->id].vm.total_used_write_budget = 0;
+        reg_conf[cpu()->id].vm.total_calculated_new_read_budget = 0;
+        reg_conf[cpu()->id].vm.total_calculated_new_write_budget = 0;
+        reg_conf[cpu()->id].vm.new_read_budget = 0;
+        reg_conf[cpu()->id].vm.new_write_budget = 0;
+        reg_conf[cpu()->id].vm.defined_pmu_read_val = 250000;
+        reg_conf[cpu()->id].vm.defined_pmu_write_val = 250000;
+        PRINT("CHANGED FORMULA, NULL-oed VM struct\n");
+    }
+
     switch (formula) {
         case EWMA_FORMULA:
             ewma(cpu()->id, task_num);
