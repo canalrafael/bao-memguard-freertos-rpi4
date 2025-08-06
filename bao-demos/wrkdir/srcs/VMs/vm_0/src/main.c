@@ -61,7 +61,7 @@
 #include <budget.h>
 #include <data.h>
 
-#if 1
+#if 0
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)
@@ -80,7 +80,7 @@ int AdjMatrix[666][NUM_NODES];
 
 //=================================================================================
 
-#define VM_NUM 3
+#define VM_NUM 0
 
 // typedef struct {
 TaskHandle_t task_handlers[TASK_QUANTITY];

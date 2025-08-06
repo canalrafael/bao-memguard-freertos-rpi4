@@ -622,7 +622,7 @@ inline static void ambp(const uint8_t cpu_id, const uint8_t task_num)
         } else {
             // Decrease the budget
             reg_conf[cpu_id].ambp.qnt_budget_read_limit_reached = 0;
-            reg_conf[cpu_id].vm.new_write_budget =
+            reg_conf[cpu_id].vm.new_read_budget =
                 (950 * reg_conf[cpu_id].ambp.budget_read_limit +
                  50 * current_read_usage) /
                 reg_conf[cpu_id].ambp.scaling_factor;
@@ -825,9 +825,9 @@ void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
         case AFC_FORMULA:
             afc(cpu()->id, task_num);
             break;
-        case LR_FORMULA:
-            lr(cpu()->id, task_num);
-            break;
+        // case LR_FORMULA:
+        //     lr(cpu()->id, task_num);
+        //     break;
         // case PIC_FORMULA:
         //     pic(cpu()->id, task_num);
         //     break;

@@ -90,7 +90,7 @@
 #define EXEC_VM_0 1
 #define EXEC_VM_1 1
 #define EXEC_VM_2 1
-#define EXEC_VM_3 1
+#define EXEC_VM_3 0
 
 #define VM_0_REGULATION 1
 #define VM_1_REGULATION 0
@@ -136,7 +136,7 @@
   (INCREMENT_IF_EXEC_VM_0 + INCREMENT_IF_EXEC_VM_1 + INCREMENT_IF_EXEC_VM_2 +  \
    INCREMENT_IF_EXEC_VM_3)
 
-#define VM_QNT 4
+#define VM_QNT 3
 #define TASK_QUANTITY 2
 // #define BENCHMARK_QNT 8
 

@@ -159,7 +159,11 @@ volatile int count_primes_array(void) {
 
 ////////////
 
-volatile int empty() { return array[0]; }
+void empty() {
+  while (1) {
+    printf("\n\n\n\nthis should never happen\n\n\n\n");
+  }
+}
 
 volatile int max_sum(void) {
   int m = array[0];

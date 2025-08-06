@@ -74,7 +74,7 @@ int AdjMatrix[666][NUM_NODES];
 
 //=================================================================================
 
-#define VM_NUM 3
+#define VM_NUM 2
 
 // typedef struct {
 TaskHandle_t task_handlers[TASK_QUANTITY];

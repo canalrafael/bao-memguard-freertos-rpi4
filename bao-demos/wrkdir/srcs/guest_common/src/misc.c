@@ -145,11 +145,11 @@ void write_used_budget(struct VM vm_info, BenchmarkData *d) {
 void write_calc_budget(struct VM vm_info, BenchmarkData *d) {
   // printf("\tCalc per period \n\t\tr ");
 
-  uint64_t total_calc_read = 0;
-  uint64_t total_calc_write = 0;
+  int64_t total_calc_read = 0;
+  int64_t total_calc_write = 0;
   for (uint8_t i = 0; i < PERIOD_QNT; i++) {
-    uint64_t period_calc_read = vm_info.calc_r_budget_period[i];
-    uint64_t period_calc_write = vm_info.calc_w_budget_period[i];
+    int64_t period_calc_read = vm_info.calc_r_budget_period[i];
+    int64_t period_calc_write = vm_info.calc_w_budget_period[i];
 
     total_calc_read += period_calc_read;
     total_calc_write += period_calc_write;
@@ -165,9 +165,9 @@ void write_calc_budget(struct VM vm_info, BenchmarkData *d) {
 void write_clock_cycle(struct VM vm_info, BenchmarkData *d) {
   // printf("\tClock per period \n\t\t");
 
-  uint64_t total_clock = 0;
-  for (uint8_t i = 0; i < PERIOD_QNT; i++) {
-    uint64_t clock_period = vm_info.cycle_per_period[i];
+  int64_t total_clock = 0;
+  for (int8_t i = 0; i < PERIOD_QNT; i++) {
+    int64_t clock_period = vm_info.cycle_per_period[i];
     total_clock += clock_period;
 
     d->clock_per_period[i] = clock_period;
@@ -288,7 +288,7 @@ void print_vm_header() {
 
 void print_array(int64_t values[PERIOD_QNT]) {
   for (int i = 0; i < PERIOD_QNT; i++) {
-    printf("%lu,", values[i]);
+    printf("%ld,", values[i]);
   }
 }
 
@@ -302,8 +302,8 @@ void print_vm_info(struct VM vm_info) {
   // write_clock_cycle(vm_info, &info);
 
   printf("%s,", get_formula_name(get_budget_formula()));
-  printf("%lu,%lu,", info.total_used_budget_r, info.total_used_budget_w);
-  printf("%lu,%lu,", info.total_calc_r, info.total_calc_w);
+  printf("%ld,%ld,", info.total_used_budget_r, info.total_used_budget_w);
+  printf("%ld,%ld,", info.total_calc_r, info.total_calc_w);
   // printf("%lu,", info.total_clock);
   print_array(info.used_budget_per_period_read);
   print_array(info.used_budget_per_period_write);

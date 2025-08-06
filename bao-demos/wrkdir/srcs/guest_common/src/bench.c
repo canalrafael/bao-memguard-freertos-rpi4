@@ -11,14 +11,14 @@
 bool init = false;
 
 Function benchmark_functions[NUM_BENCHMARKS] = {
-    {0, bandwidth_wrapper, ""}, // -
-    {1, bandwidth_wrapper, ""}, // OK
-    {2, bandwidth_wrapper, ""}, // OK
-    {3, bandwidth_wrapper, ""}, // OK
-    {4, bandwidth_wrapper, ""}, // OK
-    {5, bandwidth_wrapper, ""}, // OK
-    {6, bandwidth_wrapper, ""}, // OK
-    {7, bandwidth_wrapper, ""}, // OK
+    {0, fft_wrapper, "0"},       // OK
+    {1, bandwidth_wrapper, "1"}, // OK
+    {2, bandwidth_wrapper, "2"}, // OK
+    {3, bandwidth_wrapper, "3"}, // OK
+    {4, bandwidth_wrapper, "4"}, // OK
+    {5, bandwidth_wrapper, "5"}, // OK
+    {6, empty, "6"},             // OK
+    {7, empty, "7"},             // OK
 
     // {1, fft_wrapper, "fft_wrapper"},             // -
     // {2, sorting_wrapper, "sorting_wrapper"},     // OK
@@ -96,7 +96,7 @@ int get_benchmark_index(int vm_num, int task_num) {
       (vm_num * TASK_QUANTITY + task_num) + (MAX_TASKS * BENCH_ARRAY_INDEX);
   if (index < 0 || index >= NUM_BENCHMARKS) {
     printf("Invalid get_benchmark_index call %d\n", index);
-    return 0;
+    return -1;
   }
   return index;
 }
