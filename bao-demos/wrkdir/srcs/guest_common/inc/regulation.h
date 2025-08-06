@@ -87,17 +87,20 @@
 // End do not change
 // =======================================
 
+#define PERIOD_QNT 30
+
 #define EXEC_VM_0 1
 #define EXEC_VM_1 1
 #define EXEC_VM_2 1
-#define EXEC_VM_3 0
+#define EXEC_VM_3 1
+
+#define VM_QNT 4
+#define TASK_QUANTITY 2
 
 #define VM_0_REGULATION 1
 #define VM_1_REGULATION 0
 #define VM_2_REGULATION 0
 #define VM_3_REGULATION 0
-
-#define PERIOD_QNT 30
 
 // Periodicity of each task
 // #define PERIOD_MS_TASK_0 30
@@ -136,8 +139,6 @@
   (INCREMENT_IF_EXEC_VM_0 + INCREMENT_IF_EXEC_VM_1 + INCREMENT_IF_EXEC_VM_2 +  \
    INCREMENT_IF_EXEC_VM_3)
 
-#define VM_QNT 4
-#define TASK_QUANTITY 2
 // #define BENCHMARK_QNT 8
 
 struct VM {
