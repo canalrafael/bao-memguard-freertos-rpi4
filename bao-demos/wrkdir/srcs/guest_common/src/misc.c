@@ -268,16 +268,16 @@ void print_vm_header() {
   // printf("total_clock,");
 
   for (int i = 0; i < PERIOD_QNT; i++) {
-    printf("used_budget_per_period_read[%d],", i);
+    printf("used_budget_read[%d],", i);
   }
   for (int i = 0; i < PERIOD_QNT; i++) {
-    printf("used_budget_per_period_write[%d],", i);
+    printf("used_budget_write[%d],", i);
   }
   for (int i = 0; i < PERIOD_QNT; i++) {
-    printf("calc_per_period_read[%d],", i);
+    printf("predicted_read[%d],", i);
   }
   for (int i = 0; i < PERIOD_QNT; i++) {
-    printf("calc_per_period_write[%d],", i);
+    printf("predicted_write[%d],", i);
   }
   // for (int i = 0; i < PERIOD_QNT; i++) {
   //   printf("clock_per_period[%d],", i);

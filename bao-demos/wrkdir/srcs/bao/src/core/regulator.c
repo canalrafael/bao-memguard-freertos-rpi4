@@ -710,34 +710,36 @@ inline static void afc(const uint8_t cpu_id, const uint8_t task_num)
     print_AFC(&reg_conf[cpu_id].afc, false);
 }
 
-inline static void lr(const uint8_t cpu_id, const uint8_t task_num)
-{
-    print_LR(&reg_conf[cpu_id].lr, true);
-
-    uint32_t r = 0, w = 0;
-
-    // READ
-    const uint32_t current_read_usage =
-        get_operation_usage(cpu_id, task_num, READ);
-
-    if (current_read_usage != 0 && current_read_usage < MARGIN) {
-        const uint8_t current_read_array_size =
-            reg_conf[cpu_id].lr.current_read_array_size;
-        if (current_read_array_size < LR_MAX_QNT_ACCESS) {
-            reg_conf[cpu_id].lr.read_usage[current_read_array_size] =
-                current_read_usage;
-            reg_conf[cpu_id].lr.current_read_array_size++;
-            reg_conf[cpu_id].vm.current_used_read_budget = current_read_usage;
-        }
-    }
-
-    if (r && w) {
-        for (uint8_t i = 0; i < LR_MAX_QNT_ACCESS; i++)
-            reg_conf[cpu_id].lr.t_vector[i] += 1;
-    }
-
-    print_LR(&reg_conf[cpu_id].lr, false);
-}
+// <not implemented>
+// inline static void lr(const uint8_t cpu_id, const uint8_t task_num)
+// {
+//     print_LR(&reg_conf[cpu_id].lr, true);
+//
+//     uint32_t r = 0, w = 0;
+//
+//     // READ
+//     const uint32_t current_read_usage =
+//         get_operation_usage(cpu_id, task_num, READ);
+//
+//     if (current_read_usage != 0 && current_read_usage < MARGIN) {
+//         const uint8_t current_read_array_size =
+//             reg_conf[cpu_id].lr.current_read_array_size;
+//         if (current_read_array_size < LR_MAX_QNT_ACCESS) {
+//             reg_conf[cpu_id].lr.read_usage[current_read_array_size] =
+//                 current_read_usage;
+//             reg_conf[cpu_id].lr.current_read_array_size++;
+//             reg_conf[cpu_id].vm.current_used_read_budget =
+//             current_read_usage;
+//         }
+//     }
+//
+//     if (r && w) {
+//         for (uint8_t i = 0; i < LR_MAX_QNT_ACCESS; i++)
+//             reg_conf[cpu_id].lr.t_vector[i] += 1;
+//     }
+//
+//     print_LR(&reg_conf[cpu_id].lr, false);
+// }
 
 inline static void pic(const uint8_t cpu_id, const uint8_t task_num)
 {
@@ -819,12 +821,12 @@ void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
         case SW_FORMULA:
             sw(cpu()->id, task_num);
             break;
-        case AMBP_FORMULA:
-            ambp(cpu()->id, task_num);
-            break;
         case AFC_FORMULA:
             afc(cpu()->id, task_num);
             break;
+        // case AMBP_FORMULA:
+        //     ambp(cpu()->id, task_num);
+        //     break;
         // case LR_FORMULA:
         //     lr(cpu()->id, task_num);
         //     break;

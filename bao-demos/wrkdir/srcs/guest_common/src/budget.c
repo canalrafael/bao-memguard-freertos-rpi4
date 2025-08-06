@@ -11,12 +11,12 @@ const char *get_formula_name(formula_t formula) {
   case SW_FORMULA:
     return "SW";
     break;
-  case AMBP_FORMULA:
-    return "AMBP";
-    break;
   case AFC_FORMULA:
     return "AFC";
     break;
+    // case AMBP_FORMULA:
+    //   return "AMBP";
+    //   break;
     // case LR_FORMULA:
     //   return "LR";
     //   break;
