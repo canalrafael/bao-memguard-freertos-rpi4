@@ -14,8 +14,6 @@
 #define NO 0
 #define YES 1
 
-#define READ 0
-#define WRITE 1
 #define UNUSED_ARG 0
 
 #define MAX_INT 4294967295U
@@ -23,7 +21,15 @@
 
 #define MAX_QNT_CORE 4
 
-#define GUEST_PMU_0_OR_1_OVERFLOWED 0
+#define PMU_COUNT 2
+#define PMU_0_OVERFLOWED_ID 0
+#define PMU_1_OVERFLOWED_ID 1
+
+#define READ 0
+#define WRITE 1
+
+#define OVERFLOWED 1
+
 // #define GUEST_RESUME_TASK_0_ID 0
 // #define GUEST_SUSPEND_TASK_0_BUDGET_ID 1
 //
@@ -148,7 +154,7 @@ uint32_t regulator_get_total_used_budget(const uint8_t task_num,
 
 #endif
 
-#if 0
+#if 1
 #define PRINT(fmt, ...) printk("[BAO] " fmt "\n", ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)

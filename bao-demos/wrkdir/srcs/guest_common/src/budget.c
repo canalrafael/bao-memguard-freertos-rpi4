@@ -8,12 +8,15 @@ const char *get_formula_name(formula_t formula) {
   case EWMA_FORMULA:
     return "EWMA";
     break;
-  case SW_FORMULA:
-    return "SW";
+  case EWMA_V2_FORMULA:
+    return "EWMA_v2";
     break;
-  case AFC_FORMULA:
-    return "AFC";
-    break;
+    // case SW_FORMULA:
+    //   return "SW";
+    //   break;
+    // case AFC_FORMULA:
+    //   return "AFC";
+    //   break;
     // case AMBP_FORMULA:
     //   return "AMBP";
     //   break;

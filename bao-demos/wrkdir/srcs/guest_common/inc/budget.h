@@ -9,12 +9,13 @@
 // #define PIC_FORMULA 5
 // #define USED_BUDGET_FORMULA 5
 //
-#define FORMULA_COUNT 3
+#define FORMULA_COUNT 2
 typedef enum {
   // LR_FORMULA, // not fully implemented in bao
+  EWMA_V2_FORMULA,
   EWMA_FORMULA,
-  SW_FORMULA,
-  AFC_FORMULA,
+  // SW_FORMULA,
+  // AFC_FORMULA,
   // AMBP_FORMULA,
   // PIC_FORMULA, // breaks the current logic, no idea how to fix
   // FORMULA_COUNT,

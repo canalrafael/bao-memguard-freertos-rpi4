@@ -61,7 +61,7 @@
 #include <budget.h>
 #include <data.h>
 
-#if 0
+#if 1
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)
@@ -80,17 +80,47 @@ int AdjMatrix[666][NUM_NODES];
 
 //=================================================================================
 
+/**
+ * @brief  Converts a boolean array into a single 32-bit bitmask.
+ *
+ * This function iterates through a boolean array. For each 'true' value
+ * at index 'i', it sets the i-th bit in the resulting integer.
+ *
+ * @param  arr   The input boolean array.
+ * @param  size  The number of elements in the array to process.
+ * @return A uint32_t where each bit corresponds to a 'true' element.
+ */
+uint32_t convert_array_to_bitmask(const bool arr[], int size) {
+  uint32_t bitmask = 0;
+
+  // Loop through each element of the boolean array.
+  for (int i = 0; i < size; i++) {
+    if (arr[i]) {
+      // If the element is true, set the corresponding bit in the mask
+      // using the bitwise OR assignment operator.
+      bitmask |= (1U << i);
+    }
+  }
+
+  return bitmask;
+}
+
 #define VM_NUM 0
 
-// typedef struct {
 TaskHandle_t task_handlers[TASK_QUANTITY];
+bool pmu_overflowed[PMU_COUNT] = {false};
 bool started_counter = 0;
-// } Task_handlers;
-// Task_handlers task_handlers[TASK_QUANTITY] = {{NULL, NULL}};
 
 #if VM_0_REGULATION
-static void suspend_task_budget_sgi() {
-  PRINT("OVERFLOW SIGNAL\n");
+static void sgi_pmu_0() {
+  PRINT("sgi signal pmu 0\n");
+  pmu_overflowed[0] = true;
+  vm_conf[VM_NUM].sgi_suspend_task_budget = 1;
+}
+
+static void sgi_pmu_1() {
+  PRINT("sgi signal pmu 1\n");
+  pmu_overflowed[1] = true;
   vm_conf[VM_NUM].sgi_suspend_task_budget = 1;
 }
 
@@ -813,9 +843,11 @@ void ctrl_task(void *pvParameters) {
 
   while (1) {
     TickType_t current_time_task_any = xTaskGetTickCount();
+
     if ((current_time_task_any - last_check_time_task_any) >= period_task_any &&
         !get_budget) {
       stop_counter();
+
       PRINT("control TIMEOUT: \n");
       PRINT("(current_time_task_any - last_check_time_task_any) >= "
             "period_task_any\n");
@@ -823,13 +855,17 @@ void ctrl_task(void *pvParameters) {
             last_check_time_task_any, period_task_any,
             (current_time_task_any - last_check_time_task_any),
             period_task_any);
+
       get_budget = 1;
       last_check_time_task_any = current_time_task_any;
+
     } else if (vm_conf[VM_NUM].sgi_suspend_task_budget && !get_budget) {
       stop_counter();
-      PRINT("control OVERFLOW\n");
       get_budget = 1;
+
+      PRINT("control OVERFLOW\n");
     } else {
+
       static int number = 0;
       PRINT("NOTHING %d\n", number++);
     }
@@ -837,7 +873,9 @@ void ctrl_task(void *pvParameters) {
     if (get_budget) {
 
       PRINT("calling HC_regulator_get_new_budget\n");
-      HC_regulator_budget_depleted(UNUSED_ARG, get_budget_formula());
+
+      uint8_t pmu_bitmask = convert_array_to_bitmask(pmu_overflowed, PMU_COUNT);
+      HC_regulator_budget_depleted(pmu_bitmask, get_budget_formula());
 
       vm_conf[VM_NUM].used_r_budget_period[idx] =
           HC_regulator_get_current_used_budget(UNUSED_ARG, READ);
@@ -1004,9 +1042,13 @@ int main(void) {
   print_vm_header();
 
 #if VM_0_REGULATION
-  irq_set_handler(GUEST_PMU_0_OR_1_OVERFLOWED, suspend_task_budget_sgi);
-  irq_enable(GUEST_PMU_0_OR_1_OVERFLOWED);
-  irq_set_prio(GUEST_PMU_0_OR_1_OVERFLOWED, 0);
+  irq_set_handler(PMU_0_OVERFLOWED_ID, sgi_pmu_0);
+  irq_enable(PMU_0_OVERFLOWED_ID);
+  irq_set_prio(PMU_0_OVERFLOWED_ID, 0);
+
+  irq_set_handler(PMU_1_OVERFLOWED_ID, sgi_pmu_1);
+  irq_enable(PMU_1_OVERFLOWED_ID);
+  irq_set_prio(PMU_1_OVERFLOWED_ID, 0);
 
   xTaskCreate(ctrl_task, "vm_ctrl_task", 1400, NULL, CTRL_TASK_PRIORITY, NULL);
 #endif
