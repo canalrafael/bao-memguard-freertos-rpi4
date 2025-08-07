@@ -193,17 +193,27 @@ void init_regulation_config()
     }
 }
 
-// inline static uint32_t get_operation_usage(const uint8_t cpu_id,
-//                                            const uint8_t task_num,
-//                                            uint8_t op_type)
-// {
-//     uint32_t pmu_counter_0 = PMU_get_counter_value(0);
-//     uint32_t pmu_counter_1 = PMU_get_counter_value(1);
-//     uint32_t r_reg = MAX_INT - pmu_counter_0;
-//     uint32_t w_reg = MAX_INT - pmu_counter_1;
-//     return op_type == READ ? r_reg : w_reg;
-// }
+inline static uint32_t get_operation_usage_v2(uint8_t pmu_index,
+                                              uint32_t defined_budget,
+                                              bool overflowed)
+{
+    uint32_t pmu_counter = PMU_get_counter_value(pmu_index);
+    uint32_t result = 0;
 
+    if (overflowed) {
+        // return the defined budget.
+        // (since that what was used)
+        result = defined_budget;
+    } else {
+        // return the (partial) used budget.
+        // the total was not met and there was no overflow
+        result = defined_budget - (MAX_INT - pmu_counter);  // end - (start)
+    }
+
+    return result;
+}
+
+// ...
 inline static uint32_t get_operation_usage(const uint8_t cpu_id,
                                            const uint8_t task_num,
                                            uint8_t op_type)
@@ -228,7 +238,7 @@ inline static uint32_t get_operation_usage(const uint8_t cpu_id,
     return op_type == READ ? (MAX_INT - r_reg) : (MAX_INT - w_reg);
 }
 
-inline static void ewma(const uint8_t cpu_id, const uint8_t task_num_)
+inline static void ewma(const uint8_t cpu_id, const uint8_t _unused_)
 {
     print_EWMA(&reg_conf[cpu_id].ewma, true);
 
@@ -786,44 +796,194 @@ inline static void pic(const uint8_t cpu_id, const uint8_t task_num)
     print_PIC(&reg_conf[cpu_id].pic, false);
 }
 
+//////////////
+
+/**
+ * @brief  Calculates the new EWMA value based on the current and previous
+ * states.
+ * @param  current_usage    The latest measured value.
+ * @param  prev_prediction  The prediction from the previous time step.
+ * @param  alpha            The weight given to the current value (smoothing
+ * factor numerator).
+ * @param  scaling_factor   The denominator for the smoothing factor.
+ * @return The newly calculated EWMA prediction.
+ */
+static inline uint32_t calculate_ewma(const uint32_t current_usage,
+                                      const uint32_t prev_prediction,
+                                      const uint16_t alpha,
+                                      const uint16_t scaling_factor)
+{
+    // --- Safety Check ---
+    // Prevents a division-by-zero crash if the scaling_factor is misconfigured.
+    if (scaling_factor == 0) {
+        // Log this as a critical error in a real system.
+        // Returning the previous prediction is a safe fallback.
+        printk("\t\tinvalid usage of calculate_ewma, null scaling_factor\n");
+        return prev_prediction;
+    }
+
+    // --- The EWMA Formula ---
+    // NewPrediction = β * CurrentValue + (1 - β) * PreviousPrediction
+    // where β = alpha / scaling_factor
+    // The calculation uses 64-bit integers to prevent overflow before the final
+    // division.
+    return (uint32_t)(((uint64_t)alpha * current_usage +
+                       (uint64_t)(scaling_factor - alpha) * prev_prediction) /
+                      scaling_factor);
+}
+
+/**
+ * @brief  Calculates the next EWMA budget based on provided usage values.
+ *
+ * This function is a pure calculation engine. It is the caller's
+ * responsibility to provide the most accurate usage data for the period.
+ *
+ * @param  cpu_id              The CPU identifier for the configuration.
+ * @param  actual_read_usage   The actual read usage for the completed period.
+ * @param  actual_write_usage  The actual write usage for the completed period.
+ */
+void ewma_budget_v2(const uint32_t cpu_id, const uint32_t actual_read_usage,
+                    const uint32_t actual_write_usage, bool new_read,
+                    bool new_write)
+{
+    struct VM *vm_conf = &reg_conf[cpu_id].vm;
+    struct EWMA *ewma_conf = &reg_conf[cpu_id].ewma;
+
+    // --- READ: Update stats and calculate next budget ---
+    if (new_read) {
+        vm_conf->current_used_read_budget = actual_read_usage;
+        vm_conf->total_used_read_budget += actual_read_usage;
+
+        ewma_conf->previous_predicted_read_budget = ewma_conf->new_read_budget;
+        ewma_conf->new_read_budget = calculate_ewma(
+            (actual_read_usage < MARGIN) ? actual_read_usage : MARGIN,
+            ewma_conf->previous_predicted_read_budget, ewma_conf->alpha,
+            ewma_conf->scaling_factor);
+
+        vm_conf->new_read_budget = ewma_conf->new_read_budget;
+        // (FIX) Add update for total allocated budget statistic
+        vm_conf->total_calculated_new_read_budget += vm_conf->new_read_budget;
+    }
+    //
+    if (new_write) {
+        // --- WRITE: Update stats and calculate next budget ---
+        vm_conf->current_used_write_budget = actual_write_usage;
+        vm_conf->total_used_write_budget += actual_write_usage;
+
+        ewma_conf->previous_predicted_write_budget =
+            ewma_conf->new_write_budget;
+        ewma_conf->new_write_budget = calculate_ewma(
+            (actual_write_usage < MARGIN) ? actual_write_usage : MARGIN,
+            ewma_conf->previous_predicted_write_budget, ewma_conf->alpha,
+            ewma_conf->scaling_factor);
+
+        vm_conf->new_write_budget = ewma_conf->new_write_budget;
+        // (FIX) Add update for total allocated budget statistic
+        vm_conf->total_calculated_new_write_budget += vm_conf->new_write_budget;
+    }
+}
+
+//////////////
+
 void print_counters(bool before)
 {
     PMU_print_all_counters(before ? "BEFORE" : "AFTER");
 }
 
-void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
+void reset_vm()
+{
+    reg_conf[cpu()->id].vm.depleated_op_type = UNKNOWN_VALUE;
+    reg_conf[cpu()->id].vm.current_used_read_budget = 0;
+    reg_conf[cpu()->id].vm.current_used_write_budget = 0;
+    reg_conf[cpu()->id].vm.total_used_read_budget = 0;
+    reg_conf[cpu()->id].vm.total_used_write_budget = 0;
+    reg_conf[cpu()->id].vm.total_calculated_new_read_budget = 0;
+    reg_conf[cpu()->id].vm.total_calculated_new_write_budget = 0;
+    reg_conf[cpu()->id].vm.new_read_budget = 0;
+    reg_conf[cpu()->id].vm.new_write_budget = 0;
+    reg_conf[cpu()->id].vm.defined_pmu_read_val = 250000;
+    reg_conf[cpu()->id].vm.defined_pmu_write_val = 250000;
+}
+
+void print_bool_array(const bool arr[], int size)
+{
+    PRINT("Boolean Array State:");
+    for (int i = 0; i < size; i++) {
+        // Use %s for the string and the ternary operator to choose the output
+        PRINT("  Flag[%d] = %s", i, arr[i] ? "true" : "false");
+    }
+}
+
+/**
+ * @brief  Populates a boolean array based on the bits set in an integer mask.
+ *
+ * This function iterates from bit 0 to 'size - 1' of the input bitmask.
+ * For each position 'i', it sets arr[i] to true if the bit is set,
+ * and false otherwise.
+ *
+ * @param  bitmask The input integer to read the bits from.
+ * @param  arr     The output boolean array to populate.
+ * @param  size    The number of bits/array elements to process.
+ */
+void convert_bitmask_to_array(uint8_t bitmask, bool arr[], int size)
+{
+    print_bool_array(arr, size);
+
+    for (int i = 0; i < size; i++) {
+        // Check if the i-th bit is set in the bitmask.
+        if (bitmask & (1U << i)) {
+            arr[i] = true;
+        } else {
+            arr[i] = false;
+        }
+    }
+
+    print_bool_array(arr, size);
+}
+
+void reset_vm_on_new_formula(formula_t const formula)
+{
+    // HACK:
+    static int last_formula = -1;
+    if (last_formula != formula) {
+        last_formula = formula;
+        reset_vm();
+        PRINT("CHANGED FORMULA, NULL-oed VM struct\n");
+    }
+}
+
+void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
 {
     PRINT("regulator_budget_depleted\t formula %d", formula);
     print_VM(&reg_conf[cpu()->id].vm, true);
     print_counters(true);
 
-    static int last_formula = -1;
-    if (last_formula != formula) {
-        last_formula = formula;
-        reg_conf[cpu()->id].vm.depleated_op_type = UNKNOWN_VALUE;
-        reg_conf[cpu()->id].vm.current_used_read_budget = 0;
-        reg_conf[cpu()->id].vm.current_used_write_budget = 0;
-        reg_conf[cpu()->id].vm.total_used_read_budget = 0;
-        reg_conf[cpu()->id].vm.total_used_write_budget = 0;
-        reg_conf[cpu()->id].vm.total_calculated_new_read_budget = 0;
-        reg_conf[cpu()->id].vm.total_calculated_new_write_budget = 0;
-        reg_conf[cpu()->id].vm.new_read_budget = 0;
-        reg_conf[cpu()->id].vm.new_write_budget = 0;
-        reg_conf[cpu()->id].vm.defined_pmu_read_val = 250000;
-        reg_conf[cpu()->id].vm.defined_pmu_write_val = 250000;
-        PRINT("CHANGED FORMULA, NULL-oed VM struct\n");
-    }
+    bool overflowed_pmu[PMU_COUNT] = {false};
+    convert_bitmask_to_array(pmu_id, overflowed_pmu, PMU_COUNT);
+    reset_vm_on_new_formula(formula);
+
+    cpuid_t cpu_id = cpu()->id;
+    bool new_read = overflowed_pmu[READ];
+    bool new_write = overflowed_pmu[WRITE];
+    uint32_t actual_read_usage =  //
+        get_operation_usage_v2(cpu_id, READ, new_read);
+    uint32_t actual_write_usage =
+        get_operation_usage_v2(cpu_id, WRITE, new_write);
 
     switch (formula) {
         case EWMA_FORMULA:
-            ewma(cpu()->id, task_num);
+            ewma(cpu_id, UNUSED_ARG);
             break;
-        case SW_FORMULA:
-            sw(cpu()->id, task_num);
+        case EWMA_V2_FORMULA:
+            ewma_budget_v2(cpu_id, actual_read_usage, actual_write_usage,
+                           new_read, new_write);
             break;
-        case AFC_FORMULA:
-            afc(cpu()->id, task_num);
-            break;
+        // case SW_FORMULA:
+        //     sw(cpu_id, task_num);
+        //     break;
+        // case AFC_FORMULA:
+        //     afc(cpu_id, task_num);
+        //     break;
         // case AMBP_FORMULA:
         //     ambp(cpu()->id, task_num);
         //     break;
@@ -837,25 +997,14 @@ void regulator_budget_depleted(const uint8_t task_num, formula_t formula)
             printk("something has gone very wrong!\n");
             break;
     }
-    // print_Regulation_config(&reg_conf[cpu()->id], "AFTER");
 
     reg_conf[cpu()->id].vm.depleated_op_type = UNKNOWN_VALUE;
-
-    // if (task_num == 0)
-    PMU_reset_counter(0);
-    PMU_reset_counter(1);
+    for (int i = 0; i < PMU_COUNT; ++i) {
+        PMU_reset_counter(i);
+    }
 
     print_VM(&reg_conf[cpu()->id].vm, false);
     print_counters(false);
-    // else
-    //     PMU_reset_counter(2);
-
-#if DEBUG
-    printk("VM %u task %u, new R: %u, new W: %u, formula: %s\n", cpu()->id,
-           task_num, reg_conf[cpu()->id].vm.new_read_budget,
-           reg_conf[cpu()->id].vm.new_write_budget, "UNDEFINED");
-    // get_current_formula_name());
-#endif
 }
 
 uint32_t regulator_get_new_budget(const uint8_t task_num, const uint8_t op_type)

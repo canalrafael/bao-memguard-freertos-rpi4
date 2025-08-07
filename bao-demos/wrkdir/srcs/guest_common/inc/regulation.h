@@ -22,7 +22,9 @@
 
 #define PMU_COUNTER_PAIR_RW 0
 
-#define GUEST_PMU_0_OR_1_OVERFLOWED 0
+#define PMU_0_OVERFLOWED_ID 0
+#define PMU_1_OVERFLOWED_ID 1
+
 // #define GUEST_RESUME_TASK_0_ID 0
 // #define GUEST_SUSPEND_TASK_0_BUDGET_ID 1
 //
@@ -49,6 +51,7 @@
 // #define TASK_PRIORITY_6 6
 // #define TASK_PRIORITY_7 7
 
+#define PMU_COUNT 2
 #define PMU_COUNTER0 0
 #define PMU_COUNTER1 1
 #define PMU_COUNTER2 2
