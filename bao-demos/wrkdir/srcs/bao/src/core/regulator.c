@@ -201,9 +201,9 @@ inline static uint32_t get_operation_usage_v2(uint8_t pmu_index,
     uint32_t result = 0;
 
     if (overflowed) {
-        // return the defined budget.
+        // return the defined budget + leftover.
         // (since that what was used)
-        result = defined_budget;
+        result = defined_budget + pmu_counter;
     } else {
         // return the (partial) used budget.
         // the total was not met and there was no overflow
@@ -843,44 +843,38 @@ static inline uint32_t calculate_ewma(const uint32_t current_usage,
  * @param  actual_write_usage  The actual write usage for the completed period.
  */
 void ewma_budget_v2(const uint32_t cpu_id, const uint32_t actual_read_usage,
-                    const uint32_t actual_write_usage, bool new_read,
-                    bool new_write)
+                    const uint32_t actual_write_usage)
 {
     struct VM *vm_conf = &reg_conf[cpu_id].vm;
     struct EWMA *ewma_conf = &reg_conf[cpu_id].ewma;
 
+    print_EWMA(&reg_conf[cpu_id].ewma, true);
+
     // --- READ: Update stats and calculate next budget ---
-    if (new_read) {
-        vm_conf->current_used_read_budget = actual_read_usage;
-        vm_conf->total_used_read_budget += actual_read_usage;
+    vm_conf->current_used_read_budget = actual_read_usage;
+    vm_conf->total_used_read_budget += actual_read_usage;
+    ewma_conf->previous_predicted_read_budget = ewma_conf->new_read_budget;
+    ewma_conf->new_read_budget = calculate_ewma(
+        (actual_read_usage < MARGIN) ? actual_read_usage : MARGIN,
+        ewma_conf->previous_predicted_read_budget, ewma_conf->alpha,
+        ewma_conf->scaling_factor);
+    vm_conf->new_read_budget = ewma_conf->new_read_budget;
+    // (FIX) Add update for total allocated budget statistic
+    vm_conf->total_calculated_new_read_budget += vm_conf->new_read_budget;
 
-        ewma_conf->previous_predicted_read_budget = ewma_conf->new_read_budget;
-        ewma_conf->new_read_budget = calculate_ewma(
-            (actual_read_usage < MARGIN) ? actual_read_usage : MARGIN,
-            ewma_conf->previous_predicted_read_budget, ewma_conf->alpha,
-            ewma_conf->scaling_factor);
+    // --- WRITE: Update stats and calculate next budget ---
+    vm_conf->current_used_write_budget = actual_write_usage;
+    vm_conf->total_used_write_budget += actual_write_usage;
+    ewma_conf->previous_predicted_write_budget = ewma_conf->new_write_budget;
+    ewma_conf->new_write_budget = calculate_ewma(
+        (actual_write_usage < MARGIN) ? actual_write_usage : MARGIN,
+        ewma_conf->previous_predicted_write_budget, ewma_conf->alpha,
+        ewma_conf->scaling_factor);
+    vm_conf->new_write_budget = ewma_conf->new_write_budget;
+    // (FIX) Add update for total allocated budget statistic
+    vm_conf->total_calculated_new_write_budget += vm_conf->new_write_budget;
 
-        vm_conf->new_read_budget = ewma_conf->new_read_budget;
-        // (FIX) Add update for total allocated budget statistic
-        vm_conf->total_calculated_new_read_budget += vm_conf->new_read_budget;
-    }
-    //
-    if (new_write) {
-        // --- WRITE: Update stats and calculate next budget ---
-        vm_conf->current_used_write_budget = actual_write_usage;
-        vm_conf->total_used_write_budget += actual_write_usage;
-
-        ewma_conf->previous_predicted_write_budget =
-            ewma_conf->new_write_budget;
-        ewma_conf->new_write_budget = calculate_ewma(
-            (actual_write_usage < MARGIN) ? actual_write_usage : MARGIN,
-            ewma_conf->previous_predicted_write_budget, ewma_conf->alpha,
-            ewma_conf->scaling_factor);
-
-        vm_conf->new_write_budget = ewma_conf->new_write_budget;
-        // (FIX) Add update for total allocated budget statistic
-        vm_conf->total_calculated_new_write_budget += vm_conf->new_write_budget;
-    }
+    print_EWMA(&reg_conf[cpu_id].ewma, false);
 }
 
 //////////////
@@ -892,6 +886,7 @@ void print_counters(bool before)
 
 void reset_vm()
 {
+    // VM
     reg_conf[cpu()->id].vm.depleated_op_type = UNKNOWN_VALUE;
     reg_conf[cpu()->id].vm.current_used_read_budget = 0;
     reg_conf[cpu()->id].vm.current_used_write_budget = 0;
@@ -899,10 +894,18 @@ void reset_vm()
     reg_conf[cpu()->id].vm.total_used_write_budget = 0;
     reg_conf[cpu()->id].vm.total_calculated_new_read_budget = 0;
     reg_conf[cpu()->id].vm.total_calculated_new_write_budget = 0;
-    reg_conf[cpu()->id].vm.new_read_budget = 0;
-    reg_conf[cpu()->id].vm.new_write_budget = 0;
     reg_conf[cpu()->id].vm.defined_pmu_read_val = 250000;
     reg_conf[cpu()->id].vm.defined_pmu_write_val = 250000;
+    reg_conf[cpu()->id].vm.new_read_budget = 0;
+    reg_conf[cpu()->id].vm.new_write_budget = 0;
+
+    // EWMA
+    reg_conf[cpu()->id].ewma.previous_predicted_read_budget = 0;
+    reg_conf[cpu()->id].ewma.previous_predicted_write_budget = 0;
+    reg_conf[cpu()->id].ewma.new_read_budget = 0;
+    reg_conf[cpu()->id].ewma.new_write_budget = 0;
+    reg_conf[cpu()->id].ewma.alpha = 2;
+    reg_conf[cpu()->id].ewma.scaling_factor = 10;
 }
 
 void print_bool_array(const bool arr[], int size)
@@ -948,7 +951,7 @@ void reset_vm_on_new_formula(formula_t const formula)
     if (last_formula != formula) {
         last_formula = formula;
         reset_vm();
-        PRINT("CHANGED FORMULA, NULL-oed VM struct\n");
+        PRINT("CHANGED FORMULA, NULL-oed VM struct");
     }
 }
 
@@ -975,8 +978,7 @@ void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
             ewma(cpu_id, UNUSED_ARG);
             break;
         case EWMA_V2_FORMULA:
-            ewma_budget_v2(cpu_id, actual_read_usage, actual_write_usage,
-                           new_read, new_write);
+            ewma_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
             break;
         // case SW_FORMULA:
         //     sw(cpu_id, task_num);

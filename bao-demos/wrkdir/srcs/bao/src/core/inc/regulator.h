@@ -21,7 +21,7 @@
 
 #define MAX_QNT_CORE 4
 
-#define PMU_COUNT 2
+#define PMU_COUNT 6
 #define PMU_0_OVERFLOWED_ID 0
 #define PMU_1_OVERFLOWED_ID 1
 
