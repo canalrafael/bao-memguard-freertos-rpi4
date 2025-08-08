@@ -12,8 +12,8 @@
 #define FORMULA_COUNT 2
 typedef enum {
   // LR_FORMULA, // not fully implemented in bao
-  EWMA_V2_FORMULA,
   EWMA_FORMULA,
+  EWMA_V2_FORMULA,
   // SW_FORMULA,
   // AFC_FORMULA,
   // AMBP_FORMULA,

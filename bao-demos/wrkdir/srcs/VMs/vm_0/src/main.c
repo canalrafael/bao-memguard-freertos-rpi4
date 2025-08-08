@@ -876,6 +876,9 @@ void ctrl_task(void *pvParameters) {
 
       uint8_t pmu_bitmask = convert_array_to_bitmask(pmu_overflowed, PMU_COUNT);
       HC_regulator_budget_depleted(pmu_bitmask, get_budget_formula());
+      for (int i = 0; i < PMU_COUNT; ++i) {
+        pmu_overflowed[i] = false; // reset the flags
+      }
 
       vm_conf[VM_NUM].used_r_budget_period[idx] =
           HC_regulator_get_current_used_budget(UNUSED_ARG, READ);

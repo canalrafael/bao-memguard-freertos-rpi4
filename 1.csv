@@ -1,0 +1,2691 @@
+EWMA,88341960,2227666,17668380,1962416,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,2944732,286581,75456,71694,68376,69316,66199,66141,65813,65708,66496,65581,65738,65714,66652,66728,66461,66337,66401,67285,66323,66159,66400,65746,66362,66439,66407,66284,66469,66032,66368,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,588946,57316,60944,63094,64150,65183,65386,65537,65592,65615,65791,65749,65746,65739,65921,66082,66157,66193,66234,66444,66419,66367,66373,66247,66270,66303,66323,66315,66345,66282,66299,
+[DEBUG] TASK: OVER 0 | UNDER 0
+[DEBUG] set budget formula from 0 to 1
+[DEBUG] Configured counter.
+[DEBUG] Started counter.
+[DEBUG] suspending task 0
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1092 - 977) >= 30 | 115 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 588946
+[BAO]   defined_pmu_write_val           = 66299
+[BAO]   current_used_read_budget        = 2944732
+[BAO]   current_used_write_budget       = 66368
+[BAO]   new_read_budget                 = 588946
+[BAO]   new_write_budget                = 66299
+[BAO]   total_used_read_budget          = 2944732
+[BAO]   total_used_write_budget         = 2227666
+[BAO]   total_calculated_new_read_budget = 0
+[BAO]   total_calculated_new_write_budget= 0
+[BAO] Counters: BEFORE
+[BAO] C0: 4294835376
+[BAO] C1: 66272
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] CHANGED FORMULA, NULL-oed VM struct
+
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 0
+[BAO]   previous_predicted_write_budget = 66282
+[BAO]   new_read_budget                 = 588946
+[BAO]   new_write_budget                = 66299
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 0
+[BAO]   previous_predicted_write_budget = 66299
+[BAO]   new_read_budget                 = 588946
+[BAO]   new_write_budget                = 53039
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 250000
+[BAO]   defined_pmu_write_val           = 250000
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 0
+[BAO]   new_write_budget                = 53039
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 1
+[BAO]   total_calculated_new_read_budget = 0
+[BAO]   total_calculated_new_write_budget= 53039
+[BAO] Counters: AFTER
+[BAO] C0: 4294835376
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 0
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 0
+[DEBUG] Started counter.
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1125 - 1092) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 0
+[BAO]   defined_pmu_write_val           = 53039
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 0
+[BAO]   new_write_budget                = 53039
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 1
+[BAO]   total_calculated_new_read_budget = 0
+[BAO]   total_calculated_new_write_budget= 53039
+[BAO] Counters: BEFORE
+[BAO] C0: 457075
+[BAO] C1: 79609
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = true
+[BAO]   Flag[1] = false
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 0
+[BAO]   previous_predicted_write_budget = 66299
+[BAO]   new_read_budget                 = 588946
+[BAO]   new_write_budget                = 53039
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 66299
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 53039
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 0
+[BAO]   defined_pmu_write_val           = 53039
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 53039
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 1
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 53039
+[BAO] Counters: AFTER
+[BAO] C0: 0
+[BAO] C1: 79609
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 0
+[DEBUG] idx to 1
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] Started counter.
+[DEBUG] suspendi[DEBUG] sgi signal pmu 1
+nl pmu 1
+
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1157 - 1125) >= 30 | 32 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 53039
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 53039
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 1
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 53039
+[BAO] Counters: BEFORE
+[BAO] C0: 4294953187
+[BAO] C1: 79519
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 66299
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 53039
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 53039
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 42431
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 53039
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 42431
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 2
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 95470
+[BAO] Counters: AFTER
+[BAO] C0: 4294953187
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 1
+[DEBUG] idx to 2
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] Started counter.
+[DEBUG] [DEBUG] sgi signal pmu 1
+sgi signal pmu 1
+
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1191 - 1157) >= 30 | 34 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 42431
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 42431
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 2
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 95470
+[BAO] Counters: BEFORE
+[BAO] C0: 4294953548
+[BAO] C1: 90359
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 53039
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 42431
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 42431
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 33945
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 42431
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 33945
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 3
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 129415
+[BAO] Counters: AFTER
+[BAO] C0: 4294953548
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 2
+[DEBUG] idx to 3
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] Started counter.
+[[DEBUG] sgi signal pmu 1
+DEBUG] sgi signal pmu 1
+
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1225 - 1191) >= 30 | 34 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 33945
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 33945
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 3
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 129415
+[BAO] Counters: BEFORE
+[BAO] C0: 4294953611
+[BAO] C1: 98765
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 42431
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 33945
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 33945
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 27156
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 33945
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 27156
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 4
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 156571
+[BAO] Counters: AFTER
+[BAO] C0: 4294953611
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 3
+[DEBUG] idx to 4
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] Started counte[DEBUG] sgi signal pmu 1
+r1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1260 - 1225) >= 30 | 35 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 27156
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 27156
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 4
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 156571
+[BAO] Counters: BEFORE
+[BAO] C0: 4294950605
+[BAO] C1: 104618
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 33945
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 27156
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 27156
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 21725
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 27156
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 21725
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 5
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 178296
+[BAO] Counters: AFTER
+[BAO] C0: 4294950605
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 4
+[DEBUG] idx to 5
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] Started c[DEBUG] sgi signal pmu 1
+o pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1294 - 1260) >= 30 | 34 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 21725
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 21725
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 5
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 178296
+[BAO] Counters: BEFORE
+[BAO] C0: 4294949633
+[BAO] C1: 109825
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 27156
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 21725
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 21725
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 17380
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 21725
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 17380
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 6
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 195676
+[BAO] Counters: AFTER
+[BAO] C0: 4294949633
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 5
+[DEBUG] idx to 6
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] Starte[DEBUG] sgi signal pmu 1
+dnal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1328 - 1294) >= 30 | 34 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 17380
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 17380
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 6
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 195676
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948246
+[BAO] C1: 113669
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 21725
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 17380
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 17380
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 13904
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 17380
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 13904
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 7
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 209580
+[BAO] Counters: AFTER
+[BAO] C0: 4294948246
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 6
+[DEBUG] idx to 7
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] Sta[DEBUG] sgi signal pmu 1
+rsignal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1361 - 1328) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 13904
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 13904
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 7
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 209580
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948920
+[BAO] C1: 117320
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 17380
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 13904
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 13904
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 11123
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 13904
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 11123
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 8
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 220703
+[BAO] Counters: AFTER
+[BAO] C0: 4294948920
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 7
+[DEBUG] idx to 8
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] [DEBUG] sgi signal pmu 1
+Sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1394 - 1361) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 11123
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 11123
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 8
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 220703
+[BAO] Counters: BEFORE
+[BAO] C0: 4294953186
+[BAO] C1: 121441
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 13904
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 11123
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 11123
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 8898
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 11123
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 8898
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 9
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 229601
+[BAO] Counters: AFTER
+[BAO] C0: 4294953186
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 8
+[DEBUG] idx to 9
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG][DEBUG] sgi signal pmu 1
+ sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1428 - 1394) >= 30 | 34 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 8898
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 8898
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 9
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 229601
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948534
+[BAO] C1: 122252
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 11123
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 8898
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 8898
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 7118
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 8898
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 7118
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 10
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 236719
+[BAO] Counters: AFTER
+[BAO] C0: 4294948534
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 9
+[DEBUG] idx to 10
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBU[DEBUG] sgi signal pmu 1
+G] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1462 - 1428) >= 30 | 34 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 7118
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 7118
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 10
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 236719
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948322
+[BAO] C1: 124041
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 8898
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 7118
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 7118
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 5694
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 7118
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 5694
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 11
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 242413
+[BAO] Counters: AFTER
+[BAO] C0: 4294948322
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 10
+[DEBUG] idx to 11
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEB[DEBUG] sgi signal pmu 1
+UG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1496 - 1462) >= 30 | 34 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 5694
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 5694
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 11
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 242413
+[BAO] Counters: BEFORE
+[BAO] C0: 4294949968
+[BAO] C1: 125922
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 7118
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 5694
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 5694
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 4555
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 5694
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 4555
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 12
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 246968
+[BAO] Counters: AFTER
+[BAO] C0: 4294949968
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 11
+[DEBUG] idx to 12
+[DEBUG] done
+[DEBUG] Configured counter.
+[DE[DEBUG] sgi signal pmu 1
+BUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1531 - 1496) >= 30 | 35 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 4555
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 4555
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 12
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 246968
+[BAO] Counters: BEFORE
+[BAO] C0: 4294949020
+[BAO] C1: 126845
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 5694
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 4555
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 4555
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 3644
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 4555
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 3644
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 13
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 250612
+[BAO] Counters: AFTER
+[BAO] C0: 4294949020
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 12
+[DEBUG] idx to 13
+[DEBUG] done
+[DEBUG] Configured counter.
+[D[DEBUG] sgi signal pmu 1
+EBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1565 - 1531) >= 30 | 34 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 3644
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 3644
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 13
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 250612
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948887
+[BAO] C1: 127748
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 4555
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 3644
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 3644
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 2915
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 3644
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 2915
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 14
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 253527
+[BAO] Counters: AFTER
+[BAO] C0: 4294948887
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 13
+[DEBUG] idx to 14
+[DEBUG] done
+[DEBUG] Configured counter.
+[D[DEBUG] sgi signal pmu 1
+EBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1599 - 1565) >= 30 | 34 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 2915
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 2915
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 14
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 253527
+[BAO] Counters: BEFORE
+[BAO] C0: 4294949018
+[BAO] C1: 128533
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 3644
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 2915
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 2915
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 2332
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 2915
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 2332
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 15
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 255859
+[BAO] Counters: AFTER
+[BAO] C0: 4294949018
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 14
+[DEBUG] idx to 15
+[DEBUG] done
+[DEBUG] Configured counter.
+[[DEBUG] sgi signal pmu 1
+DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1632 - 1599) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 2332
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 2332
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 15
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 255859
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948301
+[BAO] C1: 128817
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 2915
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 2332
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 2332
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 1865
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 2332
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 1865
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 16
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 257724
+[BAO] Counters: AFTER
+[BAO] C0: 4294948301
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 15
+[DEBUG] idx to 16
+[DEBUG] done
+[DEBUG] Configured counter.
+[[DEBUG] sgi signal pmu 1
+DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1665 - 1632) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 1865
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 1865
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 16
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 257724
+[BAO] Counters: BEFORE
+[BAO] C0: 4294953233
+[BAO] C1: 130855
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 2332
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 1865
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 1865
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 1492
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 1865
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 1492
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 17
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 259216
+[BAO] Counters: AFTER
+[BAO] C0: 4294953233
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 16
+[DEBUG] idx to 17
+[DEBUG] done
+[DEBUG] Configured counter.
+[[DEBUG] sgi signal pmu 1
+DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1698 - 1665) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 1492
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 1492
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 17
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 259216
+[BAO] Counters: BEFORE
+[BAO] C0: 4294949070
+[BAO] C1: 129853
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 1865
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 1492
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 1492
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 1193
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 1492
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 1193
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 18
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 260409
+[BAO] Counters: AFTER
+[BAO] C0: 4294949070
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 17
+[DEBUG] idx to 18
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1731 - 1698) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 1193
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 1193
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 18
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 260409
+[BAO] Counters: BEFORE
+[BAO] C0: 4294951366
+[BAO] C1: 131020
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 1492
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 1193
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 1193
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 954
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 1193
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 954
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 19
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 261363
+[BAO] Counters: AFTER
+[BAO] C0: 4294951366
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 18
+[DEBUG] idx to 19
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1764 - 1731) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 954
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 954
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 19
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 261363
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948926
+[BAO] C1: 130534
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 1193
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 954
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 954
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 763
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 954
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 763
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 20
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 262126
+[BAO] Counters: AFTER
+[BAO] C0: 4294948926
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 19
+[DEBUG] idx to 20
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1797 - 1764) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 763
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 763
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 20
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 262126
+[BAO] Counters: BEFORE
+[BAO] C0: 4294949057
+[BAO] C1: 130781
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 954
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 763
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 763
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 610
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 763
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 610
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 21
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 262736
+[BAO] Counters: AFTER
+[BAO] C0: 4294949057
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 20
+[DEBUG] idx to 21
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1830 - 1797) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 610
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 610
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 21
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 262736
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948573
+[BAO] C1: 130725
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 763
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 610
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 610
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 488
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 610
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 488
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 22
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 263224
+[BAO] Counters: AFTER
+[BAO] C0: 4294948573
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 21
+[DEBUG] idx to 22
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1863 - 1830) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 488
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 488
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 22
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 263224
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948799
+[BAO] C1: 130894
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 610
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 488
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 488
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 390
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 488
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 390
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 23
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 263614
+[BAO] Counters: AFTER
+[BAO] C0: 4294948799
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 22
+[DEBUG] idx to 23
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1896 - 1863) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 390
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 390
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 23
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 263614
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948670
+[BAO] C1: 131024
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 488
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 390
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 390
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 312
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 390
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 312
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 24
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 263926
+[BAO] Counters: AFTER
+[BAO] C0: 4294948670
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 23
+[DEBUG] idx to 24
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1929 - 1896) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 312
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 312
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 24
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 263926
+[BAO] Counters: BEFORE
+[BAO] C0: 4294953130
+[BAO] C1: 132414
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 390
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 312
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 312
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 249
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 312
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 249
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 25
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264175
+[BAO] Counters: AFTER
+[BAO] C0: 4294953130
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 24
+[DEBUG] idx to 25
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1962 - 1929) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 249
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 249
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 25
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264175
+[BAO] Counters: BEFORE
+[BAO] C0: 4294953290
+[BAO] C1: 132502
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 312
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 249
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 249
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 199
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 249
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 199
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 26
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264374
+[BAO] Counters: AFTER
+[BAO] C0: 4294953290
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 25
+[DEBUG] idx to 26
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (1995 - 1962) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 199
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 199
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 26
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264374
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948951
+[BAO] C1: 131291
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 249
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 199
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 199
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 159
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 199
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 159
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 27
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264533
+[BAO] Counters: AFTER
+[BAO] C0: 4294948951
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 26
+[DEBUG] idx to 27
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (2028 - 1995) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 159
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 159
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 27
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264533
+[BAO] Counters: BEFORE
+[BAO] C0: 4294949042
+[BAO] C1: 131358
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 199
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 159
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 159
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 127
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 159
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 127
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 28
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264660
+[BAO] Counters: AFTER
+[BAO] C0: 4294949042
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 27
+[DEBUG] idx to 28
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (2061 - 2028) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 127
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 127
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 28
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264660
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948919
+[BAO] C1: 131221
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 159
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 127
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 127
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 101
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 127
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 101
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 29
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264761
+[BAO] Counters: AFTER
+[BAO] C0: 4294948919
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 28
+[DEBUG] idx to 29
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (2094 - 2061) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 101
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 101
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 29
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264761
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948555
+[BAO] C1: 131362
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 127
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 101
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 101
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 81
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 101
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 81
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 30
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264842
+[BAO] Counters: AFTER
+[BAO] C0: 4294948555
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 29
+[DEBUG] idx to 30
+[DEBUG] done
+EWMA_v2,0,30,14134680,264842,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,471156,53039,42431,33945,27156,21725,17380,13904,11123,8898,7118,5694,4555,3644,2915,2332,1865,1492,1193,954,763,610,488,390,312,249,199,159,127,101,81,
+[DEBUG] TASK: OVER 0 | UNDER 0
+[DEBUG] INFO SHOWED. END.
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (2177 - 2094) >= 30 | 83 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 81
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 81
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 30
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264842
+[BAO] Counters: BEFORE
+[BAO] C0: 4294952521
+[BAO] C1: 132431
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 101
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 81
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 81
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 65
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 81
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 65
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 31
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264907
+[BAO] Counters: AFTER
+[BAO] C0: 4294952521
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 0
+[DEBUG] idx to 1
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (2210 - 2177) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 65
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 65
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 31
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264907
+[BAO] Counters: BEFORE
+[BAO] C0: 4294953412
+[BAO] C1: 132726
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 81
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 65
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 65
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 52
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 65
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 52
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 32
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264959
+[BAO] Counters: AFTER
+[BAO] C0: 4294953412
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 1
+[DEBUG] idx to 2
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (2243 - 2210) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 52
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 52
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 32
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 264959
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948576
+[BAO] C1: 131213
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 65
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 52
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 52
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 41
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 52
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 41
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 33
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 265000
+[BAO] Counters: AFTER
+[BAO] C0: 4294948576
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 2
+[DEBUG] idx to 3
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (2276 - 2243) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 41
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 41
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 33
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 265000
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948725
+[BAO] C1: 131425
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 52
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 41
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 41
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 33
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 41
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 33
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 34
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 265033
+[BAO] Counters: AFTER
+[BAO] C0: 4294948725
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 3
+[DEBUG] idx to 4
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] sgi signal pmu 1
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (2309 - 2276) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 33
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 33
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 34
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 265033
+[BAO] Counters: BEFORE
+[BAO] C0: 4294948963
+[BAO] C1: 131471
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 41
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 33
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 33
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 26
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 33
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 26
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 35
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 265059
+[BAO] Counters: AFTER
+[BAO] C0: 4294948963
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 4
+[DEBUG] idx to 5
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] Started counter.[DEBUG] sgi signal pmu 1
+[[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (2340 - 2309) >= 30 | 31 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 26
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 26
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 35
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 265059
+[BAO] Counters: BEFORE
+[BAO] C0: 4294944143
+[BAO] C1: 129673
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = false
+[BAO] Boolean Array State:
+[BAO]   Flag[0] = false
+[BAO]   Flag[1] = true
+[BAO] EWMA: BEFORE
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 33
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 26
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] EWMA: AFTER
+[BAO]   previous_predicted_read_budget  = 588946
+[BAO]   previous_predicted_write_budget = 26
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 21
+[BAO]   alpha                           = 2
+[BAO]   scaling_factor                  = 10
+[BAO] VM: AFTER
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 26
+[BAO]   current_used_read_budget        = 0
+[BAO]   current_used_write_budget       = 1
+[BAO]   new_read_budget                 = 471156
+[BAO]   new_write_budget                = 21
+[BAO]   total_used_read_budget          = 0
+[BAO]   total_used_write_budget         = 36
+[BAO]   total_calculated_new_read_budget = 471156
+[BAO]   total_calculated_new_write_budget= 265080
+[BAO] Counters: AFTER
+[BAO] C0: 4294944143
+[BAO] C1: 0
+[BAO] C2: 0
+[BAO] C3: 0
+[BAO] C4: 0
+[BAO] C5: 0
+[DEBUG] idx 5
+[DEBUG] idx to 6
+[DEBUG] done
+[DEBUG] Configured counter.
+[DEBUG] sgi signal pmu 1
+[DEBUG] Started counter.
+[DEBUG] suspending task 0
+[DEBUG] suspending task 1
+[DEBUG] Stoped counter.
+[DEBUG] control TIMEOUT: 
+[DEBUG] (current_time_task_any - last_check_time_task_any) >= period_task_any
+[DEBUG] (2373 - 2340) >= 30 | 33 >= 30
+[DEBUG] calling HC_regulator_get_new_budget
+[BAO] regulator_budget_depleted	 formula 1
+[BAO] VM: BEFORE
+[BAO]   depleated_op_type               = 4294967295
+[BAO]   defined_pmu_read_val            = 471156
+[BAO]   defined_pmu_write_val           = 21
+[BAO]   current_used_read_budget        = 0
+[BAO]   curren
