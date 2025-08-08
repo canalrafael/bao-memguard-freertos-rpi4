@@ -123,73 +123,84 @@ void print_Regulation_config(const struct Regulation_config *rc,
     PRINT("========================");
 }
 
+void reset_vm(cpuid_t vm_num)
+{
+    // VM
+    reg_conf[vm_num].vm.depleated_op_type = UNKNOWN_VALUE;
+    reg_conf[vm_num].vm.current_used_read_budget = 0;
+    reg_conf[vm_num].vm.current_used_write_budget = 0;
+    reg_conf[vm_num].vm.total_used_read_budget = 0;
+    reg_conf[vm_num].vm.total_used_write_budget = 0;
+    reg_conf[vm_num].vm.total_calculated_new_read_budget = 0;
+    reg_conf[vm_num].vm.total_calculated_new_write_budget = 0;
+    reg_conf[vm_num].vm.defined_pmu_read_val = 250000;
+    reg_conf[vm_num].vm.defined_pmu_write_val = 250000;
+    reg_conf[vm_num].vm.new_read_budget = 0;
+    reg_conf[vm_num].vm.new_write_budget = 0;
+}
+
+void reset_budget_formulas(cpuid_t vm_num)
+{
+    // EWMA
+    reg_conf[vm_num].ewma.previous_predicted_read_budget = 0;
+    reg_conf[vm_num].ewma.previous_predicted_write_budget = 0;
+    reg_conf[vm_num].ewma.new_read_budget = 0;
+    reg_conf[vm_num].ewma.new_write_budget = 0;
+    reg_conf[vm_num].ewma.alpha = 2;
+    reg_conf[vm_num].ewma.scaling_factor = 10;
+
+    // SW
+    for (uint8_t i_sw = 0; i_sw < SW_MAX_ARRAY_SIZE; i_sw++) {
+        reg_conf[vm_num].sw.read_usage[i_sw] = 0;
+        reg_conf[vm_num].sw.write_usage[i_sw] = 0;
+    }
+
+    reg_conf[vm_num].sw.current_read_array_size = 0;
+    reg_conf[vm_num].sw.current_write_array_size = 0;
+    reg_conf[vm_num].sw.read_index = 0;
+    reg_conf[vm_num].sw.write_index = 0;
+
+    // AMBP
+    reg_conf[vm_num].ambp.budget_read_limit = 100;
+    reg_conf[vm_num].ambp.budget_write_limit = 100;
+    reg_conf[vm_num].ambp.qnt_budget_read_limit_reached = 0;
+    reg_conf[vm_num].ambp.qnt_budget_write_limit_reached = 0;
+    reg_conf[vm_num].ambp.penalty_by_reaching_budget_read_limit = 0;
+    reg_conf[vm_num].ambp.penalty_by_reaching_budget_write_limit = 0;
+    reg_conf[vm_num].ambp.alpha = 2;
+    reg_conf[vm_num].ambp.scaling_factor = 10;
+
+    // AFC
+    reg_conf[vm_num].afc.previous_read_budget = 0;
+    reg_conf[vm_num].afc.previous_write_budget = 0;
+    reg_conf[vm_num].afc.proportional_gain = 2;
+    reg_conf[vm_num].afc.scaling_factor = 10;
+
+    // LR
+    for (uint8_t i_lr = 0; i_lr < LR_MAX_QNT_ACCESS; i_lr++) {
+        reg_conf[vm_num].lr.t_vector[i_lr] = i_lr;
+        reg_conf[vm_num].lr.read_usage[i_lr] = 0;
+        reg_conf[vm_num].lr.write_usage[i_lr] = 0;
+        reg_conf[vm_num].lr.total_read_exec = 0;
+        reg_conf[vm_num].lr.total_write_exec = 0;
+    }
+
+    reg_conf[vm_num].lr.current_read_array_size = 0;
+    reg_conf[vm_num].lr.current_write_array_size = 0;
+
+    // PIC
+    reg_conf[vm_num].pic.accumulated_read_error = 0;
+    reg_conf[vm_num].pic.accumulated_write_error = 0;
+    reg_conf[vm_num].pic.kp = 2;
+    reg_conf[vm_num].pic.ki = 1;
+    reg_conf[vm_num].pic.scaling_factor = 10;
+}
+
 void init_regulation_config()
 {
     for (uint8_t vm_num = 0; vm_num < VM_QNT; vm_num++) {
-        // VW
-        reg_conf[vm_num].vm.depleated_op_type = UNKNOWN_VALUE;
-        reg_conf[vm_num].vm.current_used_read_budget = 0;
-        reg_conf[vm_num].vm.current_used_write_budget = 0;
-        reg_conf[vm_num].vm.total_used_read_budget = 0;
-        reg_conf[vm_num].vm.total_used_write_budget = 0;
-        reg_conf[vm_num].vm.total_calculated_new_read_budget = 0;
-        reg_conf[vm_num].vm.total_calculated_new_write_budget = 0;
-        reg_conf[vm_num].vm.new_read_budget = 0;
-        reg_conf[vm_num].vm.new_write_budget = 0;
-
-        // EWMA
-        reg_conf[vm_num].ewma.previous_predicted_read_budget = 0;
-        reg_conf[vm_num].ewma.previous_predicted_write_budget = 0;
-        reg_conf[vm_num].ewma.new_read_budget = 0;
-        reg_conf[vm_num].ewma.new_write_budget = 0;
-        reg_conf[vm_num].ewma.alpha = 2;
-        reg_conf[vm_num].ewma.scaling_factor = 10;
-
-        // SW
-        for (uint8_t i_sw = 0; i_sw < SW_MAX_ARRAY_SIZE; i_sw++) {
-            reg_conf[vm_num].sw.read_usage[i_sw] = 0;
-            reg_conf[vm_num].sw.write_usage[i_sw] = 0;
-        }
-
-        reg_conf[vm_num].sw.current_read_array_size = 0;
-        reg_conf[vm_num].sw.current_write_array_size = 0;
-        reg_conf[vm_num].sw.read_index = 0;
-        reg_conf[vm_num].sw.write_index = 0;
-
-        // AMBP
-        reg_conf[vm_num].ambp.budget_read_limit = 100;
-        reg_conf[vm_num].ambp.budget_write_limit = 100;
-        reg_conf[vm_num].ambp.qnt_budget_read_limit_reached = 0;
-        reg_conf[vm_num].ambp.qnt_budget_write_limit_reached = 0;
-        reg_conf[vm_num].ambp.penalty_by_reaching_budget_read_limit = 0;
-        reg_conf[vm_num].ambp.penalty_by_reaching_budget_write_limit = 0;
-        reg_conf[vm_num].ambp.alpha = 2;
-        reg_conf[vm_num].ambp.scaling_factor = 10;
-
-        // AFC
-        reg_conf[vm_num].afc.previous_read_budget = 0;
-        reg_conf[vm_num].afc.previous_write_budget = 0;
-        reg_conf[vm_num].afc.proportional_gain = 2;
-        reg_conf[vm_num].afc.scaling_factor = 10;
-
-        // LR
-        for (uint8_t i_lr = 0; i_lr < LR_MAX_QNT_ACCESS; i_lr++) {
-            reg_conf[vm_num].lr.t_vector[i_lr] = i_lr;
-            reg_conf[vm_num].lr.read_usage[i_lr] = 0;
-            reg_conf[vm_num].lr.write_usage[i_lr] = 0;
-            reg_conf[vm_num].lr.total_read_exec = 0;
-            reg_conf[vm_num].lr.total_write_exec = 0;
-        }
-
-        reg_conf[vm_num].lr.current_read_array_size = 0;
-        reg_conf[vm_num].lr.current_write_array_size = 0;
-
-        // PIC
-        reg_conf[vm_num].pic.accumulated_read_error = 0;
-        reg_conf[vm_num].pic.accumulated_write_error = 0;
-        reg_conf[vm_num].pic.kp = 2;
-        reg_conf[vm_num].pic.ki = 1;
-        reg_conf[vm_num].pic.scaling_factor = 10;
+        reset_vm(vm_num);
+        reset_budget_formulas(vm_num);
     }
 }
 
@@ -877,35 +888,121 @@ void ewma_budget_v2(const uint32_t cpu_id, const uint32_t actual_read_usage,
     print_EWMA(&reg_conf[cpu_id].ewma, false);
 }
 
+/**
+ * @brief Calculates the next memory budget using a sliding window average.
+ *
+ * This function implements the "Average of Last Window" strategy. It maintains
+ * a history of recent memory usage in a circular buffer. The new budget is set
+ * to the simple average of the last 'SW_MAX_WINDOW_SIZE' periods. This provides
+ * a balance of stability and responsiveness.
+ *
+ * This version has been updated to calculate a new budget on every call.
+ * During the initial phase when the history buffer is not yet full, it will
+ * average the number of samples currently available.
+ *
+ * @param cpu_id The ID of the CPU core for which the budget is being
+ * calculated.
+ * @param actual_read_usage The measured memory read operations for the last
+ * period.
+ * @param actual_write_usage The measured memory write operations for the last
+ * period.
+ */
+inline static void sw_budget_v2(const uint8_t cpu_id,
+                                const uint32_t actual_read_usage,
+                                const uint32_t actual_write_usage)
+{
+    // Get pointers to the relevant configuration structs for cleaner code
+    struct VM *vm_conf = &reg_conf[cpu_id].vm;
+    struct SW *sw_conf = &reg_conf[cpu_id].sw;
+
+    print_SW(sw_conf, true);
+
+    // --- READ BUDGET CALCULATION ---
+
+    // Update VM statistics with the actual measured usage for this period.
+    vm_conf->current_used_read_budget = actual_read_usage;
+    vm_conf->total_used_read_budget += actual_read_usage;
+
+    // Add the new usage data to our historical circular buffer.
+    sw_conf->read_usage[sw_conf->read_index] = actual_read_usage;
+    sw_conf->read_index = (sw_conf->read_index + 1) % SW_MAX_ARRAY_SIZE;
+
+    // Increment the count of historical samples, up to the maximum buffer size.
+    if (sw_conf->current_read_array_size < SW_MAX_ARRAY_SIZE) {
+        sw_conf->current_read_array_size++;
+    }
+
+    // NEW LOGIC: Determine how many samples to average. This ensures we always
+    // calculate a budget, even before the window is full.
+    uint8_t read_samples_to_average =
+        (sw_conf->current_read_array_size < SW_MAX_WINDOW_SIZE)
+            ? sw_conf->current_read_array_size
+            : SW_MAX_WINDOW_SIZE;
+
+    // Always calculate a new budget if we have at least one sample.
+    if (read_samples_to_average > 0) {
+        uint64_t sum_of_window = 0;
+
+        // Calculate the sum of the last 'read_samples_to_average' samples.
+        for (uint8_t i = 0; i < read_samples_to_average; i++) {
+            uint16_t index =
+                (sw_conf->read_index - (i + 1) + SW_MAX_ARRAY_SIZE) %
+                SW_MAX_ARRAY_SIZE;
+            sum_of_window += sw_conf->read_usage[index];
+        }
+
+        // Calculate the average and set it as the new budget.
+        vm_conf->new_read_budget =
+            (sum_of_window + (read_samples_to_average / 2)) /
+            read_samples_to_average;
+    }
+
+    // --- WRITE BUDGET CALCULATION ---
+
+    vm_conf->current_used_write_budget = actual_write_usage;
+    vm_conf->total_used_write_budget += actual_write_usage;
+
+    sw_conf->write_usage[sw_conf->write_index] = actual_write_usage;
+    sw_conf->write_index = (sw_conf->write_index + 1) % SW_MAX_ARRAY_SIZE;
+
+    if (sw_conf->current_write_array_size < SW_MAX_ARRAY_SIZE) {
+        sw_conf->current_write_array_size++;
+    }
+
+    // NEW LOGIC: Determine how many samples to average for the write budget.
+    uint8_t write_samples_to_average =
+        (sw_conf->current_write_array_size < SW_MAX_WINDOW_SIZE)
+            ? sw_conf->current_write_array_size
+            : SW_MAX_WINDOW_SIZE;
+
+    if (write_samples_to_average > 0) {
+        uint64_t sum_of_window = 0;
+
+        for (uint8_t i = 0; i < write_samples_to_average; i++) {
+            uint16_t index =
+                (sw_conf->write_index - (i + 1) + SW_MAX_ARRAY_SIZE) %
+                SW_MAX_ARRAY_SIZE;
+            sum_of_window += sw_conf->write_usage[index];
+        }
+
+        vm_conf->new_write_budget =
+            (sum_of_window + (write_samples_to_average / 2)) /
+            write_samples_to_average;
+    }
+
+    // Update total allocated budget statistic. This is now safe because a new
+    // budget is calculated on every call (assuming at least one sample exists).
+    vm_conf->total_calculated_new_read_budget += vm_conf->new_read_budget;
+    vm_conf->total_calculated_new_write_budget += vm_conf->new_write_budget;
+
+    print_SW(sw_conf, false);
+}
+
 //////////////
 
 void print_counters(bool before)
 {
     PMU_print_all_counters(before ? "BEFORE" : "AFTER");
-}
-
-void reset_vm()
-{
-    // VM
-    reg_conf[cpu()->id].vm.depleated_op_type = UNKNOWN_VALUE;
-    reg_conf[cpu()->id].vm.current_used_read_budget = 0;
-    reg_conf[cpu()->id].vm.current_used_write_budget = 0;
-    reg_conf[cpu()->id].vm.total_used_read_budget = 0;
-    reg_conf[cpu()->id].vm.total_used_write_budget = 0;
-    reg_conf[cpu()->id].vm.total_calculated_new_read_budget = 0;
-    reg_conf[cpu()->id].vm.total_calculated_new_write_budget = 0;
-    reg_conf[cpu()->id].vm.defined_pmu_read_val = 250000;
-    reg_conf[cpu()->id].vm.defined_pmu_write_val = 250000;
-    reg_conf[cpu()->id].vm.new_read_budget = 0;
-    reg_conf[cpu()->id].vm.new_write_budget = 0;
-
-    // EWMA
-    reg_conf[cpu()->id].ewma.previous_predicted_read_budget = 0;
-    reg_conf[cpu()->id].ewma.previous_predicted_write_budget = 0;
-    reg_conf[cpu()->id].ewma.new_read_budget = 0;
-    reg_conf[cpu()->id].ewma.new_write_budget = 0;
-    reg_conf[cpu()->id].ewma.alpha = 2;
-    reg_conf[cpu()->id].ewma.scaling_factor = 10;
 }
 
 void print_bool_array(const bool arr[], int size)
@@ -928,21 +1025,21 @@ void print_bool_array(const bool arr[], int size)
  * @param  arr     The output boolean array to populate.
  * @param  size    The number of bits/array elements to process.
  */
-void convert_bitmask_to_array(uint8_t bitmask, bool arr[], int size)
-{
-    print_bool_array(arr, size);
-
-    for (int i = 0; i < size; i++) {
-        // Check if the i-th bit is set in the bitmask.
-        if (bitmask & (1U << i)) {
-            arr[i] = true;
-        } else {
-            arr[i] = false;
-        }
-    }
-
-    print_bool_array(arr, size);
-}
+// void convert_bitmask_to_array(uint8_t bitmask, bool arr[], int size)
+// {
+//     print_bool_array(arr, size);
+//
+//     for (int i = 0; i < size; i++) {
+//         // Check if the i-th bit is set in the bitmask.
+//         if (bitmask & (1U << i)) {
+//             arr[i] = true;
+//         } else {
+//             arr[i] = false;
+//         }
+//     }
+//
+//     print_bool_array(arr, size);
+// }
 
 void reset_vm_on_new_formula(formula_t const formula)
 {
@@ -961,13 +1058,11 @@ void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
     print_VM(&reg_conf[cpu()->id].vm, true);
     print_counters(true);
 
-    bool overflowed_pmu[PMU_COUNT] = {false};
-    convert_bitmask_to_array(pmu_id, overflowed_pmu, PMU_COUNT);
     reset_vm_on_new_formula(formula);
 
     cpuid_t cpu_id = cpu()->id;
-    bool new_read = overflowed_pmu[READ];
-    bool new_write = overflowed_pmu[WRITE];
+    bool new_read = (pmu_id == READ);
+    bool new_write = (pmu_id == WRITE);
     uint32_t actual_read_usage =  //
         get_operation_usage_v2(cpu_id, READ, new_read);
     uint32_t actual_write_usage =
@@ -980,9 +1075,13 @@ void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
         case EWMA_V2_FORMULA:
             ewma_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
             break;
-        // case SW_FORMULA:
-        //     sw(cpu_id, task_num);
-        //     break;
+        case SW_FORMULA:
+            sw(cpu_id, UNUSED_ARG);
+            break;
+        case SW_V2_FORMULA:
+            sw_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+            break;
+
         // case AFC_FORMULA:
         //     afc(cpu_id, task_num);
         //     break;

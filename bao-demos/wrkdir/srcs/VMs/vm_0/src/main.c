@@ -80,47 +80,46 @@ int AdjMatrix[666][NUM_NODES];
 
 //=================================================================================
 
-/**
- * @brief  Converts a boolean array into a single 32-bit bitmask.
- *
- * This function iterates through a boolean array. For each 'true' value
- * at index 'i', it sets the i-th bit in the resulting integer.
- *
- * @param  arr   The input boolean array.
- * @param  size  The number of elements in the array to process.
- * @return A uint32_t where each bit corresponds to a 'true' element.
- */
-uint32_t convert_array_to_bitmask(const bool arr[], int size) {
-  uint32_t bitmask = 0;
-
-  // Loop through each element of the boolean array.
-  for (int i = 0; i < size; i++) {
-    if (arr[i]) {
-      // If the element is true, set the corresponding bit in the mask
-      // using the bitwise OR assignment operator.
-      bitmask |= (1U << i);
-    }
-  }
-
-  return bitmask;
-}
+// /**
+//  * @brief  Converts a boolean array into a single 32-bit bitmask.
+//  *
+//  * This function iterates through a boolean array. For each 'true' value
+//  * at index 'i', it sets the i-th bit in the resulting integer.
+//  *
+//  * @param  arr   The input boolean array.
+//  * @param  size  The number of elements in the array to process.
+//  * @return A uint32_t where each bit corresponds to a 'true' element.
+//  */
+// uint32_t convert_array_to_bitmask(const bool arr[], int size) {
+//   uint32_t bitmask = 0;
+//
+//   // Loop through each element of the boolean array.
+//   for (int i = 0; i < size; i++) {
+//     if (arr[i]) {
+//       // If the element is true, set the corresponding bit in the mask
+//       // using the bitwise OR assignment operator.
+//       bitmask |= (1U << i);
+//     }
+//   }
+//
+//   return bitmask;
+// }
 
 #define VM_NUM 0
 
 TaskHandle_t task_handlers[TASK_QUANTITY];
-bool pmu_overflowed[PMU_COUNT] = {false};
-bool started_counter = 0;
+uint32_t pmu_overflowed = -1;
 
 #if VM_0_REGULATION
 static void sgi_pmu_0() {
   PRINT("sgi signal pmu 0\n");
-  pmu_overflowed[0] = true;
+  pmu_overflowed = 0;
   vm_conf[VM_NUM].sgi_suspend_task_budget = 1;
 }
 
 static void sgi_pmu_1() {
   PRINT("sgi signal pmu 1\n");
-  pmu_overflowed[1] = true;
+  pmu_overflowed = 1;
   vm_conf[VM_NUM].sgi_suspend_task_budget = 1;
 }
 
@@ -842,6 +841,7 @@ void ctrl_task(void *pvParameters) {
   uint8_t idx = 0;
 
   while (1) {
+    PRINT("begin control task\n");
     TickType_t current_time_task_any = xTaskGetTickCount();
 
     if ((current_time_task_any - last_check_time_task_any) >= period_task_any &&
@@ -874,11 +874,7 @@ void ctrl_task(void *pvParameters) {
 
       PRINT("calling HC_regulator_get_new_budget\n");
 
-      uint8_t pmu_bitmask = convert_array_to_bitmask(pmu_overflowed, PMU_COUNT);
-      HC_regulator_budget_depleted(pmu_bitmask, get_budget_formula());
-      for (int i = 0; i < PMU_COUNT; ++i) {
-        pmu_overflowed[i] = false; // reset the flags
-      }
+      HC_regulator_budget_depleted(pmu_overflowed, get_budget_formula());
 
       vm_conf[VM_NUM].used_r_budget_period[idx] =
           HC_regulator_get_current_used_budget(UNUSED_ARG, READ);
@@ -939,6 +935,8 @@ void ctrl_task(void *pvParameters) {
 
     vTaskDelayUntil(&last_wake_time, frequency);
     last_wake_time = xTaskGetTickCount();
+
+    PRINT("end control task\n");
   }
 
   vTaskDelete(NULL);
