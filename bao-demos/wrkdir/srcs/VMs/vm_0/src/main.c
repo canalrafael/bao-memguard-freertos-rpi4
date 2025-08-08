@@ -61,7 +61,7 @@
 #include <budget.h>
 #include <data.h>
 
-#if 1
+#if 0
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)
@@ -833,8 +833,11 @@ void ctrl_task(void *pvParameters) {
   TickType_t last_wake_time = xTaskGetTickCount();
 
   // check VM tasks' period
-  const TickType_t period_task_any = pdMS_TO_TICKS(PERIOD_MS_TASK_ANY);
-  TickType_t last_check_time_task_any = xTaskGetTickCount();
+  const TickType_t control_period = pdMS_TO_TICKS(PERIOD_MS_TASK_ANY);
+
+  // --- CORRECTED TIMING LOGIC ---
+  // This variable will hold the start time of the current measurement period.
+  TickType_t period_start_time = xTaskGetTickCount();
 
   uint8_t get_budget = 0;
   uint8_t info_showed = 0;
@@ -842,10 +845,10 @@ void ctrl_task(void *pvParameters) {
 
   while (1) {
     PRINT("begin control task\n");
-    TickType_t current_time_task_any = xTaskGetTickCount();
+    TickType_t current_time = xTaskGetTickCount();
+    TickType_t period_end_time = 0; // Variable to store the exact end time
 
-    if ((current_time_task_any - last_check_time_task_any) >= period_task_any &&
-        !get_budget) {
+    if ((current_time - period_start_time) >= control_period && !get_budget) {
       stop_counter();
 
       PRINT("control TIMEOUT: \n");
@@ -856,13 +859,17 @@ void ctrl_task(void *pvParameters) {
             (current_time_task_any - last_check_time_task_any),
             period_task_any);
 
+      period_end_time = current_time; // Capture the end time
+      pmu_overflowed =
+          UNUSED_VALUE; // Explicitly signal that a timeout occurred ---
       get_budget = 1;
-      last_check_time_task_any = current_time_task_any;
+      period_end_time = current_time;
 
     } else if (vm_conf[VM_NUM].sgi_suspend_task_budget && !get_budget) {
       stop_counter();
       get_budget = 1;
 
+      period_end_time = xTaskGetTickCount(); // Capture the end time on overflow
       PRINT("control OVERFLOW\n");
     } else {
 
@@ -871,6 +878,13 @@ void ctrl_task(void *pvParameters) {
     }
 
     if (get_budget) {
+
+      // Calculate and store the duration of the period that just ended.
+      TickType_t duration = period_end_time - period_start_time;
+      vm_conf[VM_NUM].period_duration[idx] = duration;
+
+      // The start time for the *next* period is now.
+      period_start_time = period_end_time;
 
       PRINT("calling HC_regulator_get_new_budget\n");
 
@@ -890,6 +904,9 @@ void ctrl_task(void *pvParameters) {
           vm_conf[VM_NUM].new_read_budget;
       vm_conf[VM_NUM].calc_w_budget_period[idx] =
           vm_conf[VM_NUM].new_write_budget;
+
+      // Now, update the start time for the *next* period
+      last_check_time_task_any = period_end_time;
 
       PRINT("idx %d\n", idx);
       if (idx < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget != 0 &&

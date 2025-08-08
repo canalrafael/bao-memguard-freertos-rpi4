@@ -58,18 +58,15 @@ void print_SW(const struct SW *s, bool before)
 void print_AMBP(const struct AMBP *a, bool before)
 {
     PRINT("AMBP: %s", (before ? "BEFORE" : "AFTER"));
-    PRINT("  budget_read_limit                  = %u", a->budget_read_limit);
-    PRINT("  budget_write_limit                 = %u", a->budget_write_limit);
-    PRINT("  qnt_budget_read_limit_reached      = %u",
+    PRINT("  budget_read_limit               = %u", a->budget_read_limit);
+    PRINT("  budget_write_limit              = %u", a->budget_write_limit);
+    PRINT("  qnt_budget_read_limit_reached   = %u",
           a->qnt_budget_read_limit_reached);
-    PRINT("  qnt_budget_write_limit_reached     = %u",
+    PRINT("  qnt_budget_write_limit_reached  = %u",
           a->qnt_budget_write_limit_reached);
-    PRINT("  penalty_by_reaching_budget_read_limit  = %u",
-          a->penalty_by_reaching_budget_read_limit);
-    PRINT("  penalty_by_reaching_budget_write_limit = %u",
-          a->penalty_by_reaching_budget_write_limit);
-    PRINT("  alpha                              = %u", a->alpha);
-    PRINT("  scaling_factor                     = %u", a->scaling_factor);
+    PRINT("  alpha                           = %u", a->alpha);
+    PRINT("  scaling_factor                  = %u", a->scaling_factor);
+    PRINT("  penalty_factor                  = %u%%", a->penalty_factor);
 }
 
 void print_AFC(const struct AFC *c, bool before)
@@ -169,6 +166,9 @@ void reset_budget_formulas(cpuid_t vm_num)
     reg_conf[vm_num].ambp.penalty_by_reaching_budget_write_limit = 0;
     reg_conf[vm_num].ambp.alpha = 2;
     reg_conf[vm_num].ambp.scaling_factor = 10;
+    //
+    // Default: 90%, representing a 10% penalty
+    reg_conf[vm_num].ambp.penalty_factor = 90;
 
     // AFC
     reg_conf[vm_num].afc.previous_read_budget = 0;
@@ -184,9 +184,11 @@ void reset_budget_formulas(cpuid_t vm_num)
         reg_conf[vm_num].lr.total_read_exec = 0;
         reg_conf[vm_num].lr.total_write_exec = 0;
     }
-
     reg_conf[vm_num].lr.current_read_array_size = 0;
     reg_conf[vm_num].lr.current_write_array_size = 0;
+    // FIX: Initialize the new members
+    reg_conf[vm_num].lr.previous_read_usage = 0;
+    reg_conf[vm_num].lr.previous_write_usage = 0;
 
     // PIC
     reg_conf[vm_num].pic.accumulated_read_error = 0;
@@ -194,6 +196,9 @@ void reset_budget_formulas(cpuid_t vm_num)
     reg_conf[vm_num].pic.kp = 2;
     reg_conf[vm_num].pic.ki = 1;
     reg_conf[vm_num].pic.scaling_factor = 10;
+    // FIX: Initialize the new members
+    reg_conf[vm_num].pic.previous_read_budget = 0;
+    reg_conf[vm_num].pic.previous_write_budget = 0;
 }
 
 void init_regulation_config()
@@ -208,6 +213,9 @@ inline static uint32_t get_operation_usage_v2(uint8_t pmu_index,
                                               uint32_t defined_budget,
                                               bool overflowed)
 {
+    PRINT("get_operation_usage_v2(pmu_index, defined_budget, overflowed)(%d, "
+          "%d, %d)",
+          pmu_index, defined_budget, overflowed);
     uint32_t pmu_counter = PMU_get_counter_value(pmu_index);
     uint32_t result = 0;
 
@@ -732,35 +740,34 @@ inline static void afc(const uint8_t cpu_id, const uint8_t task_num)
 }
 
 // <not implemented>
-// inline static void lr(const uint8_t cpu_id, const uint8_t task_num)
-// {
-//     print_LR(&reg_conf[cpu_id].lr, true);
-//
-//     uint32_t r = 0, w = 0;
-//
-//     // READ
-//     const uint32_t current_read_usage =
-//         get_operation_usage(cpu_id, task_num, READ);
-//
-//     if (current_read_usage != 0 && current_read_usage < MARGIN) {
-//         const uint8_t current_read_array_size =
-//             reg_conf[cpu_id].lr.current_read_array_size;
-//         if (current_read_array_size < LR_MAX_QNT_ACCESS) {
-//             reg_conf[cpu_id].lr.read_usage[current_read_array_size] =
-//                 current_read_usage;
-//             reg_conf[cpu_id].lr.current_read_array_size++;
-//             reg_conf[cpu_id].vm.current_used_read_budget =
-//             current_read_usage;
-//         }
-//     }
-//
-//     if (r && w) {
-//         for (uint8_t i = 0; i < LR_MAX_QNT_ACCESS; i++)
-//             reg_conf[cpu_id].lr.t_vector[i] += 1;
-//     }
-//
-//     print_LR(&reg_conf[cpu_id].lr, false);
-// }
+inline static void lr(const uint8_t cpu_id, const uint8_t task_num)
+{
+    print_LR(&reg_conf[cpu_id].lr, true);
+
+    uint32_t r = 0, w = 0;
+
+    // READ
+    const uint32_t current_read_usage =
+        get_operation_usage(cpu_id, task_num, READ);
+
+    if (current_read_usage != 0 && current_read_usage < MARGIN) {
+        const uint8_t current_read_array_size =
+            reg_conf[cpu_id].lr.current_read_array_size;
+        if (current_read_array_size < LR_MAX_QNT_ACCESS) {
+            reg_conf[cpu_id].lr.read_usage[current_read_array_size] =
+                current_read_usage;
+            reg_conf[cpu_id].lr.current_read_array_size++;
+            reg_conf[cpu_id].vm.current_used_read_budget = current_read_usage;
+        }
+    }
+
+    if (r && w) {
+        for (uint8_t i = 0; i < LR_MAX_QNT_ACCESS; i++)
+            reg_conf[cpu_id].lr.t_vector[i] += 1;
+    }
+
+    print_LR(&reg_conf[cpu_id].lr, false);
+}
 
 inline static void pic(const uint8_t cpu_id, const uint8_t task_num)
 {
@@ -998,6 +1005,221 @@ inline static void sw_budget_v2(const uint8_t cpu_id,
     print_SW(sw_conf, false);
 }
 
+// ================================================================================
+//  Budget Formula Implementations (Corrected)
+// ================================================================================
+
+/**
+ * @brief Adaptive Budget with Penalty (AMBP) v2 (Corrected)
+ */
+inline static void ambp_budget_v2(const uint8_t cpu_id,
+                                  const uint32_t actual_read_usage,
+                                  const uint32_t actual_write_usage)
+{
+    struct VM *vm_conf = &reg_conf[cpu_id].vm;
+    struct AMBP *ambp_conf = &reg_conf[cpu_id].ambp;
+
+    print_AMBP(ambp_conf, true);
+
+    // --- READ BUDGET CALCULATION ---
+    vm_conf->current_used_read_budget = actual_read_usage;
+    vm_conf->total_used_read_budget += actual_read_usage;
+
+    if (actual_read_usage > ambp_conf->budget_read_limit) {
+        uint32_t new_limit =
+            ambp_conf->budget_read_limit +
+            (ambp_conf->alpha *
+             (actual_read_usage - ambp_conf->budget_read_limit)) /
+                ambp_conf->scaling_factor;
+        ambp_conf->budget_read_limit =
+            (new_limit * ambp_conf->penalty_factor) / 100;
+    } else {
+        ambp_conf->budget_read_limit =
+            ((950 * ambp_conf->budget_read_limit) + (50 * actual_read_usage)) /
+            1000;
+    }
+    vm_conf->new_read_budget = ambp_conf->budget_read_limit;
+
+    // --- WRITE BUDGET CALCULATION ---
+    vm_conf->current_used_write_budget = actual_write_usage;
+    vm_conf->total_used_write_budget += actual_write_usage;
+
+    if (actual_write_usage > ambp_conf->budget_write_limit) {
+        uint32_t new_limit =
+            ambp_conf->budget_write_limit +
+            (ambp_conf->alpha *
+             (actual_write_usage - ambp_conf->budget_write_limit)) /
+                ambp_conf->scaling_factor;
+        ambp_conf->budget_write_limit =
+            (new_limit * ambp_conf->penalty_factor) / 100;
+    } else {
+        ambp_conf->budget_write_limit = ((950 * ambp_conf->budget_write_limit) +
+                                         (50 * actual_write_usage)) /
+                                        1000;
+    }
+    vm_conf->new_write_budget = ambp_conf->budget_write_limit;
+
+    vm_conf->total_calculated_new_read_budget += vm_conf->new_read_budget;
+    vm_conf->total_calculated_new_write_budget += vm_conf->new_write_budget;
+
+    print_AMBP(ambp_conf, false);
+}
+
+/**
+ * @brief Proportional Control (AFC) v2 (No bugs found)
+ */
+inline static void afc_budget_v2(const uint8_t cpu_id,
+                                 const uint32_t actual_read_usage,
+                                 const uint32_t actual_write_usage)
+{
+    struct VM *vm_conf = &reg_conf[cpu_id].vm;
+    struct AFC *afc_conf = &reg_conf[cpu_id].afc;
+
+    print_AFC(afc_conf, true);
+
+    // --- READ BUDGET CALCULATION ---
+    vm_conf->current_used_read_budget = actual_read_usage;
+    vm_conf->total_used_read_budget += actual_read_usage;
+
+    const int32_t read_error =
+        actual_read_usage - afc_conf->previous_read_budget;
+    const uint32_t new_read_budget =
+        afc_conf->previous_read_budget +
+        (afc_conf->proportional_gain * read_error) / afc_conf->scaling_factor;
+
+    afc_conf->previous_read_budget = new_read_budget;
+    vm_conf->new_read_budget = new_read_budget;
+
+    // --- WRITE BUDGET CALCULATION ---
+    vm_conf->current_used_write_budget = actual_write_usage;
+    vm_conf->total_used_write_budget += actual_write_usage;
+
+    const int32_t write_error =
+        actual_write_usage - afc_conf->previous_write_budget;
+    const uint32_t new_write_budget =
+        afc_conf->previous_write_budget +
+        (afc_conf->proportional_gain * write_error) / afc_conf->scaling_factor;
+
+    afc_conf->previous_write_budget = new_write_budget;
+    vm_conf->new_write_budget = new_write_budget;
+
+    vm_conf->total_calculated_new_read_budget += vm_conf->new_read_budget;
+    vm_conf->total_calculated_new_write_budget += vm_conf->new_write_budget;
+
+    print_AFC(afc_conf, false);
+}
+
+/**
+ * @brief Linear Regression (LR) v2 - Simplified (Corrected)
+ */
+inline static void lr_budget_v2(const uint8_t cpu_id,
+                                const uint32_t actual_read_usage,
+                                const uint32_t actual_write_usage)
+{
+    struct VM *vm_conf = &reg_conf[cpu_id].vm;
+    struct LR *lr_conf = &reg_conf[cpu_id].lr;
+
+    print_LR(lr_conf, true);
+
+    // --- READ BUDGET CALCULATION ---
+    vm_conf->current_used_read_budget = actual_read_usage;
+    vm_conf->total_used_read_budget += actual_read_usage;
+
+    int32_t read_trend = actual_read_usage - lr_conf->previous_read_usage;
+    // Dampen the trend by half to prevent instability and overflow.
+    uint32_t new_read_budget = actual_read_usage + (read_trend / 2);
+
+    lr_conf->previous_read_usage = actual_read_usage;
+    vm_conf->new_read_budget = new_read_budget;
+
+    // --- WRITE BUDGET CALCULATION ---
+    vm_conf->current_used_write_budget = actual_write_usage;
+    vm_conf->total_used_write_budget += actual_write_usage;
+
+    int32_t write_trend = actual_write_usage - lr_conf->previous_write_usage;
+    // Dampen the trend.
+    uint32_t new_write_budget = actual_write_usage + (write_trend / 2);
+
+    lr_conf->previous_write_usage = actual_write_usage;
+    vm_conf->new_write_budget = new_write_budget;
+
+    vm_conf->total_calculated_new_read_budget += vm_conf->new_read_budget;
+    vm_conf->total_calculated_new_write_budget += vm_conf->new_write_budget;
+
+    print_LR(lr_conf, false);
+}
+
+/**
+ * @brief Proportional-Integral Controller (PIC) v2 (Corrected)
+ */
+#define MAX_ACCUMULATED_ERROR 5000000  // Example value, tune as needed
+#define MIN_ACCUMULATED_ERROR -5000000
+
+inline static void pic_budget_v2(const uint8_t cpu_id,
+                                 const uint32_t actual_read_usage,
+                                 const uint32_t actual_write_usage)
+{
+    struct VM *vm_conf = &reg_conf[cpu_id].vm;
+    struct PIC *pic_conf = &reg_conf[cpu_id].pic;
+
+    print_PIC(pic_conf, true);
+
+    // --- READ BUDGET CALCULATION ---
+    vm_conf->current_used_read_budget = actual_read_usage;
+    vm_conf->total_used_read_budget += actual_read_usage;
+
+    const int32_t read_error =
+        actual_read_usage - pic_conf->previous_read_budget;
+    pic_conf->accumulated_read_error += read_error;
+
+    // Clamp the accumulated error to prevent integral windup.
+    if (pic_conf->accumulated_read_error > MAX_ACCUMULATED_ERROR) {
+        pic_conf->accumulated_read_error = MAX_ACCUMULATED_ERROR;
+    } else if (pic_conf->accumulated_read_error < MIN_ACCUMULATED_ERROR) {
+        pic_conf->accumulated_read_error = MIN_ACCUMULATED_ERROR;
+    }
+
+    const int32_t read_adjust =
+        (pic_conf->kp * read_error +
+         pic_conf->ki * pic_conf->accumulated_read_error) /
+        pic_conf->scaling_factor;
+
+    const uint32_t new_read_budget =
+        pic_conf->previous_read_budget + read_adjust;
+    pic_conf->previous_read_budget = new_read_budget;
+    vm_conf->new_read_budget = new_read_budget;
+
+    // --- WRITE BUDGET CALCULATION ---
+    vm_conf->current_used_write_budget = actual_write_usage;
+    vm_conf->total_used_write_budget += actual_write_usage;
+
+    const int32_t write_error =
+        actual_write_usage - pic_conf->previous_write_budget;
+    pic_conf->accumulated_write_error += write_error;
+
+    // Clamp the accumulated error.
+    if (pic_conf->accumulated_write_error > MAX_ACCUMULATED_ERROR) {
+        pic_conf->accumulated_write_error = MAX_ACCUMULATED_ERROR;
+    } else if (pic_conf->accumulated_write_error < MIN_ACCUMULATED_ERROR) {
+        pic_conf->accumulated_write_error = MIN_ACCUMULATED_ERROR;
+    }
+
+    const int32_t write_adjust =
+        (pic_conf->kp * write_error +
+         pic_conf->ki * pic_conf->accumulated_write_error) /
+        pic_conf->scaling_factor;
+
+    const uint32_t new_write_budget =
+        pic_conf->previous_write_budget + write_adjust;
+    pic_conf->previous_write_budget = new_write_budget;
+    vm_conf->new_write_budget = new_write_budget;
+
+    vm_conf->total_calculated_new_read_budget += vm_conf->new_read_budget;
+    vm_conf->total_calculated_new_write_budget += vm_conf->new_write_budget;
+
+    print_PIC(pic_conf, false);
+}
+
 //////////////
 
 void print_counters(bool before)
@@ -1041,13 +1263,14 @@ void print_bool_array(const bool arr[], int size)
 //     print_bool_array(arr, size);
 // }
 
-void reset_vm_on_new_formula(formula_t const formula)
+void reset_state_on_new_formula(formula_t const formula)
 {
     // HACK:
     static int last_formula = -1;
     if (last_formula != formula) {
         last_formula = formula;
-        reset_vm();
+        reset_vm(cpu()->id);
+        reset_budget_formulas(cpu()->id);
         PRINT("CHANGED FORMULA, NULL-oed VM struct");
     }
 }
@@ -1058,15 +1281,17 @@ void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
     print_VM(&reg_conf[cpu()->id].vm, true);
     print_counters(true);
 
-    reset_vm_on_new_formula(formula);
+    reset_state_on_new_formula(formula);
 
     cpuid_t cpu_id = cpu()->id;
     bool new_read = (pmu_id == READ);
     bool new_write = (pmu_id == WRITE);
-    uint32_t actual_read_usage =  //
-        get_operation_usage_v2(cpu_id, READ, new_read);
-    uint32_t actual_write_usage =
-        get_operation_usage_v2(cpu_id, WRITE, new_write);
+
+    // This part is now correct
+    uint32_t actual_read_usage = get_operation_usage_v2(
+        READ, reg_conf[cpu_id].vm.defined_pmu_read_val, new_read);
+    uint32_t actual_write_usage = get_operation_usage_v2(
+        WRITE, reg_conf[cpu_id].vm.defined_pmu_write_val, new_write);
 
     switch (formula) {
         case EWMA_FORMULA:
@@ -1081,23 +1306,42 @@ void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
         case SW_V2_FORMULA:
             sw_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
             break;
-
-        // case AFC_FORMULA:
-        //     afc(cpu_id, task_num);
-        //     break;
-        // case AMBP_FORMULA:
-        //     ambp(cpu()->id, task_num);
-        //     break;
+        case AFC_FORMULA:
+            afc(cpu_id, UNUSED_ARG);
+            break;
+        case AFC_V2_FORMULA:
+            afc_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+            break;
+        case AMBP_FORMULA:
+            ambp(cpu()->id, UNUSED_ARG);
+            break;
+        case AMBP_V2_FORMULA:
+            ambp_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+            break;
         // case LR_FORMULA:
-        //     lr(cpu()->id, task_num);
+        //     lr(cpu()->id, UNUSED_ARG);
         //     break;
-        // case PIC_FORMULA:
-        //     pic(cpu()->id, task_num);
-        //     break;
+        case LR_V2_FORMULA:
+            lr_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+            break;
+        case PIC_FORMULA:
+            pic(cpu()->id, UNUSED_ARG);
+            break;
+        case PIC_V2_FORMULA:
+            pic_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+            break;
         default:
             printk("something has gone very wrong!\n");
             break;
     }
+
+    // --- BUG FIX: Update the defined budget for the NEXT period ---
+    // This ensures the next call to get_operation_usage_v2 has the correct
+    // starting value.
+    reg_conf[cpu_id].vm.defined_pmu_read_val =
+        reg_conf[cpu_id].vm.new_read_budget;
+    reg_conf[cpu_id].vm.defined_pmu_write_val =
+        reg_conf[cpu_id].vm.new_write_budget;
 
     reg_conf[cpu()->id].vm.depleated_op_type = UNKNOWN_VALUE;
     for (int i = 0; i < PMU_COUNT; ++i) {
