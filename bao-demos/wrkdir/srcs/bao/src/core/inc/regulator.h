@@ -85,6 +85,9 @@ struct AMBP {
     uint32_t penalty_by_reaching_budget_write_limit;
     uint16_t alpha;
     uint16_t scaling_factor;
+
+    // Represents a percentage, e.g., 90 for a 10% penalty
+    uint16_t penalty_factor;
 };
 
 struct AFC {
@@ -103,6 +106,10 @@ struct LR {
     uint8_t current_write_array_size;
     uint8_t total_read_exec;
     uint8_t total_write_exec;
+
+    // FIX: Added missing members required by lr_budget_v2
+    uint32_t previous_read_usage;
+    uint32_t previous_write_usage;
 };
 
 struct PIC {
@@ -111,6 +118,10 @@ struct PIC {
     uint32_t kp;
     uint32_t ki;
     uint32_t scaling_factor;
+
+    // FIX: Added missing members required by pic_budget_v2
+    uint32_t previous_read_budget;
+    uint32_t previous_write_budget;
 };
 
 struct Regulation_config {
@@ -130,9 +141,10 @@ struct Regulation_config {
     struct EWMA ewma;  //[TASK_QNT];
     struct SW sw;      //[TASK_QNT];
     struct AMBP ambp;  //[TASK_QNT];
-    struct AFC afc;    //[TASK_QNT];
-    struct LR lr;      //[TASK_QNT];
-    struct PIC pic;    //[TASK_QNT];
+    //
+    struct AFC afc;  //[TASK_QNT];
+    struct LR lr;    //[TASK_QNT];
+    struct PIC pic;  //[TASK_QNT];
 };
 
 extern struct Regulation_config reg_conf[VM_QNT];
@@ -154,7 +166,7 @@ uint32_t regulator_get_total_used_budget(const uint8_t task_num,
 
 #endif
 
-#if 1
+#if 0
 #define PRINT(fmt, ...) printk("[BAO] " fmt "\n", ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)

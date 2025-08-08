@@ -117,6 +117,9 @@ typedef struct {
   int64_t calc_per_period_write[PERIOD_QNT];
   // int64_t total_calc_rw_per_index[PERIOD_QNT];
 
+  int64_t period_duration[PERIOD_QNT];
+  int64_t period_duration_total;
+
   int64_t clock_per_period[PERIOD_QNT];
   int64_t total_clock;
 } BenchmarkData;
@@ -160,6 +163,15 @@ void write_calc_budget(struct VM vm_info, BenchmarkData *d) {
   }
   d->total_calc_r = total_calc_read;
   d->total_calc_w = total_calc_write;
+}
+
+void write_period_duration(struct VM vm_info, BenchmarkData *d) {
+  // printf("\tCalc per period \n\t\tr ");
+
+  for (uint8_t i = 0; i < PERIOD_QNT; i++) {
+    d->period_duration[i] = vm_info.period_duration[i];
+    d->period_duration_total += vm_info.period_duration[i];
+  }
 }
 
 void write_clock_cycle(struct VM vm_info, BenchmarkData *d) {
@@ -262,7 +274,7 @@ void write_clock_cycle(struct VM vm_info, BenchmarkData *d) {
 // }
 
 void print_vm_header() {
-  printf("budget_function,");
+  printf("budget_function,period_duration_total,");
   printf("total_used_budget_r,total_used_budget_w,");
   printf("total_calc_r,total_calc_w,");
   // printf("total_clock,");
@@ -278,6 +290,9 @@ void print_vm_header() {
   }
   for (int i = 0; i < PERIOD_QNT; i++) {
     printf("predicted_write[%d],", i);
+  }
+  for (int i = 0; i < PERIOD_QNT; i++) {
+    printf("period_duration[%d],", i);
   }
   // for (int i = 0; i < PERIOD_QNT; i++) {
   //   printf("clock_per_period[%d],", i);
@@ -299,9 +314,11 @@ void print_vm_info(struct VM vm_info) {
   BenchmarkData info;
   write_used_budget(vm_info, &info);
   write_calc_budget(vm_info, &info);
+  write_period_duration(vm_info, &info);
   // write_clock_cycle(vm_info, &info);
 
   printf("%s,", get_formula_name(get_budget_formula()));
+  printf("%ld,", info.period_duration_total);
   printf("%ld,%ld,", info.total_used_budget_r, info.total_used_budget_w);
   printf("%ld,%ld,", info.total_calc_r, info.total_calc_w);
   // printf("%lu,", info.total_clock);
@@ -309,6 +326,7 @@ void print_vm_info(struct VM vm_info) {
   print_array(info.used_budget_per_period_write);
   print_array(info.calc_per_period_read);
   print_array(info.calc_per_period_write);
+  print_array(info.period_duration);
   // print_array(info.clock_per_period);
 
   printf("\n");

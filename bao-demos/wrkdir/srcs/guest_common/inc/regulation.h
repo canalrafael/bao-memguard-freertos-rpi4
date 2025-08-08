@@ -12,6 +12,7 @@
 // Beginning do not change
 // =======================================
 #define UNUSED_ARG 0
+#define UNUSED_VALUE 4294967295U
 #define MAX_INT 4294967295U
 
 #define NO 0
@@ -156,9 +157,11 @@ struct VM {
   uint32_t deadline_met_counter;
   uint32_t deadline_missed_counter;
   uint32_t cycle_per_period[PERIOD_QNT];
-  uint32_t task_start_time[PERIOD_QNT];
-  uint32_t task_end_time[PERIOD_QNT];
-  uint32_t task_deadline[PERIOD_QNT];
+
+  uint32_t period_duration[PERIOD_QNT];
+  // uint32_t period_start_time[PERIOD_QNT];
+  // uint32_t period_end_time[PERIOD_QNT];
+  // uint32_t task_deadline[PERIOD_QNT];
   uint32_t used_r_budget_period[PERIOD_QNT];
   uint32_t used_w_budget_period[PERIOD_QNT];
   uint32_t calc_r_budget_period[PERIOD_QNT];
