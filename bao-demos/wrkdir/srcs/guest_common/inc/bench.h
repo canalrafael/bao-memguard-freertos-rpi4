@@ -4,7 +4,7 @@
 #include "budget.h"
 #include <stdint.h>
 
-#define BENCH_ARRAY_INDEX 0
+#define BENCH_ARRAY_INDEX 11
 
 typedef struct {
   int index;
@@ -24,6 +24,7 @@ typedef struct {
 
 BenchInfo *add_benchmark_info(int vm_num, int task_num, int periodicity);
 BenchInfo *get_benchmark_info(int vm_num, int task_num);
+void set_array_index(int index);
 
 // formula handling
 formula_t get_budget_formula();

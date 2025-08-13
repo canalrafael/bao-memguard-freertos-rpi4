@@ -91,7 +91,7 @@
 // End do not change
 // =======================================
 
-#define PERIOD_QNT 30
+#define PERIOD_QNT 10
 
 #define EXEC_VM_0 1
 #define EXEC_VM_1 1
@@ -158,14 +158,17 @@ struct VM {
   uint32_t deadline_missed_counter;
   uint32_t cycle_per_period[PERIOD_QNT];
 
-  uint32_t period_duration[PERIOD_QNT];
-  // uint32_t period_start_time[PERIOD_QNT];
-  // uint32_t period_end_time[PERIOD_QNT];
-  // uint32_t task_deadline[PERIOD_QNT];
+  uint32_t period_start_time[PERIOD_QNT];
+  uint32_t period_end_time[PERIOD_QNT];
+  uint32_t task_deadline[PERIOD_QNT];
   uint32_t used_r_budget_period[PERIOD_QNT];
   uint32_t used_w_budget_period[PERIOD_QNT];
   uint32_t calc_r_budget_period[PERIOD_QNT];
   uint32_t calc_w_budget_period[PERIOD_QNT];
+
+  uint32_t period_duration[PERIOD_QNT];
+  uint32_t completed_runs_per_task[TASK_QUANTITY];
+  uint32_t has_overflowed[PERIOD_QNT];
 };
 
 extern struct VM vm_conf[VM_QNT];

@@ -5,85 +5,131 @@
 #include <stdbool.h>
 
 // Global variables for all benchmark functions
-#define NUM_BENCHMARKS 8
-#define MAX_TASKS 4
+#define NUM_BENCHMARKS 96
+#define MAX_TASKS 8
 
 bool init = false;
 
 Function benchmark_functions[NUM_BENCHMARKS] = {
-    {0, disparity_wrapper, "0"}, // OK
-    {1, disparity_wrapper, "1"}, // OK
-    {2, disparity_wrapper, "2"}, // OK
-    {3, disparity_wrapper, "3"}, // OK
-    {4, disparity_wrapper, "4"}, // OK
-    {5, disparity_wrapper, "5"}, // OK
-    {6, disparity_wrapper, "6"}, // OK
-    {7, disparity_wrapper, "7"}, // OK
+    // Scenario 1: High-load baseline
+    {0, bandwidth_wrapper, "bandwidth_wrapper"},
+    {1, disparity_wrapper, "disparity_wrapper"},
+    {2, empty_wrapper, "empty"}, // Idle VM1
+    {3, empty_wrapper, "empty"}, // Idle VM1
+    {4, empty_wrapper, "empty"}, // Idle VM2
+    {5, empty_wrapper, "empty"}, // Idle VM2
+    {6, empty_wrapper, "empty"}, // Idle VM3
+    {7, empty_wrapper, "empty"}, // Idle VM3
 
-    // {1, fft_wrapper, "fft_wrapper"},             // -
-    // {2, sorting_wrapper, "sorting_wrapper"},     // OK
-    // {3, mser_wrapper, "mser_wrapper"},           // -
-    // {4, qsort_wrapper, "qsort_wrapper"},         // -
-    // {5, dijkstra_wrapper, "dijkstra_wrapper"},   // OK
-    // {6, sha_wrapper, "sha_wrapper"},             // OK
-    // {7, disparity_wrapper, "disparity_wrapper"}, // -
+    // Scenario 2: Interference from one noisy neighbor
+    {8, bandwidth_wrapper, "bandwidth_wrapper"},
+    {9, disparity_wrapper, "disparity_wrapper"},
+    {10, fft_wrapper, "fft_wrapper"},
+    {11, mser_wrapper, "mser_wrapper"},
+    {12, empty_wrapper, "empty"}, // Idle VM2
+    {13, empty_wrapper, "empty"}, // Idle VM2
+    {14, empty_wrapper, "empty"}, // Idle VM3
+    {15, empty_wrapper, "empty"}, // Idle VM3
 
-    // {empty, "empty"},
-    // {sum_array, "sum_array"},
-    // {subtract_array, "subtract_array"},
-    // {multiply_array, "multiply_array"},
-    // {divide_array, "divide_array"},
-    // {mod_array, "mod_array"},
-    // {and_array, "and_array"},
-    // {or_array, "or_array"},
-    // {xor_array, "xor_array"},
-    // {sum_not_array, "sum_not_array"},
-    // {sum_shl2_array, "sum_shl2_array"},
-    // {sum_shr1_array, "sum_shr1_array"},
-    // {count_eq_next, "count_eq_next"},
-    // {count_gt_prev, "count_gt_prev"},
-    // {sum_of_squares_array, "sum_of_squares_array"},
-    // {count_primes_array, "count_primes_array"},
-    // {max_sum, "max_sum"},
-    // {min_sum, "min_sum"},
-    // {logical_and, "logical_and"},
-    // {logical_or, "logical_or"},
-    // {logical_not_equal, "logical_not_equal"},
-    // {increment_a_1000_times, "increment_a_1000_times"},
-    // {decrement_b_1000_times, "decrement_b_1000_times"},
-    // {factorial_15, "factorial_15"},
-    // {sum_1_to_1000, "sum_1_to_1000"},
-    // {gcd_ab, "gcd_ab"},
-    // {popcount_a, "popcount_a"},
-    // {sum_mod7_0_to_999, "sum_mod7_0_to_999"},
-    // {lcg_sequence, "lcg_sequence"},
-    // {xorshift_a, "xorshift_a"},
-    // {sum_of_squares_ab, "sum_of_squares_ab"},
-    // {sum_of_squares_0_to_999, "sum_of_squares_0_to_999"},
-    // {repeated_square_mod, "repeated_square_mod"},
-    // {count_primes_below_1000, "count_primes_below_1000"},
-    // {fibonacci_20, "fibonacci_20"},
-    // {reverse_digits_a, "reverse_digits_a"},
-    // {russian_peasant_mul, "russian_peasant_mul"},
-    // {count_bits_a, "count_bits_a"},
-    // {sum_of_cubes_1_to_100, "sum_of_cubes_1_to_100"},
-    // {xor_all_globals, "xor_all_globals"},
-    // {complex_bitwise, "complex_bitwise"},
-    // {mixed_arithmetic_mod, "mixed_arithmetic_mod"},
-    // {mixed_arithmetic_masked, "mixed_arithmetic_masked"},
-    // {swap_ab_and_sum, "swap_ab_and_sum"},
-    // {abs_a_bitwise, "abs_a_bitwise"},
-    // {fizzbuzz_sum, "fizzbuzz_sum"},
-    // {count_bits_in_b, "count_bits_in_b"},
-    // {parity_a, "parity_a"},
-    // {shift_mix_ab, "shift_mix_ab"},
-    // {simple_parity_a, "simple_parity_a"},
-    // {count_ones_in_a, "count_ones_in_a"},
-    // {my_bubble_sort, "my_bubble_sort"},
-    // {my_selection_sort, "my_selection_sort"},
-    // {my_shell_sort, "my_shell_sort"},
-    // {my_insertion_sort, "my_insertion_sort"},
-    // {my_quick_sort, "my_quick_sort"},
+    // Scenario 3: One high-load and one low-load neighbor
+    {16, bandwidth_wrapper, "bandwidth_wrapper"},
+    {17, disparity_wrapper, "disparity_wrapper"},
+    {18, fft_wrapper, "fft_wrapper"},
+    {19, mser_wrapper, "mser_wrapper"},
+    {20, qsort_wrapper, "qsort_wrapper"},
+    {21, sorting_wrapper, "sorting_wrapper"},
+    {22, empty_wrapper, "empty"}, // Idle VM3
+    {23, empty_wrapper, "empty"}, // Idle VM3
+
+    // Scenario 4: One high-load and two low-load neighbors
+    {24, bandwidth_wrapper, "bandwidth_wrapper"},
+    {25, disparity_wrapper, "disparity_wrapper"},
+    {26, fft_wrapper, "fft_wrapper"},
+    {27, mser_wrapper, "mser_wrapper"},
+    {28, sha_wrapper, "sha_wrapper"},
+    {29, dijkstra_wrapper, "dijkstra_wrapper"},
+    {30, qsort_wrapper, "qsort_wrapper"},
+    {31, sorting_wrapper, "sorting_wrapper"},
+
+    // Scenario 5: Tipping-point test with three high-load VMs
+    {32, bandwidth_wrapper, "bandwidth_wrapper"},
+    {33, disparity_wrapper, "disparity_wrapper"},
+    {34, fft_wrapper, "fft_wrapper"},
+    {35, mser_wrapper, "mser_wrapper"},
+    {36, qsort_wrapper, "qsort_wrapper"},
+    {37, sha_wrapper, "sha_wrapper"},
+    {38, empty_wrapper, "empty"}, // Idle VM3
+    {39, empty_wrapper, "empty"}, // Idle VM3
+
+    // Scenario 6: Full system saturation with mixed high-load tasks
+    {40, bandwidth_wrapper, "bandwidth_wrapper"},
+    {41, disparity_wrapper, "disparity_wrapper"},
+    {42, fft_wrapper, "fft_wrapper"},
+    {43, mser_wrapper, "mser_wrapper"},
+    {44, qsort_wrapper, "qsort_wrapper"},
+    {45, sha_wrapper, "sha_wrapper"},
+    {46, dijkstra_wrapper, "dijkstra_wrapper"},
+    {47, sorting_wrapper, "sorting_wrapper"},
+
+    // Scenario 7: Inversion Test (low-load vm0 vs saturated system)
+    {48, dijkstra_wrapper, "dijkstra_wrapper"},
+    {49, sha_wrapper, "sha_wrapper"},
+    {50, fft_wrapper, "fft_wrapper"},
+    {51, mser_wrapper, "mser_wrapper"},
+    {52, bandwidth_wrapper, "bandwidth_wrapper"},
+    {53, disparity_wrapper, "disparity_wrapper"},
+    {54, qsort_wrapper, "qsort_wrapper"},
+    {55, sorting_wrapper, "sorting_wrapper"},
+
+    // Scenario 8: Realistic Mix (chaotic, mixed workloads)
+    {56, bandwidth_wrapper, "bandwidth_wrapper"},
+    {57, sha_wrapper, "sha_wrapper"},
+    {58, fft_wrapper, "fft_wrapper"},
+    {59, qsort_wrapper, "qsort_wrapper"},
+    {60, mser_wrapper, "mser_wrapper"},
+    {61, dijkstra_wrapper, "dijkstra_wrapper"},
+    {62, disparity_wrapper, "disparity_wrapper"},
+    {63, sorting_wrapper, "sorting_wrapper"},
+
+    // Scenario 9: Monoculture Saturation (bandwidth)
+    {64, bandwidth_wrapper, "bandwidth_wrapper"},
+    {65, bandwidth_wrapper, "bandwidth_wrapper"},
+    {66, bandwidth_wrapper, "bandwidth_wrapper"},
+    {67, bandwidth_wrapper, "bandwidth_wrapper"},
+    {68, bandwidth_wrapper, "bandwidth_wrapper"},
+    {69, bandwidth_wrapper, "bandwidth_wrapper"},
+    {70, bandwidth_wrapper, "bandwidth_wrapper"},
+    {71, bandwidth_wrapper, "bandwidth_wrapper"},
+
+    // Scenario 10: Monoculture Saturation (fft)
+    {72, fft_wrapper, "fft_wrapper"},
+    {73, fft_wrapper, "fft_wrapper"},
+    {74, fft_wrapper, "fft_wrapper"},
+    {75, fft_wrapper, "fft_wrapper"},
+    {76, fft_wrapper, "fft_wrapper"},
+    {77, fft_wrapper, "fft_wrapper"},
+    {78, fft_wrapper, "fft_wrapper"},
+    {79, fft_wrapper, "fft_wrapper"},
+
+    // Scenario 11: Monoculture Saturation (mser)
+    {80, mser_wrapper, "mser_wrapper"},
+    {81, mser_wrapper, "mser_wrapper"},
+    {82, mser_wrapper, "mser_wrapper"},
+    {83, mser_wrapper, "mser_wrapper"},
+    {84, mser_wrapper, "mser_wrapper"},
+    {85, mser_wrapper, "mser_wrapper"},
+    {86, mser_wrapper, "mser_wrapper"},
+    {87, mser_wrapper, "mser_wrapper"},
+
+    // Scenario 12: Monoculture Saturation (disparity)
+    {88, disparity_wrapper, "disparity_wrapper"},
+    {89, disparity_wrapper, "disparity_wrapper"},
+    {90, disparity_wrapper, "disparity_wrapper"},
+    {91, disparity_wrapper, "disparity_wrapper"},
+    {92, disparity_wrapper, "disparity_wrapper"},
+    {93, disparity_wrapper, "disparity_wrapper"},
+    {94, disparity_wrapper, "disparity_wrapper"},
+    {95, disparity_wrapper, "disparity_wrapper"},
 };
 
 BenchInfo benchmark_info[NUM_BENCHMARKS];
@@ -143,20 +189,14 @@ BenchInfo *add_benchmark_info(int vm_num, int task_num, int periodicity) {
 void init_bench() {
   init_data();
 
-  for (int vm_num = 0; vm_num < VM_QNT; ++vm_num) {
-    for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-      int index = get_benchmark_index(vm_num, task_num);
-
-      benchmark_info[index].function.index = -1;
-      benchmark_info[index].function.name = "UNDEFINED";
-      benchmark_info[index].function.pointer = (void *)MAX_INT;
-      benchmark_info[index].task_num = -1;
-      // benchmark_info[index].task_handle = (void *)MAX_INT;
-      // benchmark_info[index].budget_formula = -1;
-      benchmark_info[index].periodicity = 0;
-      benchmark_info[index].task_overruns = -1;
-      benchmark_info[index].task_underruns = -1;
-    }
+  for (int index = 0; index < NUM_BENCHMARKS; ++index) {
+    benchmark_info[index].function.index = -1;
+    benchmark_info[index].function.name = "UNDEFINED";
+    benchmark_info[index].function.pointer = empty_wrapper;
+    benchmark_info[index].task_num = -1;
+    benchmark_info[index].periodicity = 0;
+    benchmark_info[index].task_overruns = -1;
+    benchmark_info[index].task_underruns = -1;
   }
 
   init = true;

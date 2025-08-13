@@ -11,12 +11,12 @@
 //
 #define FORMULA_COUNT 11
 typedef enum {
-  // LR_FORMULA, // <not implemented>
   EWMA_FORMULA,
   SW_FORMULA,
   AFC_FORMULA,
   AMBP_FORMULA,
   PIC_FORMULA,
+  LR_FORMULA, // <not implemented>
   //
   EWMA_V2_FORMULA,
   SW_V2_FORMULA,

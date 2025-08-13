@@ -17,9 +17,9 @@ const char *get_formula_name(formula_t formula) {
   case AMBP_FORMULA:
     return "AMBP";
     break;
-  // case LR_FORMULA:
-  //   return "LR";
-  //   break;
+  case LR_FORMULA:
+    return "LR";
+    break;
   case PIC_FORMULA:
     return "PIC";
     break;
