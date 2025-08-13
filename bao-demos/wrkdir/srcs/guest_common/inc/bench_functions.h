@@ -10,7 +10,7 @@
 #include "../../benchmarks/sha/inc/sha.h"
 #include "../../benchmarks/sorting/inc/sorting.h"
 
-void empty();
+void empty_wrapper();
 
 volatile int sum_array();
 volatile int subtract_array();

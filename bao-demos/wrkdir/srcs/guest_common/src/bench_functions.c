@@ -159,7 +159,7 @@ volatile int count_primes_array(void) {
 
 ////////////
 
-void empty() {
+void empty_wrapper() {
   while (1) {
     printf("\n\n\n\nthis should never happen\n\n\n\n");
   }

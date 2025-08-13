@@ -122,6 +122,9 @@ typedef struct {
 
   int64_t clock_per_period[PERIOD_QNT];
   int64_t total_clock;
+
+  int64_t completed_runs_per_task[TASK_QUANTITY];
+  int64_t has_overflowed[PERIOD_QNT];
 } BenchmarkData;
 
 void write_used_budget(struct VM vm_info, BenchmarkData *d) {
@@ -168,9 +171,22 @@ void write_calc_budget(struct VM vm_info, BenchmarkData *d) {
 void write_period_duration(struct VM vm_info, BenchmarkData *d) {
   // printf("\tCalc per period \n\t\tr ");
 
+  d->period_duration_total = 0;
   for (uint8_t i = 0; i < PERIOD_QNT; i++) {
     d->period_duration[i] = vm_info.period_duration[i];
     d->period_duration_total += vm_info.period_duration[i];
+  }
+}
+
+void write_others(struct VM vm_info, BenchmarkData *d) {
+
+  // runs
+  for (uint8_t i = 0; i < TASK_QUANTITY; i++) {
+    d->completed_runs_per_task[i] = vm_info.completed_runs_per_task[i];
+  }
+
+  for (uint8_t i = 0; i < PERIOD_QNT; i++) {
+    d->has_overflowed[i] = vm_info.has_overflowed[i];
   }
 }
 
@@ -277,8 +293,11 @@ void print_vm_header() {
   printf("budget_function,period_duration_total,");
   printf("total_used_budget_r,total_used_budget_w,");
   printf("total_calc_r,total_calc_w,");
-  // printf("total_clock,");
+  printf("has_overflowed,");
 
+  for (int i = 0; i < TASK_QUANTITY; i++) {
+    printf("completed_runs_per_task[%d],", i);
+  }
   for (int i = 0; i < PERIOD_QNT; i++) {
     printf("used_budget_read[%d],", i);
   }
@@ -294,10 +313,7 @@ void print_vm_header() {
   for (int i = 0; i < PERIOD_QNT; i++) {
     printf("period_duration[%d],", i);
   }
-  // for (int i = 0; i < PERIOD_QNT; i++) {
-  //   printf("clock_per_period[%d],", i);
-  // }
-  //
+
   printf("\n");
 }
 
@@ -307,21 +323,34 @@ void print_array(int64_t values[PERIOD_QNT]) {
   }
 }
 
-void print_vm_info(struct VM vm_info) {
-  // printf("%u,%u,%u,%u,", vm_info.pmu_counter_pair_rw, vm_info.r_fac,
-  //        vm_info.w_fac, vm_info.sgi_suspend_task_budget);
+void print_task_array(int64_t values[TASK_QUANTITY]) {
+  for (int i = 0; i < TASK_QUANTITY; i++) {
+    printf("%ld,", values[i]);
+  }
+}
 
+void print_compact(int64_t values[PERIOD_QNT]) {
+  for (int i = 0; i < PERIOD_QNT; i++) {
+    printf("%s", values[i] ? "O" : "-");
+  }
+  printf(",");
+}
+
+void print_vm_info(struct VM vm_info) {
   BenchmarkData info;
   write_used_budget(vm_info, &info);
   write_calc_budget(vm_info, &info);
   write_period_duration(vm_info, &info);
+  write_others(vm_info, &info);
   // write_clock_cycle(vm_info, &info);
 
   printf("%s,", get_formula_name(get_budget_formula()));
   printf("%ld,", info.period_duration_total);
   printf("%ld,%ld,", info.total_used_budget_r, info.total_used_budget_w);
   printf("%ld,%ld,", info.total_calc_r, info.total_calc_w);
+  print_compact(info.has_overflowed);
   // printf("%lu,", info.total_clock);
+  print_task_array(info.completed_runs_per_task);
   print_array(info.used_budget_per_period_read);
   print_array(info.used_budget_per_period_write);
   print_array(info.calc_per_period_read);

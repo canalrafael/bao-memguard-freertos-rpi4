@@ -109,6 +109,7 @@ int AdjMatrix[666][NUM_NODES];
 
 TaskHandle_t task_handlers[TASK_QUANTITY];
 uint32_t pmu_overflowed = -1;
+bool end_application = false;
 
 #if VM_0_REGULATION
 static void sgi_pmu_0() {
@@ -843,7 +844,7 @@ void ctrl_task(void *pvParameters) {
   uint8_t info_showed = 0;
   uint8_t idx = 0;
 
-  while (1) {
+  while (!end_application) {
     PRINT("begin control task\n");
     TickType_t current_time = xTaskGetTickCount();
     TickType_t period_end_time = 0; // Variable to store the exact end time
@@ -852,24 +853,19 @@ void ctrl_task(void *pvParameters) {
       stop_counter();
 
       PRINT("control TIMEOUT: \n");
-      PRINT("(current_time_task_any - last_check_time_task_any) >= "
+      PRINT("(current_time - period_start_time) >= "
             "period_task_any\n");
-      PRINT("(%lu - %lu) >= %lu | %lu >= %lu\n", current_time_task_any,
-            last_check_time_task_any, period_task_any,
-            (current_time_task_any - last_check_time_task_any),
-            period_task_any);
+      PRINT("(%lu - %lu) >= %lu | %lu >= %lu\n", current_time,
+            period_start_time, control_period,
+            (current_time - period_start_time), control_period);
 
-      period_end_time = current_time; // Capture the end time
       pmu_overflowed =
           UNUSED_VALUE; // Explicitly signal that a timeout occurred ---
       get_budget = 1;
-      period_end_time = current_time;
 
     } else if (vm_conf[VM_NUM].sgi_suspend_task_budget && !get_budget) {
       stop_counter();
       get_budget = 1;
-
-      period_end_time = xTaskGetTickCount(); // Capture the end time on overflow
       PRINT("control OVERFLOW\n");
     } else {
 
@@ -878,6 +874,10 @@ void ctrl_task(void *pvParameters) {
     }
 
     if (get_budget) {
+      PRINT("calling HC_regulator_get_new_budget\n");
+      HC_regulator_budget_depleted(pmu_overflowed, get_budget_formula());
+      get_budget = 0;
+      period_end_time = xTaskGetTickCount(); // Capture the end time on overflow
 
       // Calculate and store the duration of the period that just ended.
       TickType_t duration = period_end_time - period_start_time;
@@ -886,10 +886,10 @@ void ctrl_task(void *pvParameters) {
       // The start time for the *next* period is now.
       period_start_time = period_end_time;
 
-      PRINT("calling HC_regulator_get_new_budget\n");
+      vm_conf[VM_NUM].sgi_suspend_task_budget = 0;
 
-      HC_regulator_budget_depleted(pmu_overflowed, get_budget_formula());
-
+      vm_conf[VM_NUM].has_overflowed[idx] = pmu_overflowed != UNUSED_VALUE;
+      HC_regulator_get_current_used_budget(UNUSED_ARG, READ);
       vm_conf[VM_NUM].used_r_budget_period[idx] =
           HC_regulator_get_current_used_budget(UNUSED_ARG, READ);
       vm_conf[VM_NUM].used_w_budget_period[idx] =
@@ -905,9 +905,6 @@ void ctrl_task(void *pvParameters) {
       vm_conf[VM_NUM].calc_w_budget_period[idx] =
           vm_conf[VM_NUM].new_write_budget;
 
-      // Now, update the start time for the *next* period
-      last_check_time_task_any = period_end_time;
-
       PRINT("idx %d\n", idx);
       if (idx < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget != 0 &&
           vm_conf[VM_NUM].new_write_budget != 0) {
@@ -917,27 +914,31 @@ void ctrl_task(void *pvParameters) {
 
       PRINT("done\n");
 
-      get_budget = 0;
-      vm_conf[VM_NUM].sgi_suspend_task_budget = 0;
-
       // showing results
       if (idx >= PERIOD_QNT && !info_showed) {
         /* && task_conf.show_exe_info && */
         // vTaskDelay((3500));
 
+        for (int task_index = 0; task_index < TASK_QUANTITY; ++task_index) {
+          BenchInfo *info = get_benchmark_info(VM_NUM, task_index);
+          vm_conf[VM_NUM].completed_runs_per_task[task_index] =
+              info->task_overruns + info->task_underruns;
+
+          // Reset the counters for this specific task for the next run
+          info->task_overruns = 0;
+          info->task_underruns = 0;
+        }
+
+        idx = 0;
+
         // printf("showing results\n");
         print_vm_info(vm_conf[VM_NUM]);
-        BenchInfo *info = get_benchmark_info(VM_NUM, UNUSED_ARG);
-        PRINT("TASK: OVER %d | UNDER %d\n", info->task_overruns,
-              info->task_underruns);
-        info->task_overruns = 0;
-        info->task_underruns = 0;
-        idx = 0;
 
         formula_t formula = get_budget_formula() + 1;
         if (formula >= FORMULA_COUNT) {
           info_showed = 1;
           PRINT("INFO SHOWED. END.\n");
+          end_application = true;
         } else {
           // task_conf.show_exe_info = 0;
           PRINT("set budget formula from %d to %d\n", //
@@ -946,6 +947,7 @@ void ctrl_task(void *pvParameters) {
         }
       }
 
+      period_start_time = xTaskGetTickCount();
       config_counter();
       start_counter();
     }
@@ -1040,7 +1042,7 @@ void delayed_task(void *pvParameters) {
   const TickType_t period = pdMS_TO_TICKS(info->periodicity);
   TickType_t last_wake_time = xTaskGetTickCount();
 
-  while (true) {
+  while (!end_application) {
     info->function.pointer();
 
     TickType_t now = xTaskGetTickCount();
@@ -1053,6 +1055,8 @@ void delayed_task(void *pvParameters) {
 
     vTaskDelayUntil(&last_wake_time, period);
   }
+
+  vTaskDelete(NULL);
 }
 
 int main(void) {
@@ -1086,6 +1090,8 @@ int main(void) {
     if (task_handlers[task_num] == NULL) {
       printf("NULL task_handle, returning\n");
       return 0;
+    } else {
+      printf("got %s (%d)\n", info->function.name, info->function.index);
     }
   }
 
@@ -1122,11 +1128,11 @@ int main(void) {
   start_counter();
 
   vTaskStartScheduler();
-  printf("\n\n\nShould never reach here.\n\n\n");
-  while (true) {
-    //
-  }
+  // while (true) {
+  //   //
+  // }
   destroy_bench();
+  printf("\nReturning from main.\n");
   return 0;
 }
 
