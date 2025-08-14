@@ -61,7 +61,7 @@
 #include <budget.h>
 #include <data.h>
 
-#if 0
+#if 1
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)
