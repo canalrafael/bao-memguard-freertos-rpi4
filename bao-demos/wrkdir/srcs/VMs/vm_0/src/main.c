@@ -1028,6 +1028,22 @@ void ctrl_task(void *pvParameters) {
 //   }
 // }
 
+// This task waits for a fixed duration and then stops the scheduler.
+void vShutdownTask(void *pvParameters) {
+  const TickType_t xDelay =
+      pdMS_TO_TICKS(5000); // 5000 milliseconds = 5 seconds
+
+  printf("Shutdown task started. Application will run for 5 seconds.\n");
+
+  // Wait for 5 seconds.
+  vTaskDelay(xDelay);
+
+  // Stop the scheduler. Execution will resume in main() after
+  // vTaskStartScheduler().
+  printf("5 seconds elapsed. Stopping the scheduler.\n");
+  vTaskEndScheduler();
+}
+
 void stress_task(void *pvParameters) {
   BenchInfo *info = (BenchInfo *)pvParameters;
 
@@ -1095,44 +1111,26 @@ int main(void) {
     }
   }
 
-  // **************************** IMPORTANT *********************************
-  // Task 0 MUST always use task_conf[0]
-  // All values inside the [] must be equal through all the line
-  // The control task must only controls the same number of active tasks
-  // ************************************************************************
-
-  // xTaskCreate(benchmark, NULL, 400, (void *)&task_conf[1],
-  //             task_conf[1].priority, &th->task_handler[1]);
-  // xTaskCreate(benchmark, NULL, 400, (void *)&task_conf[0],
-  //             task_conf[0].priority, &th->task_handler[0]);
-
-  // xTaskCreate(bandwdith_benchmark, BANDWIDTH_TASK_NAME, 400,
-  // (void*)&task_conf[0], task_conf[0].priority, &th->task_handler[0]);
-  // xTaskCreate(disparity_benchmark, DISPARITY_TASK_NAME, 400,
-  // (void*)&task_conf[1], task_conf[1].priority, &th->task_handler[1]);
-  // xTaskCreate(mser_benchmark,      MSER_TASK_NAME,      400,
-  // (void*)&task_conf[1], task_conf[1].priority, &th->task_handler[1]);
-  // xTaskCreate(fft_benchmark,       FFT_TASK_NAME,       400,
-  // (void*)&task_conf[0], task_conf[0].priority, &th->task_handler[0]);
-  // xTaskCreate(sorting_benchmark,   SORTING_TASK_NAME,   400,
-  // (void*)&task_conf[1], task_conf[1].priority, &th->task_handler[1]);
-  // xTaskCreate(qsort_benchmark,     QSORT_TASK_NAME,     400,
-  // (void*)&task_conf[0], task_conf[0].priority, &th->task_handler[0]);
-
-  // xTaskCreate(dijkstra_benchmark,  DIJKSTRA_TASK_NAME,  400,
-  // (void*)&task_conf[1], task_conf[1].priority, &th->task_handler[1]);
-  // xTaskCreate(sha_benchmark,       SHA_TASK_NAME,       400,
-  // (void*)&task_conf[0], task_conf[0].priority, &th->task_handler[0]);
-
   config_counter();
   start_counter();
 
+  // CREATE THE SHUTDOWN TASK BEFORE STARTING THE SCHEDULER
+  // =======================================================
+  xTaskCreate(vShutdownTask,            // Task function
+              "ShutdownTask",           // Task name
+              configMINIMAL_STACK_SIZE, // Stack size
+              NULL,                     // Parameters
+              configMAX_PRIORITIES - 1, // High priority
+              NULL                      // Task handle
+  );
+
+  // This will now run for 5 seconds and then return.
   vTaskStartScheduler();
-  // while (true) {
-  //   //
-  // }
+
+  // --- Execution resumes here after vTaskEndScheduler() is called ---
+
+  printf("\nend scheduler.\n");
   destroy_bench();
-  printf("\nReturning from main.\n");
   return 0;
 }
 

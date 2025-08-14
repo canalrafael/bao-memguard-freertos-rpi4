@@ -1318,9 +1318,9 @@ void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
         case AMBP_V2_FORMULA:
             ambp_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
             break;
-        // case LR_FORMULA:
-        //     lr(cpu()->id, UNUSED_ARG);
-        //     break;
+        case LR_FORMULA:
+            lr(cpu()->id, UNUSED_ARG);
+            break;
         case LR_V2_FORMULA:
             lr_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
             break;
