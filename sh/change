@@ -21,7 +21,7 @@ if not reg_file.exists():
 # --- Update BENCH_ARRAY_INDEX in bench.h ---
 bench_text = bench_file.read_text()
 bench_text, count_bench = re.subn(
-    r"(#define\s+BENCH_ARRAY_INDEX\s+)(?:\d+|%d)",
+    r"(#define\s+BENCH_ARRAY_INDEX\s+)(?:-?\d+|%d)",
     rf"\g<1>{bench_index}",
     bench_text
 )

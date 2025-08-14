@@ -1,0 +1,7 @@
+
+1392640 bytes read in 101 ms (13.1 MiB/s)
+## Starting application at 0x00200000 ...
+BENCH_ARRAY_INDEX -1
+budget_function,period_duration_total,total_used_budget_r,total_used_budget_w,total_calc_r,total_calc_w,has_overflowed,completed_runs_per_task[0],completed_runs_per_task[1],used_budget_read[0],used_budget_read[1],used_budget_read[2],used_budget_read[3],used_budget_read[4],used_budget_read[5],used_budget_read[6],used_budget_read[7],used_budget_read[8],used_budget_read[9],used_budget_write[0],used_budget_write[1],used_budget_write[2],used_budget_write[3],used_budget_write[4],used_budget_write[5],used_budget_write[6],used_budget_write[7],used_budget_write[8],used_budget_write[9],predicted_read[0],predicted_read[1],predicted_read[2],predicted_read[3],predicted_read[4],predicted_read[5],predicted_read[6],predicted_read[7],predicted_read[8],predicted_read[9],predicted_write[0],predicted_write[1],predicted_write[2],predicted_write[3],predicted_write[4],predicted_write[5],predicted_write[6],predicted_write[7],predicted_write[8],predicted_write[9],period_duration[0],period_duration[1],period_duration[2],period_duration[3],period_duration[4],period_duration[5],period_duration[6],period_duration[7],period_duration[8],period_duration[9],
+Invalid get_benchmark_index call -8
+BAO ERROR: no emulation handler for abort(0xffffffff at 0xcb64)

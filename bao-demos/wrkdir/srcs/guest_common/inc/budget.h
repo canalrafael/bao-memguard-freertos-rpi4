@@ -9,7 +9,7 @@
 // #define PIC_FORMULA 5
 // #define USED_BUDGET_FORMULA 5
 //
-#define FORMULA_COUNT 11
+#define FORMULA_COUNT 12
 typedef enum {
   EWMA_FORMULA,
   SW_FORMULA,
