@@ -1,0 +1,16 @@
+--> Waiting for autoboot prompt...
+ðpüpÀŒŒpŒŒüpppp|p€püppüðpppŒ|ŒðŒŒðŒŒppüppŒðpðp|Œ|ŒðŽ|pðpüp€ŒŒpŒŒüpppp|p€püppŒŒŒp~€üpüpp€p|ppðp|ppŒpðpp|ŒŒðpp€ppðppðp|ŒpŒpŒpÎÎŽ|pŒ|ü|€üpðppðpðppppŒpŒðpp€ppðppðp|p|pp€p|ppðp|pp|pp|ppðppppp|pŒp€€pŽŒ|üppðü|ðpp€ŒpŒ|ppŒŒpp|p|Œ|€ðŒ|pppðpðpÀp€pŒppp|p~Œ|pŒüpppðppðppðŒüŒpŒ€ŒŽðp€p|pÎŒ€|ŒðŒðŽŒðpðŒüŒpŒ€ŒüðŒŒüpp€Œ|ððŒ|pŒpŒp|þpppðŒ|Œ|||pŒ|ŒðŒðppppppüppÀppŽ|Œ|Œ€ðpŒ|ŒðŒðp|ppppüppp|p€pü|ðŒp|üðp|ðüŒpðŒ|ð|Œ|Œð|ÀüpððŒ|Î|p€ŒŒðððppppü|pŒðüŒpüŒ0Œ|ð|püŒ€|Œðp|pp|Œ|Œ€pppŒpŒp|ppð|ppppppðŒðŒpŒ|ÎpüpŒüüüppppðŒðŒpŒ|ŒpŒ€ððüppppðŒðŒpŒ|ŒpðpÎðüüpppðŒðü|püppü|Œðð|ŒðüŒ>€ðŒŒpppppp|pŒ|Œ0ŒppŒŒ|üpp||ð|||pŒpŒppp€€ŒðpŒ€pp|Œ>Œ|Œpp|p|üŒðüŒp|üðpŒŒ|ŒpððÎppŒŒŒðp||Œ0ŒŒŒÀŽpüpðpŒŒðŒðŒpŒðüŒðpŒpppp|ppppppðŒü|püŒðpŒp|p|Œ€üŒðüŒp|üðpü|Œðp€Œ|ð|€üðŒ|€|€|ŒððŒ|0ŒŒŒppÎp|Œpp€ppp|p|Œ€Œ|ð||ð|üðp€ŒŒŒðp||ŒpŒŒŒ€ŒppðŒ|ppðŒüŒpŒ€ŒŒððððpppŒŒ|Œ0p€ŒüŒpŒ€Œ|ŒpppðŒ|Œü|€ðŒ|ppppppppðŒÀŽ|ð||ð>üðpŒŒð€pðŒ|ppðüŒ|pŒŒðŽpðŽüŒ0Ž€ŒŒðððppppüŒ|pŒŒðŒp€ŒþŒpŒ€Œ|ŒpppðŒ|Œü|€ðŒ|pp>€üp|pŒŒŒðpüŒ|pðüŒ|pŒÎüŒ|pŒ|ü|€üþpppðpð 1  0 
+switch to partitions #0, OK
+mmc0 is current device
+** No partition table - mmc 0 **
+Couldn't find partition mmc 0:1
+Card did not respond to voltage select! : -110
+MMC Device 2 not found
+no mmc device at slot 2
+
+Device 0: unknown device
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+missing environment variable: pxeuuid
+Retrieving file: pxelinux.cfg/01-d8-3a-dd-30-e7-91
+ethernet@7d580000 Waiting for PHY auto negotiation to complete....script "temp_loader.script": global timeout

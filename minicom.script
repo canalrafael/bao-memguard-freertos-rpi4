@@ -1,0 +1,17 @@
+expect "Hit any key to stop autoboot:  2"
+
+send " "
+
+# Wait for the U-Boot prompt to appear
+expect "U-Boot>"
+
+# Send the command to load and run the binary
+send "fatload mmc 0 0x200000 bao.bin; go 0x200000"
+
+# Wait for the specific output that signals the program has finished and halted
+expect "end iteration"
+
+# exits
+! killall -9 minicom
+
+##########

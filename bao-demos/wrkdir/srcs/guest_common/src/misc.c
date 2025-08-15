@@ -103,106 +103,102 @@
 ///
 ///
 typedef struct {
-  int64_t total_used_budget_r;
-  int64_t total_used_budget_w;
-
+  // int64_t total_used_budget_r;
+  // int64_t total_used_budget_w;
+  //
   int64_t total_calc_r;
   int64_t total_calc_w;
-
-  int64_t used_budget_per_period_read[PERIOD_QNT];
-  int64_t used_budget_per_period_write[PERIOD_QNT];
-  // int64_t total_used_budget_rw_per_index[PERIOD_QNT];
-
+  //
+  int64_t PMU_counter_used_budget;
+  int64_t PMU_counter_used_budget_r;
+  int64_t PMU_counter_used_budget_w;
+  // int64_t total_calc_rw_per_index[PERIOD_QNT];
+  //
+  int64_t PMU_counter_used_budget_r_per_period[PERIOD_QNT];
+  int64_t PMU_counter_used_budget_w_per_period[PERIOD_QNT];
+  // // int64_t total_used_budget_rw_per_index[PERIOD_QNT];
+  //
   int64_t calc_per_period_read[PERIOD_QNT];
   int64_t calc_per_period_write[PERIOD_QNT];
-  // int64_t total_calc_rw_per_index[PERIOD_QNT];
-
-  int64_t period_duration[PERIOD_QNT];
-  int64_t period_duration_total;
-
-  int64_t clock_per_period[PERIOD_QNT];
-  int64_t total_clock;
-
-  int64_t completed_runs_per_task[TASK_QUANTITY];
-  int64_t has_overflowed[PERIOD_QNT];
+  //
+  // int64_t period_duration[PERIOD_QNT];
+  // int64_t period_duration_total;
+  //
+  // int64_t clock_per_period[PERIOD_QNT];
+  // int64_t total_clock;
+  //
+  // int64_t completed_runs_per_task[TASK_QUANTITY];
+  // int64_t has_overflowed[PERIOD_QNT];
 } BenchmarkData;
 
 void write_used_budget(struct VM vm_info, BenchmarkData *d) {
-  // printf("\tUsed budget per period \n\t\tr ");
-
-  int64_t total_read_used = 0;
-  int64_t total_write_used = 0;
+  //
+  d->PMU_counter_used_budget_r = 0;
+  d->PMU_counter_used_budget_w = 0;
+  d->PMU_counter_used_budget = 0;
   for (uint8_t i = 0; i < PERIOD_QNT; i++) {
     int64_t period_read_used = vm_info.used_r_budget_period[i];
     int64_t period_write_used = vm_info.used_w_budget_period[i];
 
-    total_read_used += period_read_used;
-    total_write_used += period_write_used;
-
-    d->used_budget_per_period_read[i] = period_read_used;
-    d->used_budget_per_period_write[i] = period_write_used;
-    // d->total_used_budget_rw_per_index[i] = period_read_used +
-    // period_write_used;
+    d->PMU_counter_used_budget_r_per_period[i] = period_read_used;
+    d->PMU_counter_used_budget_w_per_period[i] = period_write_used;
+    d->PMU_counter_used_budget_r += period_read_used;
+    d->PMU_counter_used_budget_w += period_write_used;
+    d->PMU_counter_used_budget += period_read_used + period_write_used;
   }
-  d->total_used_budget_r = total_read_used;
-  d->total_used_budget_w = total_write_used;
 }
 
 void write_calc_budget(struct VM vm_info, BenchmarkData *d) {
   // printf("\tCalc per period \n\t\tr ");
 
-  int64_t total_calc_read = 0;
-  int64_t total_calc_write = 0;
+  d->total_calc_r = 0;
+  d->total_calc_w = 0;
   for (uint8_t i = 0; i < PERIOD_QNT; i++) {
     int64_t period_calc_read = vm_info.calc_r_budget_period[i];
     int64_t period_calc_write = vm_info.calc_w_budget_period[i];
 
-    total_calc_read += period_calc_read;
-    total_calc_write += period_calc_write;
-
     d->calc_per_period_read[i] = period_calc_read;
     d->calc_per_period_write[i] = period_calc_write;
-    // d->total_calc_rw_per_index[i] = period_calc_read + period_calc_write;
-  }
-  d->total_calc_r = total_calc_read;
-  d->total_calc_w = total_calc_write;
-}
-
-void write_period_duration(struct VM vm_info, BenchmarkData *d) {
-  // printf("\tCalc per period \n\t\tr ");
-
-  d->period_duration_total = 0;
-  for (uint8_t i = 0; i < PERIOD_QNT; i++) {
-    d->period_duration[i] = vm_info.period_duration[i];
-    d->period_duration_total += vm_info.period_duration[i];
+    d->total_calc_r += period_calc_read;
+    d->total_calc_w += period_calc_write;
   }
 }
 
-void write_others(struct VM vm_info, BenchmarkData *d) {
+// void write_period_duration(struct VM vm_info, BenchmarkData *d) {
+//   // printf("\tCalc per period \n\t\tr ");
+//
+//   d->period_duration_total = 0;
+//   for (uint8_t i = 0; i < PERIOD_QNT; i++) {
+//     d->period_duration[i] = vm_info.period_duration[i];
+//     d->period_duration_total += vm_info.period_duration[i];
+//   }
+// }
 
-  // runs
-  for (uint8_t i = 0; i < TASK_QUANTITY; i++) {
-    d->completed_runs_per_task[i] = vm_info.completed_runs_per_task[i];
-  }
+// void write_others(struct VM vm_info, BenchmarkData *d) {
+//
+//   // runs
+//   for (uint8_t i = 0; i < TASK_QUANTITY; i++) {
+//     d->completed_runs_per_task[i] = vm_info.completed_runs_per_task[i];
+//   }
+//
+//   for (uint8_t i = 0; i < PERIOD_QNT; i++) {
+//     d->has_overflowed[i] = vm_info.has_overflowed[i];
+//   }
+// }
 
-  for (uint8_t i = 0; i < PERIOD_QNT; i++) {
-    d->has_overflowed[i] = vm_info.has_overflowed[i];
-  }
-}
-
-void write_clock_cycle(struct VM vm_info, BenchmarkData *d) {
-  // printf("\tClock per period \n\t\t");
-
-  int64_t total_clock = 0;
-  for (int8_t i = 0; i < PERIOD_QNT; i++) {
-    int64_t clock_period = vm_info.cycle_per_period[i];
-    total_clock += clock_period;
-
-    d->clock_per_period[i] = clock_period;
-  }
-
-  d->total_clock = total_clock;
-}
+// void write_clock_cycle(struct VM vm_info, BenchmarkData *d) {
+//   // printf("\tClock per period \n\t\t");
+//
+//   int64_t total_clock = 0;
+//   for (int8_t i = 0; i < PERIOD_QNT; i++) {
+//     int64_t clock_period = vm_info.cycle_per_period[i];
+//     total_clock += clock_period;
+//
+//     d->clock_per_period[i] = clock_period;
+//   }
+//
+//   d->total_clock = total_clock;
+// }
 
 // void print_value_array(int *values, int size, char buffer[], char current[])
 // {
@@ -290,14 +286,10 @@ void write_clock_cycle(struct VM vm_info, BenchmarkData *d) {
 // }
 
 void print_vm_header() {
-  printf("budget_function,period_duration_total,");
-  printf("total_used_budget_r,total_used_budget_w,");
+  printf("budget_function,PMU_counter_used_budget,");
+  printf("PMU_counter_used_budget_r,PMU_counter_used_budget_w,");
   printf("total_calc_r,total_calc_w,");
-  printf("has_overflowed,");
 
-  for (int i = 0; i < TASK_QUANTITY; i++) {
-    printf("completed_runs_per_task[%d],", i);
-  }
   for (int i = 0; i < PERIOD_QNT; i++) {
     printf("used_budget_read[%d],", i);
   }
@@ -305,16 +297,22 @@ void print_vm_header() {
     printf("used_budget_write[%d],", i);
   }
   for (int i = 0; i < PERIOD_QNT; i++) {
-    printf("predicted_read[%d],", i);
+    printf("calculated_read[%d],", i);
   }
   for (int i = 0; i < PERIOD_QNT; i++) {
-    printf("predicted_write[%d],", i);
+    printf("calculated_write[%d],", i);
   }
-  for (int i = 0; i < PERIOD_QNT; i++) {
-    printf("period_duration[%d],", i);
-  }
-
   printf("\n");
+
+  // printf("budget_function,period_duration_total,");
+  // printf("has_overflowed,");
+  //
+  // for (int i = 0; i < TASK_QUANTITY; i++) {
+  //   printf("completed_runs_per_task[%d],", i);
+  // }
+  // for (int i = 0; i < PERIOD_QNT; i++) {
+  //   printf("period_duration[%d],", i);
+  // }
 }
 
 void print_array(int64_t values[PERIOD_QNT]) {
@@ -340,22 +338,27 @@ void print_vm_info(struct VM vm_info) {
   BenchmarkData info;
   write_used_budget(vm_info, &info);
   write_calc_budget(vm_info, &info);
-  write_period_duration(vm_info, &info);
-  write_others(vm_info, &info);
+  // write_period_duration(vm_info, &info);
+  // write_others(vm_info, &info);
   // write_clock_cycle(vm_info, &info);
 
+  // printf("%ld,", info.period_duration_total);
   printf("%s,", get_formula_name(get_budget_formula()));
-  printf("%ld,", info.period_duration_total);
-  printf("%ld,%ld,", info.total_used_budget_r, info.total_used_budget_w);
-  printf("%ld,%ld,", info.total_calc_r, info.total_calc_w);
-  print_compact(info.has_overflowed);
+  printf("%ld,", info.PMU_counter_used_budget);
+  printf("%ld,", info.PMU_counter_used_budget_r);
+  printf("%ld,", info.PMU_counter_used_budget_w);
+  printf("%ld,", info.total_calc_r);
+  printf("%ld,", info.total_calc_w);
+  print_array(info.PMU_counter_used_budget_r_per_period);
+  print_array(info.PMU_counter_used_budget_w_per_period);
+  // print_compact(info.has_overflowed);
   // printf("%lu,", info.total_clock);
-  print_task_array(info.completed_runs_per_task);
-  print_array(info.used_budget_per_period_read);
-  print_array(info.used_budget_per_period_write);
+  // print_task_array(info.completed_runs_per_task);
+  // print_array(info.used_budget_per_period_read);
+  // print_array(info.used_budget_per_period_write);
   print_array(info.calc_per_period_read);
   print_array(info.calc_per_period_write);
-  print_array(info.period_duration);
+  // print_array(info.period_duration);
   // print_array(info.clock_per_period);
 
   printf("\n");

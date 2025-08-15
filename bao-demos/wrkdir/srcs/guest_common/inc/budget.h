@@ -9,21 +9,21 @@
 // #define PIC_FORMULA 5
 // #define USED_BUDGET_FORMULA 5
 //
-#define FORMULA_COUNT 12
+#define FORMULA_COUNT 5
 typedef enum {
-  LR_FORMULA, // <not implemented>
+  // LR_FORMULA, // <not implemented>
   EWMA_FORMULA,
   SW_FORMULA,
   AFC_FORMULA,
   AMBP_FORMULA,
   PIC_FORMULA,
   //
-  EWMA_V2_FORMULA,
-  SW_V2_FORMULA,
-  AFC_V2_FORMULA,
-  LR_V2_FORMULA,
-  AMBP_V2_FORMULA,
-  PIC_V2_FORMULA,
+  // EWMA_V2_FORMULA,
+  // SW_V2_FORMULA,
+  // AFC_V2_FORMULA,
+  // LR_V2_FORMULA,
+  // AMBP_V2_FORMULA,
+  // PIC_V2_FORMULA,
   // FORMULA_COUNT,
 } formula_t;
 

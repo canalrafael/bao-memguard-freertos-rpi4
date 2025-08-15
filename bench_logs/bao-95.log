@@ -1,0 +1,39 @@
+--> Waiting for autoboot prompt...
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+
+
+U-Boot 2022.10 (May 01 2024 - 17:26:49 -0300)
+
+DRAM:  7.1 GiB
+RPI 4 Model B (0xd03115)
+Core:  202 devices, 16 uclasses, devicetree: board
+MMC:   mmcnr@7e300000: 1, emmc2@7e340000: 0
+Loading Environment from FAT... ** No partition table - mmc 0 **
+In:    serial
+Out:   serial
+Err:   serial
+Net:   eth0: ethernet@7d580000
+PCIe BRCM: link up, 5.0 Gbps x1 (SSC)
+starting USB...
+Bus xhci_pci: Register 5000420 NbrPorts 5
+Starting the controller
+USB XHCI 1.00
+scanning bus xhci_pci for devices... 2 USB Device(s) found
+       scanning usb for storage devices... 0 Storage Device(s) found
+Hit any key to stop autoboot:--> Autoboot stopped. Waiting for U-Boot prompt...
+ 0 
+U-Boot>--> Benchmark command sent. Waiting for completion...
+fatload mmc 0 0x200000 bao-95.bin; go 0x200000
+1392640 bytes read in 103 ms (12.9 MiB/s)
+## Starting application at 0x00200000 ...
+BENCH_ARRAY_INDEX 94
+budget_function,PMU_counter_used_budget,PMU_counter_used_budget_r,PMU_counter_used_budget_w,total_calc_r,total_calc_w,used_budget_read[0],used_budget_read[1],used_budget_read[2],used_budget_read[3],used_budget_read[4],used_budget_read[5],used_budget_read[6],used_budget_read[7],used_budget_read[8],used_budget_read[9],used_budget_write[0],used_budget_write[1],used_budget_write[2],used_budget_write[3],used_budget_write[4],used_budget_write[5],used_budget_write[6],used_budget_write[7],used_budget_write[8],used_budget_write[9],calculated_read[0],calculated_read[1],calculated_read[2],calculated_read[3],calculated_read[4],calculated_read[5],calculated_read[6],calculated_read[7],calculated_read[8],calculated_read[9],calculated_write[0],calculated_write[1],calculated_write[2],calculated_write[3],calculated_write[4],calculated_write[5],calculated_write[6],calculated_write[7],calculated_write[8],calculated_write[9],
+got bandwidth_wrapper (752)
+got fft_wrapper (753)
+EWMA,15199645,9427470,5772175,6376120,3888608,1253376,1270904,1075694,953667,885427,826998,803553,787519,787541,782791,677428,803431,675754,595879,551231,512807,497482,486999,487135,484029,250675,454720,578914,653864,700176,725540,741142,750417,757841,762831,135485,269074,350410,399503,429848,446439,456647,462717,467600,470885,
+SW,14899016,9212676,5686340,6539053,4036100,1531785,267873,413132,790207,1042582,1011453,1030509,1036981,1035558,1052596,945761,165991,254449,487681,643829,623118,635770,640093,639138,650510,1258691,1109937,737597,490404,490404,490404,490404,490404,490404,490404,776275,685476,455400,302707,302707,302707,302707,302707,302707,302707,
+AFC,14873405,9199282,5674123,6176491,3808722,915294,1341767,1118942,947998,887200,850286,808237,778677,773567,777314,559043,829280,691718,584417,547789,525571,498957,480113,477214,480021,183058,414799,555627,634101,684720,717833,735913,744465,750285,755690,111808,255302,342585,390951,422318,442968,454165,459354,462926,466345,
+AMBP,14781134,9139978,5641156,6113102,3773056,765357,1376053,1123372,985560,900545,849671,787508,791884,783300,776728,472249,849488,693089,608452,556117,524815,484978,488768,483632,479568,153151,397731,542859,631399,685228,718116,731994,743972,751837,756815,94529,245520,335033,389716,422996,443359,451682,459099,464005,467117,
+PIC,12191050,7542460,4648590,4285162080,4288924110,754246,754246,754246,754246,754246,754246,754246,754246,754246,754246,464859,464859,464859,464859,464859,464859,464859,464859,464859,464859,428516208,428516208,428516208,428516208,428516208,428516208,428516208,428516208,428516208,428516208,428892411,428892411,428892411,428892411,428892411,428892411,428892411,428892411,428892411,428892411,
+end--> Completion message received. Exiting.
