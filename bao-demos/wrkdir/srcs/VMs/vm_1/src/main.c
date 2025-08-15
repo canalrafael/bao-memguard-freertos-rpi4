@@ -913,22 +913,6 @@ void ctrl_task(void *pvParameters) {
 //   }
 // }
 
-// This task waits for a fixed duration and then stops the scheduler.
-void vShutdownTask(void *pvParameters) {
-  const TickType_t xDelay =
-      pdMS_TO_TICKS(5000); // 5000 milliseconds = 5 seconds
-
-  printf("Shutdown task started. Application will run for 5 seconds.\n");
-
-  // Wait for 5 seconds.
-  vTaskDelay(xDelay);
-
-  // Stop the scheduler. Execution will resume in main() after
-  // vTaskStartScheduler().
-  printf("5 seconds elapsed. Stopping the scheduler.\n");
-  vTaskEndScheduler();
-}
-
 void stress_task(void *pvParameters) {
   BenchInfo *info = (BenchInfo *)pvParameters;
 
@@ -988,20 +972,10 @@ int main(void) {
     }
   }
 
-  // CREATE THE SHUTDOWN TASK BEFORE STARTING THE SCHEDULER
-  // =======================================================
-  xTaskCreate(vShutdownTask,            // Task function
-              "ShutdownTask",           // Task name
-              configMINIMAL_STACK_SIZE, // Stack size
-              NULL,                     // Parameters
-              configMAX_PRIORITIES - 1, // High priority
-              NULL                      // Task handle
-  );
-
-  // This will now run for 5 seconds and then return.
   vTaskStartScheduler();
-
-  // --- Execution resumes here after vTaskEndScheduler() is called ---
+  while (true) {
+    //
+  }
   destroy_bench();
   return 0;
 }

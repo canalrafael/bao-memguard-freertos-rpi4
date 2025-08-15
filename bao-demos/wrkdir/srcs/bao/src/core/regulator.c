@@ -1284,52 +1284,52 @@ void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
     reset_state_on_new_formula(formula);
 
     cpuid_t cpu_id = cpu()->id;
-    bool new_read = (pmu_id == READ);
-    bool new_write = (pmu_id == WRITE);
+    // bool new_read = (pmu_id == READ);
+    // bool new_write = (pmu_id == WRITE);
 
     // This part is now correct
-    uint32_t actual_read_usage = get_operation_usage_v2(
-        READ, reg_conf[cpu_id].vm.defined_pmu_read_val, new_read);
-    uint32_t actual_write_usage = get_operation_usage_v2(
-        WRITE, reg_conf[cpu_id].vm.defined_pmu_write_val, new_write);
+    // uint32_t actual_read_usage = get_operation_usage_v2(
+    //     READ, reg_conf[cpu_id].vm.defined_pmu_read_val, new_read);
+    // uint32_t actual_write_usage = get_operation_usage_v2(
+    //     WRITE, reg_conf[cpu_id].vm.defined_pmu_write_val, new_write);
 
     switch (formula) {
         case EWMA_FORMULA:
             ewma(cpu_id, UNUSED_ARG);
             break;
-        case EWMA_V2_FORMULA:
-            ewma_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
-            break;
+        // case EWMA_V2_FORMULA:
+        //     ewma_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+        //     break;
         case SW_FORMULA:
             sw(cpu_id, UNUSED_ARG);
             break;
-        case SW_V2_FORMULA:
-            sw_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
-            break;
+        // case SW_V2_FORMULA:
+        //     sw_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+        //     break;
         case AFC_FORMULA:
             afc(cpu_id, UNUSED_ARG);
             break;
-        case AFC_V2_FORMULA:
-            afc_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
-            break;
+        // case AFC_V2_FORMULA:
+        //     afc_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+        //     break;
         case AMBP_FORMULA:
             ambp(cpu()->id, UNUSED_ARG);
             break;
-        case AMBP_V2_FORMULA:
-            ambp_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
-            break;
-        case LR_FORMULA:
-            lr(cpu()->id, UNUSED_ARG);
-            break;
-        case LR_V2_FORMULA:
-            lr_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
-            break;
+        // case AMBP_V2_FORMULA:
+        //     ambp_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+        //     break;
+        // case LR_FORMULA:
+        //     lr(cpu()->id, UNUSED_ARG);
+        //     break;
+        // case LR_V2_FORMULA:
+        //     lr_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+        //     break;
         case PIC_FORMULA:
             pic(cpu()->id, UNUSED_ARG);
             break;
-        case PIC_V2_FORMULA:
-            pic_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
-            break;
+        // case PIC_V2_FORMULA:
+        //     pic_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+        //     break;
         default:
             printk("something has gone very wrong!\n");
             break;
