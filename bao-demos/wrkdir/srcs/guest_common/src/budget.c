@@ -23,24 +23,24 @@ const char *get_formula_name(formula_t formula) {
   // case LR_FORMULA:
   //   return "LR";
   //   break;
-  // case EWMA_V2_FORMULA:
-  //   return "EWMA_v2";
-  //   break;
-  // case SW_V2_FORMULA:
-  //   return "SW_v2";
-  //   break;
-  // case AFC_V2_FORMULA:
-  //   return "AFC_v2";
-  //   break;
-  // case AMBP_V2_FORMULA:
-  //   return "AMBP_v2";
-  //   break;
-  // case LR_V2_FORMULA:
-  //   return "LR_v2";
-  //   break;
-  // case PIC_V2_FORMULA:
-  //   return "PIC_v2";
-  //   break;
+  case EWMA_V2_FORMULA:
+    return "EWMA_v2";
+    break;
+  case SW_V2_FORMULA:
+    return "SW_v2";
+    break;
+  case AFC_V2_FORMULA:
+    return "AFC_v2";
+    break;
+  case AMBP_V2_FORMULA:
+    return "AMBP_v2";
+    break;
+  case LR_V2_FORMULA:
+    return "LR_v2";
+    break;
+  case PIC_V2_FORMULA:
+    return "PIC_v2";
+    break;
   default:
     printf("invalid formula name %d, returning UNDEFINED\n", formula);
     return "UNDEFINED";

@@ -173,7 +173,7 @@ uint32_t regulator_get_pmu_counter_value(const uint8_t pmu_index);
 
 #endif
 
-#if 1
+#if 0
 #define PRINT(fmt, ...) printk("[BAO] " fmt "\n", ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)
