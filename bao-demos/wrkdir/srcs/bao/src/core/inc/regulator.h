@@ -53,6 +53,11 @@ struct VM {
     uint64_t total_used_write_budget;
     uint64_t total_calculated_new_read_budget;
     uint64_t total_calculated_new_write_budget;
+    //
+    uint64_t cycles;
+    uint64_t instructions;
+    uint64_t cache_misses;
+    uint64_t mispredicts;
 };
 
 struct EWMA {
@@ -164,9 +169,11 @@ uint32_t regulator_get_current_used_budget(const uint8_t task_num,
 uint32_t regulator_get_total_used_budget(const uint8_t task_num,
                                          const uint8_t op_type);
 
+uint32_t regulator_get_pmu_counter_value(const uint8_t pmu_index);
+
 #endif
 
-#if 0
+#if 1
 #define PRINT(fmt, ...) printk("[BAO] " fmt "\n", ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)

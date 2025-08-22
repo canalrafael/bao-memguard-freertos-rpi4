@@ -50,9 +50,9 @@ long int hypercall(unsigned long id)
             ret = regulator_get_new_budget(arg0, arg1);
             break;
 
-            /* case HC_REGULATOR_GET_TOTAL_CALCULATED_NEW_BUDGET: */
-            /* 	ret = regulator_get_total_calculated_new_budget(arg0, arg1); */
-            /* 	break; */
+        case HC_REGULATOR_GET_TOTAL_CALCULATED_NEW_BUDGET:
+            ret = regulator_get_pmu_counter_value(arg0);
+            break;
 
         case HC_REGULATOR_GET_TOTAL_USED_BUDGET:
             ret = regulator_get_total_used_budget(arg0, arg1);

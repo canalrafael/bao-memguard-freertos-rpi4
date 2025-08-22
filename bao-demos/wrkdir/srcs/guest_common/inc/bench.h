@@ -4,7 +4,7 @@
 #include "budget.h"
 #include <stdint.h>
 
-#define BENCH_ARRAY_INDEX 119
+#define BENCH_ARRAY_INDEX 98
 
 typedef struct {
   int index;

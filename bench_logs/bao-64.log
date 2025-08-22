@@ -1,16 +1,39 @@
 --> Waiting for autoboot prompt...
-ðpüpÀŒŒpŒŒüpppp|p€püppüðpppŒ|ŒðŒŒðŒŒppüppŒðpðp|Œ|ŒðŽ|pðpüp€ŒŒpŒŒüpppp|p€püppŒŒŒp~€üpüpp€p|ppðp|ppŒpðpp|ŒŒðpp€ppðppðp|ŒpŒpŒpÎÎŽ|pŒ|ü|€üpðppðpðppppŒpŒðpp€ppðppðp|p|pp€p|ppðp|pp|pp|ppðppppp|pŒp€€pŽŒ|üppðü|ðpp€ŒpŒ|ppŒŒpp|p|Œ|€ðŒ|pppðpðpÀp€pŒppp|p~Œ|pŒüpppðppðppðŒüŒpŒ€ŒŽðp€p|pÎŒ€|ŒðŒðŽŒðpðŒüŒpŒ€ŒüðŒŒüpp€Œ|ððŒ|pŒpŒp|þpppðŒ|Œ|||pŒ|ŒðŒðppppppüppÀppŽ|Œ|Œ€ðpŒ|ŒðŒðp|ppppüppp|p€pü|ðŒp|üðp|ðüŒpðŒ|ð|Œ|Œð|ÀüpððŒ|Î|p€ŒŒðððppppü|pŒðüŒpüŒ0Œ|ð|püŒ€|Œðp|pp|Œ|Œ€pppŒpŒp|ppð|ppppppðŒðŒpŒ|ÎpüpŒüüüppppðŒðŒpŒ|ŒpŒ€ððüppppðŒðŒpŒ|ŒpðpÎðüüpppðŒðü|püppü|Œðð|ŒðüŒ>€ðŒŒpppppp|pŒ|Œ0ŒppŒŒ|üpp||ð|||pŒpŒppp€€ŒðpŒ€pp|Œ>Œ|Œpp|p|üŒðüŒp|üðpŒŒ|ŒpððÎppŒŒŒðp||Œ0ŒŒŒÀŽpüpðpŒŒðŒðŒpŒðüŒðpŒpppp|ppppppðŒü|püŒðpŒp|p|Œ€üŒðüŒp|üðpü|Œðp€Œ|ð|€üðŒ|€|€|ŒððŒ|0ŒŒŒppÎp|Œpp€ppp|p|Œ€Œ|ð||ð|üðp€ŒŒŒðp||ŒpŒŒŒ€ŒppðŒ|ppðŒüŒpŒ€ŒŒððððpppŒŒ|Œ0p€ŒüŒpŒ€Œ|ŒpppðŒ|Œü|€ðŒ|ppppppppðŒÀŽ|ð||ð>üðpŒŒð€pðŒ|ppðüŒ|pŒŒðŽpðŽüŒ0Ž€ŒŒðððppppüŒ|pŒŒðŒp€ŒþŒpŒ€Œ|ŒpppðŒ|Œü|€ðŒ|pp>€üp|pŒŒŒðpüŒ|pðüŒ|pŒÎüŒ|pŒ|ü|€üþpppðpð 1  0 
-switch to partitions #0, OK
-mmc0 is current device
-** No partition table - mmc 0 **
-Couldn't find partition mmc 0:1
-Card did not respond to voltage select! : -110
-MMC Device 2 not found
-no mmc device at slot 2
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
 
-Device 0: unknown device
-ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
-bcmgenet: PHY startup failed: -110
-missing environment variable: pxeuuid
-Retrieving file: pxelinux.cfg/01-d8-3a-dd-30-e7-91
-ethernet@7d580000 Waiting for PHY auto negotiation to complete....script "temp_loader.script": global timeout
+
+U-Boot 2022.10 (May 01 2024 - 17:26:49 -0300)
+
+DRAM:  7.1 GiB
+RPI 4 Model B (0xd03115)
+Core:  202 devices, 16 uclasses, devicetree: board
+MMC:   mmcnr@7e300000: 1, emmc2@7e340000: 0
+Loading Environment from FAT... ** No partition table - mmc 0 **
+In:    serial
+Out:   serial
+Err:   serial
+Net:   eth0: ethernet@7d580000
+PCIe BRCM: link up, 5.0 Gbps x1 (SSC)
+starting USB...
+Bus xhci_pci: Register 5000420 NbrPorts 5
+Starting the controller
+USB XHCI 1.00
+scanning bus xhci_pci for devices... 2 USB Device(s) found
+       scanning usb for storage devices... 0 Storage Device(s) found
+Hit any key to stop autoboot:--> Autoboot stopped. Waiting for U-Boot prompt...
+ 0 
+U-Boot>--> Benchmark command sent. Waiting for completion...
+fatload mmc 0 0x200000 bao-64.bin; go 0x200000
+1417216 bytes read in 105 ms (12.9 MiB/s)
+## Starting application at 0x00200000 ...
+BENCH_ARRAY_INDEX 63
+budget_function,PMU_counter_used_budget,PMU_counter_used_budget_r,PMU_counter_used_budget_w,total_calc_r,total_calc_w,used_budget_read[0],used_budget_read[1],used_budget_read[2],used_budget_read[3],used_budget_read[4],used_budget_read[5],used_budget_read[6],used_budget_read[7],used_budget_read[8],used_budget_read[9],used_budget_write[0],used_budget_write[1],used_budget_write[2],used_budget_write[3],used_budget_write[4],used_budget_write[5],used_budget_write[6],used_budget_write[7],used_budget_write[8],used_budget_write[9],calculated_read[0],calculated_read[1],calculated_read[2],calculated_read[3],calculated_read[4],calculated_read[5],calculated_read[6],calculated_read[7],calculated_read[8],calculated_read[9],calculated_write[0],calculated_write[1],calculated_write[2],calculated_write[3],calculated_write[4],calculated_write[5],calculated_write[6],calculated_write[7],calculated_write[8],calculated_write[9],
+got bandwidth_wrapper (504)
+got sorting_wrapper (505)
+EWMA,15837953,10376562,5461391,7027949,3679504,1405071,1397119,1180563,1039900,979402,908727,882338,868781,864989,849672,626219,766150,642813,561735,528680,486104,471199,463821,462172,452498,281014,504235,639500,719580,771544,798980,815651,826277,834019,837149,125243,253424,331301,377387,407645,423336,432908,439090,443706,445464,
+SW,15541330,10143527,5397803,7226404,3849072,1686814,308075,456745,867034,1140731,1137191,1128755,1133554,1149956,1134672,898410,167863,241632,460757,606996,604677,599059,602252,613208,602949,1374335,1227201,817211,543951,543951,543951,543951,543951,543951,543951,727639,654877,435968,290084,290084,290084,290084,290084,290084,290084,
+AFC,15542614,10150125,5392489,6811295,3615310,987608,1479543,1229217,1071959,982825,928937,886309,879214,847974,856539,505064,790982,657105,571882,524397,495620,471459,469360,449970,456650,197521,453925,608983,701578,757827,792049,810901,824563,829245,834703,101012,239006,322625,372476,402860,421412,431421,439008,441200,444290,
+AMBP,15418618,10063598,5355020,6717276,3572565,789139,1517039,1260859,1082142,990132,929525,894899,879319,859405,861139,412249,808164,673382,575967,527614,494990,476593,469040,457387,459634,157907,429733,595958,693194,752581,787969,809355,823347,830558,836674,82529,227656,316801,368634,400430,419342,430792,438441,442230,445710,
+PIC,11925510,7838550,4086960,4284777160,4289654230,783855,783855,783855,783855,783855,783855,783855,783855,783855,783855,408696,408696,408696,408696,408696,408696,408696,408696,408696,408696,428477716,428477716,428477716,428477716,428477716,428477716,428477716,428477716,428477716,428477716,428965423,428965423,428965423,428965423,428965423,428965423,428965423,428965423,428965423,428965423,
+end--> Completion message received. Exiting.

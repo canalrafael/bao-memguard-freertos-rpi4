@@ -32,6 +32,10 @@ mkdir -p "$DESTINATION_DIR"
 # --- Main Loop ---
 index=1
 while IFS= read -r line; do
+    if [ "$index" -gt 160 ]; then
+        break
+    fi
+
     vm_states=$(echo "$line" | tr -d '<>')
 
     if [ -z "$vm_states" ]; then
@@ -49,11 +53,11 @@ while IFS= read -r line; do
 
     # Step 2: Build the VMs.
     echo "--> Building all VMs for index $index..."
-    sh/build_vm.sh all
+    sh/build_vm.sh all > /dev/null && echo "Ok"
 
     # Step 3: Build the Bao hypervisor.
     echo "--> Building Bao hypervisor for index $index..."
-    sh/build_bao.sh
+    sh/build_bao.sh > /dev/null 2>&1 && echo "Ok"
 
     # Step 4: Copy the resulting binary with the correct versioned name.
     SOURCE_BINARY="$BAO_DEMOS_WRKDIR_IMGS/bao.bin"

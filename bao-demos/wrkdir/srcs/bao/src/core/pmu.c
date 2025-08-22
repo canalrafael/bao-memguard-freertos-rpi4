@@ -65,59 +65,59 @@ void PMU_config_counter(const uint8_t counter_pair, uint32_t r_budget,
     r_budget = (uint32_t)MAX_INT - r_budget;
     w_budget = (uint32_t)MAX_INT - w_budget;
 
-    switch (counter_pair) {
-        case 0:
-            ASM("msr pmevcntr0_el0, %0" ::"r"(0) :);
-            ASM("msr pmevtyper0_el0, %0" ::"r"(MEM_ACCESS_LD));
-            ASM("msr pmintenset_el1, %0" ::"r"(1 << 0));
-            ASM("msr pmevcntr0_el0,  %0" ::"r"(r_budget));
+    if (true) {
+        ASM("msr pmevcntr0_el0, %0" ::"r"(0) :);
+        ASM("msr pmevtyper0_el0, %0" ::"r"(MEM_ACCESS_LD));
+        ASM("msr pmintenset_el1, %0" ::"r"(1 << 0));
+        ASM("msr pmevcntr0_el0,  %0" ::"r"(r_budget));
 
-            ASM("msr pmevcntr1_el0, %0" ::"r"(0) :);
-            ASM("msr pmevtyper1_el0, %0" ::"r"(MEM_ACCESS_ST));
-            ASM("msr pmintenset_el1, %0" ::"r"(1 << 1));
-            ASM("msr pmevcntr1_el0,  %0" ::"r"(w_budget));
-            break;
+        ASM("msr pmevcntr1_el0, %0" ::"r"(0) :);
+        ASM("msr pmevtyper1_el0, %0" ::"r"(MEM_ACCESS_ST));
+        ASM("msr pmintenset_el1, %0" ::"r"(1 << 1));
+        ASM("msr pmevcntr1_el0,  %0" ::"r"(w_budget));
+    }
 
-        case 2:
-            ASM("msr pmevcntr2_el0, %0" ::"r"(0) :);
-            ASM("msr pmevtyper2_el0, %0" ::"r"(MEM_ACCESS_LD));
-            ASM("msr pmintenset_el1, %0" ::"r"(1 << 2));
-            ASM("msr pmevcntr2_el0,  %0" ::"r"(r_budget));
+    if (true) {
+        ASM("msr pmevcntr2_el0, %0" ::"r"(0) :);
+        ASM("msr pmevtyper2_el0, %0" ::"r"(CPU_CYCLE));
+        // ASM("msr pmintenset_el1, %0" ::"r"(1 << 2));
+        ASM("msr pmevcntr2_el0,  %0" ::"r"(0));
 
-            ASM("msr pmevcntr3_el0, %0" ::"r"(0) :);
-            ASM("msr pmevtyper3_el0, %0" ::"r"(MEM_ACCESS_ST));
-            ASM("msr pmintenset_el1, %0" ::"r"(1 << 3));
-            ASM("msr pmevcntr3_el0,  %0" ::"r"(w_budget));
-            break;
+        ASM("msr pmevcntr3_el0, %0" ::"r"(0) :);
+        ASM("msr pmevtyper3_el0, %0" ::"r"(
+            INSTRUCTIONS_ARCHITECTURALLY_EXECUTED));
+        // ASM("msr pmintenset_el1, %0" ::"r"(1 << 3));
+        ASM("msr pmevcntr3_el0,  %0" ::"r"(0));
+    }
 
-        case 4:
-            ASM("msr pmevcntr4_el0, %0" ::"r"(0) :);
-            ASM("msr pmevtyper4_el0, %0" ::"r"(MEM_ACCESS_LD));
-            ASM("msr pmintenset_el1, %0" ::"r"(1 << 4));
-            ASM("msr pmevcntr4_el0,  %0" ::"r"(r_budget));
+    if (true) {
+        ASM("msr pmevcntr4_el0, %0" ::"r"(0) :);
+        ASM("msr pmevtyper4_el0, %0" ::"r"(LL_CACHE_MISS_RD));
+        // ASM("msr pmintenset_el1, %0" ::"r"(1 << 4));
+        ASM("msr pmevcntr4_el0,  %0" ::"r"(0));
 
-            ASM("msr pmevcntr5_el0, %0" ::"r"(0) :);
-            ASM("msr pmevtyper5_el0, %0" ::"r"(MEM_ACCESS_ST));
-            ASM("msr pmintenset_el1, %0" ::"r"(1 << 5));
-            ASM("msr pmevcntr5_el0,  %0" ::"r"(w_budget));
-            break;
+        ASM("msr pmevcntr5_el0, %0" ::"r"(0) :);
+        ASM("msr pmevtyper5_el0, %0" ::"r"(MISPREDICTED_BRANCH));
+        // ASM("msr pmintenset_el1, %0" ::"r"(1 << 5));
+        ASM("msr pmevcntr5_el0,  %0" ::"r"(0));
     }
 }
 
 void PMU_start_counter(const uint8_t counter)
 {
-    for (uint8_t i = 0; i < 2; i++) {
+    for (uint8_t i = 0; i < PMU_COUNT; i++) {
         ASM("msr pmcntenset_el0, %0" ::"r"((1 << (counter + i))));
     }
 }
 
-void PMU_stop_counter(const uint8_t counter)
+void PMU_stop_counter(const uint8_t counter)  // Parameter is no longer needed
 {
-    for (uint8_t i = 0; i < 2; i++) {
-        ASM("msr pmcntenclr_el0, %0" ::"r"(1 << (counter + i)));
-        ASM("msr pmintenclr_el1, %0" ::"r"(1 << (counter + i)));
-        ASM("msr pmovsclr_el0, %0" ::"r"(1 << (counter + i)));
-    }
+    // Stop all 6 counters at once
+    ASM("msr pmcntenclr_el0, %0" ::"r"(0b111111));
+
+    // ONLY clear interrupts/overflows for the ones that have them (0 & 1)
+    ASM("msr pmintenclr_el1, %0" ::"r"(0b11));
+    ASM("msr pmovsclr_el0, %0" ::"r"(0b11));
 }
 
 uint32_t PMU_get_counter_value(const uint8_t counter)

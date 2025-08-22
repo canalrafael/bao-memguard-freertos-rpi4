@@ -12,7 +12,7 @@ TEMP_SCRIPT_FILE="temp_loader.script"
 mkdir -p "$LOG_DIR"
 
 # --- Main Loop ---
-for i in $(seq 23 120); do
+for i in $(seq 1 160); do
     LOG_FILE="$LOG_DIR/bao-$i.log"
     
     echo "========================================================"

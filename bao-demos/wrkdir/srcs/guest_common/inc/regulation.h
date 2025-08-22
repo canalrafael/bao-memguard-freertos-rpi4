@@ -52,13 +52,13 @@
 // #define TASK_PRIORITY_6 6
 // #define TASK_PRIORITY_7 7
 
-#define PMU_COUNT 2
-#define PMU_COUNTER0 0
-#define PMU_COUNTER1 1
-#define PMU_COUNTER2 2
-#define PMU_COUNTER3 3
-#define PMU_COUNTER4 4
-#define PMU_COUNTER5 5
+#define PMU_COUNT 6
+#define PMU_COUNTER_0 0
+#define PMU_COUNTER_1 1
+#define PMU_COUNTER_2 2
+#define PMU_COUNTER_3 3
+#define PMU_COUNTER_4 4
+#define PMU_COUNTER_5 5
 
 // #define BENCHMARK_BANDWIDTH 0
 // #define BENCHMARK_DISPARITY 1
@@ -169,6 +169,8 @@ struct VM {
   uint32_t period_duration[PERIOD_QNT];
   uint32_t completed_runs_per_task[TASK_QUANTITY];
   uint32_t has_overflowed[PERIOD_QNT];
+  //
+  uint32_t PMU_raw_values[PMU_COUNT][PERIOD_QNT];
 };
 
 extern struct VM vm_conf[VM_QNT];

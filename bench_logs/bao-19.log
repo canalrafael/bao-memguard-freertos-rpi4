@@ -25,42 +25,15 @@ Hit any key to stop autoboot:--> Autoboot stopped. Waiting for U-Boot prompt...
  0 
 U-Boot>--> Benchmark command sent. Waiting for completion...
 fatload mmc 0 0x200000 bao-19.bin; go 0x200000
-1388544 bytes read in 103 ms (12.9 MiB/s)
+1421312 bytes read in 105 ms (12.9 MiB/s)
 ## Starting application at 0x00200000 ...
 BENCH_ARRAY_INDEX 18
 budget_function,PMU_counter_used_budget,PMU_counter_used_budget_r,PMU_counter_used_budget_w,total_calc_r,total_calc_w,used_budget_read[0],used_budget_read[1],used_budget_read[2],used_budget_read[3],used_budget_read[4],used_budget_read[5],used_budget_read[6],used_budget_read[7],used_budget_read[8],used_budget_read[9],used_budget_write[0],used_budget_write[1],used_budget_write[2],used_budget_write[3],used_budget_write[4],used_budget_write[5],used_budget_write[6],used_budget_write[7],used_budget_write[8],used_budget_write[9],calculated_read[0],calculated_read[1],calculated_read[2],calculated_read[3],calculated_read[4],calculated_read[5],calculated_read[6],calculated_read[7],calculated_read[8],calculated_read[9],calculated_write[0],calculated_write[1],calculated_write[2],calculated_write[3],calculated_write[4],calculated_write[5],calculated_write[6],calculated_write[7],calculated_write[8],calculated_write[9],
-got qsort_wrapper (144)
-got sorting_wrapper (145)
---> Waiting for autoboot prompt...
-NOTICE:  BL31: v2.9(release):8a3945e
-NOTICE:  BL31: Built : 17:27:52, May  1 2024
-
-
-U-Boot 2022.10 (May 01 2024 - 17:26:49 -0300)
-
-DRAM:  7.1 GiB
-RPI 4 Model B (0xd03115)
-Core:  202 devices, 16 uclasses, devicetree: board
-MMC:   mmcnr@7e300000: 1, emmc2@7e340000: 0
-Loading Environment from FAT... ** No partition table - mmc 0 **
-In:    serial
-Out:   serial
-Err:   serial
-Net:   eth0: ethernet@7d580000
-PCIe BRCM: link up, 5.0 Gbps x1 (SSC)
-starting USB...
-Bus xhci_pci: Register 5000420 NbrPorts 5
-Starting the controller
-USB XHCI 1.00
-scanning bus xhci_pci for devices... 2 USB Device(s) found
-       scanning usb for storage devices... 0 Storage Device(s) found
-Hit any key to stop autoboot:--> Autoboot stopped. Waiting for U-Boot prompt...
- 0 
-U-Boot>--> Benchmark command sent. Waiting for completion...
-fatload mmc 0 0x200000 bao-19.bin; go 0x200000
-1388544 bytes read in 103 ms (12.9 MiB/s)
-## Starting application at 0x00200000 ...
-BENCH_ARRAY_INDEX 18
-budget_function,PMU_counter_used_budget,PMU_counter_used_budget_r,PMU_counter_used_budget_w,total_calc_r,total_calc_w,used_budget_read[0],used_budget_read[1],used_budget_read[2],used_budget_read[3],used_budget_read[4],used_budget_read[5],used_budget_read[6],used_budget_read[7],used_budget_read[8],used_budget_read[9],used_budget_write[0],used_budget_write[1],used_budget_write[2],used_budget_write[3],used_budget_write[4],used_budget_write[5],used_budget_write[6],used_budget_write[7],used_budget_write[8],used_budget_write[9],calculated_read[0],calculated_read[1],calculated_read[2],calculated_read[3],calculated_read[4],calculated_read[5],calculated_read[6],calculated_read[7],calculated_read[8],calculated_read[9],calculated_write[0],calculated_write[1],calculated_write[2],calculated_write[3],calculated_write[4],calculated_write[5],calculated_write[6],calculated_write[7],calculated_write[8],calculated_write[9],
-got qsort_wrapper (144)
-got sorting_wrapper (145)
+got bandwidth_wrapper (144)
+got disparity_wrapper (145)
+EWMA,17916291,15651759,2264532,10707826,1500400,1885493,1681455,2839253,1267545,1026302,2424076,962315,1152675,1276205,1136440,131161,314814,347304,237328,182705,271245,184254,195460,204918,195343,377098,637969,1078225,1116089,1098131,1363320,1283119,1257030,1260865,1235980,26232,83948,136619,156760,161949,183808,183897,186209,189950,191028,
+SW,17796204,15515250,2280954,9676872,1977652,2528682,83292,620217,1359519,1803181,1844551,1803544,1806496,1860299,1805469,394770,233195,91099,148837,227932,244541,229894,237953,231289,241444,2066971,1718772,1077397,687676,687676,687676,687676,687676,687676,687676,322259,322259,239688,157710,155956,155956,155956,155956,155956,155956,
+AFC,17057858,14510298,2547560,9736478,1713184,1520177,2223128,1851109,1563380,1473351,1383398,404529,1323249,1395940,1372037,198687,355662,290982,240386,230743,219060,520135,164307,159088,168510,304035,687853,920504,1049079,1133933,1183826,1027967,1087023,1148806,1193452,39737,102922,140534,160504,174551,183452,250788,233492,218612,208592,
+AMBP,15463126,13345988,2117138,591628894,86219836,1221479,2251453,1457069,2466634,1386063,912658,912658,912658,912658,912658,180495,352514,232783,280725,228926,168339,168339,168339,168339,168339,244375,645790,808045,1139762,1189022,117520380,117520380,117520380,117520380,117520380,36179,99446,126113,157035,171413,17125930,17125930,17125930,17125930,17125930,
+PIC,29356890,25408030,3948860,4261936840,4289833760,2540803,2540803,2540803,2540803,2540803,2540803,2540803,2540803,2540803,2540803,394886,394886,394886,394886,394886,394886,394886,394886,394886,394886,426193684,426193684,426193684,426193684,426193684,426193684,426193684,426193684,426193684,426193684,428983376,428983376,428983376,428983376,428983376,428983376,428983376,428983376,428983376,428983376,
+end--> Completion message received. Exiting.

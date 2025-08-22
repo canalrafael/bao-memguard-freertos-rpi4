@@ -61,7 +61,7 @@
 #include <budget.h>
 #include <data.h>
 
-#if 0
+#if 1
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)
@@ -904,6 +904,11 @@ void ctrl_task(void *pvParameters) {
           vm_conf[VM_NUM].new_read_budget;
       vm_conf[VM_NUM].calc_w_budget_period[idx] =
           vm_conf[VM_NUM].new_write_budget;
+
+      for (int i = 0; i < PMU_COUNT; ++i) {
+        vm_conf[VM_NUM].PMU_raw_values[i][idx] =
+            HC_regulator_get_total_calculated_new_budget(i, UNUSED_ARG);
+      }
 
       PRINT("idx %d\n", idx);
       if (idx < PERIOD_QNT && vm_conf[VM_NUM].new_read_budget != 0 &&

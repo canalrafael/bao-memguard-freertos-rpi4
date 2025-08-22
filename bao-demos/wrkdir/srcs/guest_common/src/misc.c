@@ -121,6 +121,15 @@ typedef struct {
   int64_t calc_per_period_read[PERIOD_QNT];
   int64_t calc_per_period_write[PERIOD_QNT];
   //
+  int64_t total_cycles;
+  int64_t total_instructions;
+  int64_t total_cache_misses;
+  int64_t total_mispredicts;
+  int64_t cycles[PERIOD_QNT];
+  int64_t instructions[PERIOD_QNT];
+  int64_t cache_misses[PERIOD_QNT];
+  int64_t mispredicts[PERIOD_QNT];
+  //
   // int64_t period_duration[PERIOD_QNT];
   // int64_t period_duration_total;
   //
@@ -161,6 +170,24 @@ void write_calc_budget(struct VM vm_info, BenchmarkData *d) {
     d->calc_per_period_write[i] = period_calc_write;
     d->total_calc_r += period_calc_read;
     d->total_calc_w += period_calc_write;
+  }
+}
+
+void write_raw(struct VM vm_info, BenchmarkData *d) {
+  d->total_cycles = 0;
+  d->total_instructions = 0;
+  d->total_cache_misses = 0;
+  d->total_mispredicts = 0;
+  for (uint8_t i = 0; i < PERIOD_QNT; i++) {
+    d->cycles[i] = vm_info.PMU_raw_values[2][i];
+    d->instructions[i] = vm_info.PMU_raw_values[3][i];
+    d->cache_misses[i] = vm_info.PMU_raw_values[4][i];
+    d->mispredicts[i] = vm_info.PMU_raw_values[5][i];
+    //
+    d->total_cycles += d->cycles[i];
+    d->total_instructions += d->instructions[i];
+    d->total_cache_misses += d->cache_misses[i];
+    d->total_mispredicts += d->mispredicts[i];
   }
 }
 
@@ -290,6 +317,24 @@ void print_vm_header() {
   printf("PMU_counter_used_budget_r,PMU_counter_used_budget_w,");
   printf("total_calc_r,total_calc_w,");
 
+  printf("total_cycles,");
+  printf("total_instructions,");
+  printf("total_cache_misses,");
+  printf("total_mispredicts,");
+  //
+  for (int i = 0; i < PERIOD_QNT; i++) {
+    printf("cycles[%d],", i);
+  }
+  for (int i = 0; i < PERIOD_QNT; i++) {
+    printf("instructions[%d],", i);
+  }
+  for (int i = 0; i < PERIOD_QNT; i++) {
+    printf("cache_misses[%d],", i);
+  }
+  for (int i = 0; i < PERIOD_QNT; i++) {
+    printf("mispredicts[%d],", i);
+  }
+  //
   for (int i = 0; i < PERIOD_QNT; i++) {
     printf("used_budget_read[%d],", i);
   }
@@ -338,6 +383,7 @@ void print_vm_info(struct VM vm_info) {
   BenchmarkData info;
   write_used_budget(vm_info, &info);
   write_calc_budget(vm_info, &info);
+  write_raw(vm_info, &info);
   // write_period_duration(vm_info, &info);
   // write_others(vm_info, &info);
   // write_clock_cycle(vm_info, &info);
@@ -349,6 +395,17 @@ void print_vm_info(struct VM vm_info) {
   printf("%ld,", info.PMU_counter_used_budget_w);
   printf("%ld,", info.total_calc_r);
   printf("%ld,", info.total_calc_w);
+
+  printf("%ld,", info.total_cycles);
+  printf("%ld,", info.total_instructions);
+  printf("%ld,", info.total_cache_misses);
+  printf("%ld,", info.total_mispredicts);
+
+  print_array(info.cycles);
+  print_array(info.instructions);
+  print_array(info.cache_misses);
+  print_array(info.mispredicts);
+
   print_array(info.PMU_counter_used_budget_r_per_period);
   print_array(info.PMU_counter_used_budget_w_per_period);
   // print_compact(info.has_overflowed);
