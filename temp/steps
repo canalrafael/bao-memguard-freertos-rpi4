@@ -2,6 +2,7 @@ remove all // and empty lines
 :g/^\s*\/\/\|^$/d
 add 1 to start of each line
 :%s/^/1 /
-change to 0 where "empty"
+change to 0 for lines having string "empty" (with "")
+:g/"empty_wrapper"/s/^1/0/
 remove all odd lines (use macros)
 group in the format 1 0 1 0 (use macros)

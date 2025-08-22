@@ -25,47 +25,15 @@ Hit any key to stop autoboot:--> Autoboot stopped. Waiting for U-Boot prompt...
  0 
 U-Boot>--> Benchmark command sent. Waiting for completion...
 fatload mmc 0 0x200000 bao-25.bin; go 0x200000
-1392640 bytes read in 103 ms (12.9 MiB/s)
+1417216 bytes read in 104 ms (13 MiB/s)
 ## Starting application at 0x00200000 ...
 BENCH_ARRAY_INDEX 24
 budget_function,PMU_counter_used_budget,PMU_counter_used_budget_r,PMU_counter_used_budget_w,total_calc_r,total_calc_w,used_budget_read[0],used_budget_read[1],used_budget_read[2],used_budget_read[3],used_budget_read[4],used_budget_read[5],used_budget_read[6],used_budget_read[7],used_budget_read[8],used_budget_read[9],used_budget_write[0],used_budget_write[1],used_budget_write[2],used_budget_write[3],used_budget_write[4],used_budget_write[5],used_budget_write[6],used_budget_write[7],used_budget_write[8],used_budget_write[9],calculated_read[0],calculated_read[1],calculated_read[2],calculated_read[3],calculated_read[4],calculated_read[5],calculated_read[6],calculated_read[7],calculated_read[8],calculated_read[9],calculated_write[0],calculated_write[1],calculated_write[2],calculated_write[3],calculated_write[4],calculated_write[5],calculated_write[6],calculated_write[7],calculated_write[8],calculated_write[9],
-got qsort_wrapper (192)
-got sorting_wrapper (193)
-NOTICE:  BL31: v2.9(release):8a3945e
-NOTICE:  BL31: Built : 17:27:52, May  1 2024
-
-
-U-Boot 2022.10 (May 01 2024 - 17:26:49 -0300)
-
-DRAM:  7.1 GiB
-RPI 4 Model B (0xd03115)
-Core:  202 devices, 16 uclasses, devicetree: board
-MMC:   mmcnr@7e300000: 1, emmc2@7e340000: 0
-Loading Environment from FAT... ** No partition table - mmc 0 **
-In:    serial
-Out:   serial
-Err:   serial
-Net:   eth0: ethernet@7d580000
-PCIe BRCM: link up, 5.0 Gbps x1 (SSC)
-starting USB...
-Bus xhci_pci: Register 5000420 NbrPorts 5
-Starting the controller
-USB XHCI 1.00
-scanning bus xhci_pci for devices... 2 USB Device(s) found
-       scanning usb for storage devices... 0 Storage Device(s) found
-Hit any key to stop autoboot:  2  1  0 
-switch to partitions #0, OK
-mmc0 is current device
-** No partition table - mmc 0 **
-Couldn't find partition mmc 0:1
-Card did not respond to voltage select! : -110
-MMC Device 2 not found
-no mmc device at slot 2
-
-Device 0: unknown device
-ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
-bcmgenet: PHY startup failed: -110
-missing environment variable: pxeuuid
-Retrieving file: pxelinux.cfg/01-d8-3a-dd-30-e7-91
-ethernet@7d580000 Waiting for PHY auto negotiation to complete.script "temp_loader.script": global timeout
-.....
+got bandwidth_wrapper (192)
+got disparity_wrapper (193)
+EWMA,18168525,15794070,2374455,10662293,1580176,2063647,2073469,1862260,1565728,1515896,1410838,1321397,1324746,1331105,1324984,161194,362254,303507,258952,240833,214121,215622,208303,205560,204109,412729,744877,968353,1087828,1173441,1220920,1241015,1257761,1272429,1282940,32238,98241,139294,163225,178746,185821,191781,195085,197180,198565,
+SW,18217813,15867994,2349819,10229938,1928167,2590072,280951,545828,1389259,1864394,1824251,1824507,1878063,1860764,1809905,398343,188773,92539,169962,255697,243181,254271,252893,245242,248918,2101441,1818794,1138950,738679,738679,738679,738679,738679,738679,738679,324320,324320,226552,150425,150425,150425,150425,150425,150425,150425,
+AFC,17797190,15328231,2468959,10269657,1663686,1541731,2253190,1885677,1650580,1513529,1230008,1185677,1362567,1370206,1335066,208443,358293,296173,256617,232505,330081,207451,188976,199297,191123,308346,697314,934986,1078104,1165189,1178152,1179657,1216239,1247032,1264638,41688,105009,143241,165916,179233,209402,209012,205005,203864,201316,
+AMBP,17675595,15144373,2531222,135221610,1623636,1140875,2332932,1922017,1680006,1537959,1446557,1377364,1332566,1310697,1063400,184095,356413,302892,260438,235223,222753,212902,206807,203837,345862,228255,649190,903755,1059005,1154795,1213147,1245990,1263305,1272783,126231385,36899,100801,141219,165062,179094,187825,192840,195633,197273,226990,
+PIC,27177070,25681730,1495340,4261581030,4293023340,2568173,2568173,2568173,2568173,2568173,2568173,2568173,2568173,2568173,2568173,149534,149534,149534,149534,149534,149534,149534,149534,149534,149534,426158103,426158103,426158103,426158103,426158103,426158103,426158103,426158103,426158103,426158103,429302334,429302334,429302334,429302334,429302334,429302334,429302334,429302334,429302334,429302334,
+end--> Completion message received. Exiting.

@@ -1281,6 +1281,11 @@ void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
     print_VM(&reg_conf[cpu()->id].vm, true);
     print_counters(true);
 
+    reg_conf[cpu()->id].vm.cycles = PMU_get_counter_value(2);
+    reg_conf[cpu()->id].vm.instructions = PMU_get_counter_value(3);
+    reg_conf[cpu()->id].vm.cache_misses = PMU_get_counter_value(4);
+    reg_conf[cpu()->id].vm.mispredicts = PMU_get_counter_value(5);
+
     reset_state_on_new_formula(formula);
 
     cpuid_t cpu_id = cpu()->id;
@@ -1291,7 +1296,7 @@ void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
     // uint32_t actual_read_usage = get_operation_usage_v2(
     //     READ, reg_conf[cpu_id].vm.defined_pmu_read_val, new_read);
     // uint32_t actual_write_usage = get_operation_usage_v2(
-    //     WRITE, reg_conf[cpu_id].vm.defined_pmu_write_val, new_write);
+    //     WRITE, reg_conGf[cpu_id].vm.defined_pmu_write_val, new_write);
 
     switch (formula) {
         case EWMA_FORMULA:
@@ -1344,9 +1349,10 @@ void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
         reg_conf[cpu_id].vm.new_write_budget;
 
     reg_conf[cpu()->id].vm.depleated_op_type = UNKNOWN_VALUE;
-    for (int i = 0; i < PMU_COUNT; ++i) {
-        PMU_reset_counter(i);
-    }
+    PMU_reset_all_counters();
+    // for (int i = 0; i < PMU_COUNT; ++i) {
+    //     PMU_reset_counter(i);
+    // }
 
     print_VM(&reg_conf[cpu()->id].vm, false);
     print_counters(false);
@@ -1365,9 +1371,35 @@ uint32_t regulator_get_current_used_budget(const uint8_t task_num,
                            : reg_conf[cpu()->id].vm.current_used_write_budget;
 }
 
-uint32_t regulator_get_total_used_budget(const uint8_t task_num,
-                                         const uint8_t op_type)
+uint32_t regulator_get_pmu_counter_value(const uint8_t pmu_index)
 {
-    return op_type == READ ? reg_conf[cpu()->id].vm.total_used_read_budget
-                           : reg_conf[cpu()->id].vm.total_used_write_budget;
+    switch (pmu_index) {
+        case 0:
+            return PMU_get_counter_value(0);
+        case 1:
+            return PMU_get_counter_value(1);
+        case 2:
+            return PMU_get_counter_value(2);
+        case 3:
+            return PMU_get_counter_value(3);
+        case 4:
+            return PMU_get_counter_value(4);
+        case 5:
+            return PMU_get_counter_value(5);
+        default:
+            printk("\n\n\ninvalid regulator call \n\n\n");
+            break;
+    }
+
+    return -1;
+
+    // return op_type == READ ? reg_conf[cpu()->id].vm.total_used_read_budget
+    //                        : reg_conf[cpu()->id].vm.total_used_write_budget;
+}
+
+uint32_t regulator_get_total_used_budget(const uint8_t value1,
+                                         const uint8_t value2)
+{
+    printk("\n\n\nUndefined function\n\n\n");
+    return 0;
 }
