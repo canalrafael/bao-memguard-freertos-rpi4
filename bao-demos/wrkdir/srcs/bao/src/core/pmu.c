@@ -92,7 +92,7 @@ void PMU_config_counter(const uint8_t counter_pair, uint32_t r_budget,
 
     if (true) {
         ASM("msr pmevcntr4_el0, %0" ::"r"(0) :);
-        ASM("msr pmevtyper4_el0, %0" ::"r"(LL_CACHE_MISS_RD));
+        ASM("msr pmevtyper4_el0, %0" ::"r"(L1D_REFILL));
         // ASM("msr pmintenset_el1, %0" ::"r"(1 << 4));
         ASM("msr pmevcntr4_el0,  %0" ::"r"(0));
 
