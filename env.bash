@@ -84,5 +84,6 @@ export BAO_DEMOS_SDCARD=$sd_card_path/
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
+# legacy variables for convenience 
 export VM=$BAO_DEMOS/wrkdir/srcs/VMs/vm_
 export BAO_CORE=$BAO_DEMOS_WRKDIR_SRC/bao/src/core
