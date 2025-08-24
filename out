@@ -1,7 +1,0 @@
-============================================================
-Processing Benchmark Index: 1
-============================================================
---> Configuring source for index 1...
-Updated bao-demos/wrkdir/srcs/guest_common/inc/bench.h: BENCH_ARRAY_INDEX → 0 (1 occurrence(s) changed)
-Updated bao-demos/wrkdir/srcs/guest_common/inc/regulation.h: EXEC_VM → [1, 0, 0, 0] (4 occurrence(s) changed)
---> Building all VMs for index 1...
