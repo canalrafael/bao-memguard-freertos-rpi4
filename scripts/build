@@ -1,0 +1,1 @@
+./scripts/util/build_vm.scripts all && ./scripts/util/build_bao.scripts && ./scripts/util/copy_files.scripts
