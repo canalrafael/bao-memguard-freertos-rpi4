@@ -3,13 +3,13 @@ all:
 	@echo make what?
 
 vms:
-	@./sh/build_vm.sh all
+	@./sh/util/build_vm.sh all
 
 bao:
-	@./sh/build_bao.sh
+	@./sh/util/build_bao.sh
 
 copy:
-	@./sh/copy_files.sh
+	@./sh/util/copy_files.sh
 
 clean:
-	@./sh/clean.sh
+	@./sh/util/clean.sh

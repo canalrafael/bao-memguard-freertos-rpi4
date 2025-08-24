@@ -3,6 +3,7 @@
 current_path=$(realpath .)
 bao_folder="bao-demos"
 toolchain_folder="arm-gnu-toolchain"
+export EDITOR="nvim"
 
 if [ ! -d "$bao_folder" ]; then
   echo "'$bao_folder' not found. Are you in the correct folder?"

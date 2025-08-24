@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script fully automates the testing process for all 960 benchmarks.
+# This script fully automates the testing process for all 160 benchmarks.
 # For each index, it dynamically creates a robust minicom script, runs the test,
 # and captures the output to a unique log file.
 
@@ -42,17 +42,31 @@ for i in $(seq 1 160); do
         expect "end iteration"
         print "--> Completion message received. Exiting."
 
-        # Forcefully quit minicom to end this iteration.
-        ! pkill minicom
+        expect {
+            "end iteration" {
+                print "--> ✅ Completion message received. Exiting."
+                # Use pkill to forcefully and reliably exit minicom.
+                ! pkill minicom
+            }
+            timeout {
+                print "--> ❌ TIMEOUT: 'end iteration' string not found. Exiting."
+                # Also use pkill on timeout.
+                ! pkill minicom
+            }
+        }
 EOF
 
-    # Step 2: Run minicom using the script.
+    # Step 2: Run minicom. The script will always be killed by pkill.
     minicom -o -C "$LOG_FILE" -S "$TEMP_SCRIPT_FILE"
 
-    if [ $? -eq 0 ]; then
+    # Step 3: Check the log file to determine if the test passed or failed.
+    # We use 'grep -q' which is quiet and returns a success exit code (0) if the text is found.
+    if grep -q "✅ Completion message received" "$LOG_FILE"; then
         echo "===== Finished test for bao-$i.bin, log saved to $LOG_FILE ====="
     else
-        echo ">>>>> WARNING: Minicom may not have exited cleanly for index $i. <<<<<"
+        echo ">>>>> ❌ ERROR: Test for index $i failed (timeout). Stopping automation. <<<<<"
+        echo ">>>>> Check the log file for details: $LOG_FILE <<<<<"
+        break # Exit the for loop.
     fi
     echo ""
 
@@ -62,5 +76,5 @@ done
 rm -f "$TEMP_SCRIPT_FILE"
 
 echo "========================================================"
-echo "All tests completed."
+echo "Automation script finished."
 echo "========================================================"
