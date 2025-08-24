@@ -26,7 +26,7 @@ build() {
   echo "Building VM with index: $1"
   #  Your actual build commands would go here,
   #  using $1 as the VM index.
-  source ./env.bash
+  VM_INDEX=$1 source ./env.bash
   make -C $BAO_DEMOS_FREERTOS PLATFORM=$PLATFORM $FREERTOS_PARAMS && echo "Copying..." && cp $BAO_DEMOS_FREERTOS/build/$PLATFORM/$VM_NAME_PREFIX$VM_INDEX.bin $BAO_DEMOS_WRKDIR_IMGS
 }
 

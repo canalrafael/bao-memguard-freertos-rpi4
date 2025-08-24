@@ -2,7 +2,9 @@
 
 current_path=$(realpath .)
 bao_folder="bao-demos"
-toolchain_folder="arm-gnu-toolchain"
+toolchain_folder="etc/arm-gnu-toolchain"
+sd_card_partition=/dev/sda
+sd_card_path=/media/$USER/boot
 export EDITOR="nvim"
 
 if [ ! -d "$bao_folder" ]; then
@@ -21,7 +23,7 @@ fi
 export PYTHONPATH=/usr
 #export CROSS_COMPILE=/home/$USER/code/bao/arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
 #export CROSS_COMPILE=$PWD/arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
-export CROSS_COMPILE="$current_path"/arm-gnu-toolchain/bin/aarch64-none-elf-
+export CROSS_COMPILE="$current_path"/"$toolchain_folder"/bin/aarch64-none-elf-
 
 # (1)
 export PLATFORM=rpi4
@@ -29,7 +31,7 @@ export DEMO=linux+freertos
 export ARCH=aarch64
 
 
-export BAO_DEMOS="$current_path"/bao-demos
+export BAO_DEMOS="$current_path"/"$bao_folder"
 export BAO_DEMOS_WRKDIR=$BAO_DEMOS/wrkdir
 export BAO_DEMOS_WRKDIR_SRC=$BAO_DEMOS_WRKDIR/srcs
 export BAO_DEMOS_WRKDIR_BIN=$BAO_DEMOS_WRKDIR/bin
@@ -77,10 +79,10 @@ export BAO_DEMOS_UBOOT=$BAO_DEMOS_WRKDIR_SRC/u-boot
 export BAO_DEMOS_ATF=$BAO_DEMOS_WRKDIR_SRC/arm-trusted-firmware
 
 # (Prepare SDCard)
-export BAO_DEMOS_SDCARD_DEV=/dev/sda
-export BAO_DEMOS_SDCARD=/media/$USER/boot
+export BAO_DEMOS_SDCARD_DEV=$sd_card_partition
+export BAO_DEMOS_SDCARD=$sd_card_path/
 
-#####################################
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 export VM=$BAO_DEMOS/wrkdir/srcs/VMs/vm_
 export BAO_CORE=$BAO_DEMOS_WRKDIR_SRC/bao/src/core
