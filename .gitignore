@@ -2,6 +2,9 @@ bao-demos/wrkdir/srcs/bao/bin/rpi4/
 
 bao-demos/wrkdir/imgs/
 bao-demos/**/bin/
+
+data/bin/bao*.bin
+
 logs/
 **/.cache/
 **/build/

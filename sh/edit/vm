@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 VM_INDEX=$1 source env.bash
-nvim $BAO_DEMOS_FREERTOS/src/main.c
+$EDITOR $BAO_DEMOS_FREERTOS/src/main.c
