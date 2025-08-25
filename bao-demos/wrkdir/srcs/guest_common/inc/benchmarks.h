@@ -15,19 +15,20 @@
 #include "../../benchmarks/sha/inc/sha.h"
 #include "../../benchmarks/sorting/inc/sorting.h"
 
-void empty_wrapper();
-void bandwidth_wrapper();
-void dijkstra_wrapper();
-void disparity_wrapper();
-void fft_wrapper();
-void mser_wrapper();
-void qsort_wrapper();
-void sha_wrapper();
-void sorting_wrapper();
+void empty_wrapper(void *context);
+void bandwidth_wrapper(void *context);
+void dijkstra_wrapper(void *context);
+void disparity_wrapper(void *context);
+void fft_wrapper(void *context);
+void mser_wrapper(void *context);
+void qsort_wrapper(void *context);
+void sha_wrapper(void *context);
+void sorting_wrapper(void *context);
 
 // #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#//
 
 #define BENCH_ARRAY_INDEX 159
+#define NUM_BENCHMARKS 1280
 #define FORMULA_COUNT 11
 
 typedef enum {
@@ -44,39 +45,50 @@ typedef enum {
   AFC_FORMULA,
   AMBP_FORMULA,
   PIC_FORMULA,
-  //
   // FORMULA_COUNT,
 } formula_t;
 
 typedef struct {
-  formula_t formula;
-} Benchmark;
+  int *mem_ptr;
+  uint64_t sum;
+} bandwidth_context_t;
+
+typedef struct {
+  I2D *It;
+} mser_context_t;
 
 typedef struct {
   int index;
-  void (*pointer)(void);
+  void (*pointer)(void *context);
   const char *name;
+  void *context;
 } Function;
 
 typedef struct {
   Function function;
   int task_num;
-  // TaskHandle_t task_handle;
-  // formula_t budget_formula;
   int periodicity;
   int task_overruns;
   int task_underruns;
-} BenchInfo;
+} info_t;
+
+typedef struct {
+  // Function functions[NUM_BENCHMARKS];
+  info_t info[NUM_BENCHMARKS];
+  formula_t formula;
+  size_t info_size;
+} Benchmark;
 
 Benchmark *benchmark_create();
+void benchmark_init(Benchmark *b);
 void benchmark_destroy(Benchmark *b);
 
 const char *benchmark_get_formula_name(Benchmark *b);
-formula_t benchmark_get_budget_formula(Benchmark *b);
+formula_t benchmark_get_formula(Benchmark *b);
+void benchmark_set_formula(formula_t formula);
 
-void benchmark_set_budget_formula(formula_t formula);
-BenchInfo *benchmark_add_info(int vm_num, int task_num, int periodicity);
-BenchInfo *benchmark_get_info(int vm_num, int task_num);
-void set_array_index(int index);
+info_t *benchmark_add_info(Benchmark *b, int vm_num, int task_num,
+                           int periodicity);
+info_t *benchmark_get_info(Benchmark *b, int vm_num, int task_num);
 
 #endif
