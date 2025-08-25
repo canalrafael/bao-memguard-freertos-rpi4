@@ -163,3 +163,4 @@ These are the core build scripts called by the `Makefile` and the main `build` s
 | `build_vm.sh`   | Compiles the Linux and FreeRTOS guests. **Accepts an index (0-3) or `all`.** |
 | `copy_files.sh` | Copies all build artifacts to the SD card mount point.                       |
 | `clean.sh`      | Removes all generated binaries and intermediate build files.                 |
+
