@@ -83,7 +83,7 @@ U-Boot> fatload mmc 0 0x200000 bao.bin; go 0x200000
 The `benchmarks/` directory contains a powerful suite to automate building, running, and collecting data for a large number of test scenarios. The workflow is split into generating binaries, running the tests, and post-processing the data.
 
 ### Directory Structure
-* `bin/`: An empty directory where the unique `bao-X.bin` benchmark binaries **will be generated** by the `iterate.sh` script. This directory is ignored by version control.
+* `bin/`: An empty directory where the unique `bao-X.bin` benchmark binaries **will be generated** by the `iterate.sh` script.
 * `logs/`: Stores raw `.log` output from each test run. It also contains Python scripts to parse and process this data.
 * `logs/cleaned_logs/`: A subdirectory created by the processing scripts to hold the parsed `.csv` data files.
 * `scripts/`: Holds the main automation scripts (`iterate.sh`, `run_benchmarks.sh`).
@@ -163,4 +163,5 @@ These are the core build scripts called by the `Makefile` and the main `build` s
 | `build_vm.sh`   | Compiles the Linux and FreeRTOS guests. **Accepts an index (0-3) or `all`.** |
 | `copy_files.sh` | Copies all build artifacts to the SD card mount point.                       |
 | `clean.sh`      | Removes all generated binaries and intermediate build files.                 |
+
 
