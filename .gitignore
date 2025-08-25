@@ -3,9 +3,10 @@ bao-demos/wrkdir/srcs/bao/bin/rpi4/
 bao-demos/wrkdir/imgs/
 bao-demos/**/bin/
 
-data/bin/bao*.bin
+benchmarks/bin/bao*.bin
+benchmarks/logs/bao-*.log
+benchmarks/logs/cleaned_logs/bao-*.csv
 
-logs/
 **/.cache/
 **/build/
 **/GPATH
