@@ -96,6 +96,14 @@ After this, follow **Step 2** from the [Quick Start](#-quick-start) to connect a
 
 ---
 
+## 📂 Source Code Overview
+- **Guest VMs**: `bao-demos/wrkdir/srcs/VMs/` (Each `vm_X` is a separate FreeRTOS instance).
+- **Shared Guest Code**: `bao-demos/wrkdir/srcs/guest_common/`.
+- **Bao Hypervisor**: `bao-demos/wrkdir/srcs/bao/`.
+- **System Configuration**: `bao-demos/demos/linux+freertos/configs/rpi4.c`.
+
+---
+
 <details>
 <summary>
 <h3>🔬 Advanced: Automated Benchmarking</h3>
@@ -151,14 +159,6 @@ This produces the final `merged_output.csv` for analysis.
 
 ---
 
-## 📂 Source Code Overview
-- **Guest VMs**: `bao-demos/wrkdir/srcs/VMs/` (Each `vm_X` is a separate FreeRTOS instance).
-- **Shared Guest Code**: `bao-demos/wrkdir/srcs/guest_common/`.
-- **Bao Hypervisor**: `bao-demos/wrkdir/srcs/bao/`.
-- **System Configuration**: `bao-demos/demos/linux+freertos/configs/rpi4.c`.
-
----
-
 <details id="reference">
 <summary>
 <h3>📘 Reference: Scripts & Makefile Targets</h3>
@@ -184,3 +184,4 @@ A full list of helper scripts for building, editing, and running.
 | `scripts/util/`       | `build_`... | Core build scripts called by the Makefile and other scripts.           |
 
 </details>
+
