@@ -379,7 +379,7 @@ void print_compact(int64_t values[PERIOD_QNT]) {
   printf(",");
 }
 
-void print_vm_info(struct VM vm_info) {
+void print_vm_info(struct VM vm_info, Benchmark *b) {
   BenchmarkData info;
   write_used_budget(vm_info, &info);
   write_calc_budget(vm_info, &info);
@@ -389,7 +389,7 @@ void print_vm_info(struct VM vm_info) {
   // write_clock_cycle(vm_info, &info);
 
   // printf("%ld,", info.period_duration_total);
-  printf("%s,", get_formula_name(get_budget_formula()));
+  printf("%s,", benchmark_get_formula_name(b));
   printf("%ld,", info.PMU_counter_used_budget);
   printf("%ld,", info.PMU_counter_used_budget_r);
   printf("%ld,", info.PMU_counter_used_budget_w);

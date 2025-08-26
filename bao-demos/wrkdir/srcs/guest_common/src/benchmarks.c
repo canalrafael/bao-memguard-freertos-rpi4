@@ -84,7 +84,7 @@ formula_t benchmark_get_formula(Benchmark *b) {
   return b->formula;
 }
 
-void set_budget_formula(Benchmark *b, formula_t formula) {
+void benchmark_set_formula(Benchmark *b, formula_t formula) {
   if (formula < 0 || formula >= FORMULA_COUNT) {
     printf("\tInvalid set_benchmark_formula call %d\n", formula);
     return;

@@ -79,13 +79,16 @@ typedef struct {
   size_t info_size;
 } Benchmark;
 
+void initialize_all_benchmark_contexts();
+void free_all_benchmark_contexts();
+
 Benchmark *benchmark_create();
 void benchmark_init(Benchmark *b);
 void benchmark_destroy(Benchmark *b);
 
 const char *benchmark_get_formula_name(Benchmark *b);
 formula_t benchmark_get_formula(Benchmark *b);
-void benchmark_set_formula(formula_t formula);
+void benchmark_set_formula(Benchmark *b, formula_t formula);
 
 info_t *benchmark_add_info(Benchmark *b, int vm_num, int task_num,
                            int periodicity);

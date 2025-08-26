@@ -48,7 +48,6 @@
 #include <disparity.h>
 #include <ecrts2019_images_64_48.h>
 #include <fft.h>
-#include <misc.h>
 #include <mser.h>
 #include <pmu.h>
 #include <qsort.h>
@@ -57,9 +56,11 @@
 #include <sha.h>
 #include <sorting.h>
 
-#include <bench.h>
-#include <budget.h>
+// #include <bench.h>
+// #include <budget.h>
+#include <benchmarks.h>
 #include <data.h>
+#include <misc.h>
 
 #if 0
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
@@ -107,6 +108,7 @@ int AdjMatrix[666][NUM_NODES];
 
 #define VM_NUM 0
 
+Benchmark *benchmark = NULL;
 TaskHandle_t task_handlers[TASK_QUANTITY];
 uint32_t pmu_overflowed = -1;
 bool end_application = false;
@@ -880,7 +882,8 @@ void ctrl_task(void *pvParameters) {
       }
 
       PRINT("calling HC_regulator_get_new_budget\n");
-      HC_regulator_budget_depleted(pmu_overflowed, get_budget_formula());
+      HC_regulator_budget_depleted(pmu_overflowed,
+                                   benchmark_get_formula(benchmark));
       get_budget = 0;
       period_end_time = xTaskGetTickCount(); // Capture the end time on overflow
 
@@ -925,7 +928,7 @@ void ctrl_task(void *pvParameters) {
         // vTaskDelay((3500));
 
         for (int task_index = 0; task_index < TASK_QUANTITY; ++task_index) {
-          BenchInfo *info = get_benchmark_info(VM_NUM, task_index);
+          info_t *info = benchmark_get_info(benchmark, VM_NUM, task_index);
           vm_conf[VM_NUM].completed_runs_per_task[task_index] =
               info->task_overruns + info->task_underruns;
 
@@ -937,9 +940,9 @@ void ctrl_task(void *pvParameters) {
         idx = 0;
 
         // printf("showing results\n");
-        print_vm_info(vm_conf[VM_NUM]);
+        print_vm_info(vm_conf[VM_NUM], benchmark);
 
-        formula_t formula = get_budget_formula() + 1;
+        formula_t formula = benchmark_get_formula(benchmark) + 1;
         if (formula >= FORMULA_COUNT) {
           info_showed = 1;
           PRINT("INFO SHOWED. END.\n");
@@ -949,7 +952,7 @@ void ctrl_task(void *pvParameters) {
           // task_conf.show_exe_info = 0;
           PRINT("set budget formula from %d to %d\n", //
                 get_budget_formula(), formula);       //
-          set_budget_formula(formula);
+          benchmark_set_formula(benchmark, formula);
         }
       }
 
@@ -1035,21 +1038,21 @@ void ctrl_task(void *pvParameters) {
 // }
 
 void stress_task(void *pvParameters) {
-  BenchInfo *info = (BenchInfo *)pvParameters;
+  info_t *info = (info_t *)pvParameters;
 
   while (true) {
-    info->function.pointer(); // full core usage
+    info->function.pointer(info->function.context); // full core usage
   }
 }
 
 void delayed_task(void *pvParameters) {
-  BenchInfo *info = (BenchInfo *)pvParameters;
+  info_t *info = (info_t *)pvParameters;
 
   const TickType_t period = pdMS_TO_TICKS(info->periodicity);
   TickType_t last_wake_time = xTaskGetTickCount();
 
   while (!end_application) {
-    info->function.pointer();
+    info->function.pointer(info->function.context);
 
     TickType_t now = xTaskGetTickCount();
     if ((now - last_wake_time) > period) {
@@ -1066,7 +1069,10 @@ void delayed_task(void *pvParameters) {
 }
 
 int main(void) {
-  init_bench();
+  initialize_all_benchmark_contexts();
+  benchmark = benchmark_create();
+  benchmark_init(benchmark);
+
   print_vm_header();
 
 #if VM_0_REGULATION
@@ -1082,7 +1088,8 @@ int main(void) {
 #endif
 
   for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-    BenchInfo *info = add_benchmark_info(VM_NUM, task_num, PERIOD_MS_TASK_ANY);
+    info_t *info =
+        benchmark_add_info(benchmark, VM_NUM, task_num, PERIOD_MS_TASK_ANY);
     TaskHandle_t handler;
     xTaskCreate(
         delayed_task,            //
@@ -1108,7 +1115,8 @@ int main(void) {
   while (true) {
     //
   }
-  destroy_bench();
+  benchmark_destroy(benchmark);
+  free_all_benchmark_contexts();
   printf("\nReturning from main.\n");
   return 0;
 }

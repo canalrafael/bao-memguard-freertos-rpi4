@@ -6,8 +6,8 @@
 #include <stdlib.h>
 
 #define UNLIMIT
-#define QSORT_MAXARRAY                                                         \
-  1000 /* this number, if too large, will cause a seg. fault!! */
+/* this number, if too large, will cause a seg. fault!! */
+#define QSORT_MAXARRAY 1000
 
 struct my3DVertexStruct {
   int x, y, z;

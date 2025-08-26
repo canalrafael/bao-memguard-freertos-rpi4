@@ -13,7 +13,7 @@
 #include <vmm.h>
 #include <regulator.h>
 
-#include "../../../guest_common/inc/bench.h"
+#include "../../../guest_common/inc/benchmarks.h"
 
 #define DMA_BASE 0xFE007000
 #define DMA_CHANNEL_0 (DMA_BASE + 0x000)

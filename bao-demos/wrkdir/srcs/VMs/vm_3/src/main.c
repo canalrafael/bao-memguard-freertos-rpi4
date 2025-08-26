@@ -48,7 +48,6 @@
 #include <disparity.h>
 #include <ecrts2019_images_64_48.h>
 #include <fft.h>
-#include <misc.h>
 #include <mser.h>
 #include <pmu.h>
 #include <qsort.h>
@@ -57,9 +56,9 @@
 #include <sha.h>
 #include <sorting.h>
 
-#include <bench.h>
-#include <budget.h>
+#include <benchmarks.h>
 #include <data.h>
+#include <misc.h>
 
 //=================================================================================
 
@@ -76,6 +75,7 @@ int AdjMatrix[666][NUM_NODES];
 
 #define VM_NUM 3
 
+Benchmark *benchmark = NULL;
 // typedef struct {
 TaskHandle_t task_handlers[TASK_QUANTITY];
 // } Task_handlers;
@@ -820,7 +820,7 @@ void ctrl_task(void *pvParameters) {
 
       // resume all tasks
       for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-        BenchInfo *info = get_benchmark_info(VM_NUM, task_num);
+        info_t *info = get_benchmark_info(VM_NUM, task_num);
         vTaskResume(task_handlers[task_num]);
       }
     }
@@ -852,7 +852,7 @@ void ctrl_task(void *pvParameters) {
 
 // void benchmark(void *pvParameters) {
 //   TASK *task_conf = (TASK *)pvParameters;
-//   BenchInfo info = get_benchmark_info(VM_NUM, task_conf->task_num);
+//   info_t info = get_benchmark_info(VM_NUM, task_conf->task_num);
 //
 //   const TickType_t xFrequency = pdMS_TO_TICKS(task_conf->periodicity);
 //   TickType_t xLastWakeTime = xTaskGetTickCount();
@@ -914,21 +914,21 @@ void ctrl_task(void *pvParameters) {
 // }
 
 void stress_task(void *pvParameters) {
-  BenchInfo *info = (BenchInfo *)pvParameters;
+  info_t *info = (info_t *)pvParameters;
 
   while (true) {
-    info->function.pointer(); // full core usage
+    info->function.pointer(info->function.context); // full core usage
   }
 }
 
 void delayed_task(void *pvParameters) {
-  BenchInfo *info = (BenchInfo *)pvParameters;
+  info_t *info = (info_t *)pvParameters;
 
   const TickType_t period = pdMS_TO_TICKS(info->periodicity);
   TickType_t last_wake_time = xTaskGetTickCount();
 
   while (true) {
-    info->function.pointer();
+    info->function.pointer(info->function.context);
 
     TickType_t now = xTaskGetTickCount();
     if ((now - last_wake_time) > period) {
@@ -943,7 +943,9 @@ void delayed_task(void *pvParameters) {
 }
 
 int main(void) {
-  init_bench();
+  initialize_all_benchmark_contexts();
+  benchmark = benchmark_create();
+  benchmark_init(benchmark);
 
 #if VM_3_REGULATION
   irq_set_handler(GUEST_SUSPEND_BUDGET_ID, suspend_task_budget_sgi);
@@ -954,8 +956,8 @@ int main(void) {
 #endif
 
   for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-    BenchInfo *info =
-        add_benchmark_info(VM_NUM, task_num, PERIOD_MS_TASK_PHONY);
+    info_t *info =
+        benchmark_add_info(benchmark, VM_NUM, task_num, PERIOD_MS_TASK_PHONY);
     TaskHandle_t handler;
     xTaskCreate(
         delayed_task,            //
@@ -976,7 +978,9 @@ int main(void) {
   while (true) {
     //
   }
-  destroy_bench();
+
+  benchmark_destroy(benchmark);
+  free_all_benchmark_contexts();
   return 0;
 }
 
