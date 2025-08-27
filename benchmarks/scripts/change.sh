@@ -10,7 +10,7 @@ if len(sys.argv) != 6:
 bench_index = int(sys.argv[1]) - 1
 exec_vm = [int(sys.argv[i]) for i in range(2, 6)]
 
-bench_file = Path("bao-demos/wrkdir/srcs/guest_common/inc/bench.h")
+bench_file = Path("bao-demos/wrkdir/srcs/guest_common/inc/benchmarks.h")
 reg_file = Path("bao-demos/wrkdir/srcs/guest_common/inc/regulation.h")
 
 if not bench_file.exists():

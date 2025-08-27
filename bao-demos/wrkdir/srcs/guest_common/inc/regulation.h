@@ -95,7 +95,7 @@
 
 #define EXEC_VM_0 1
 #define EXEC_VM_1 1
-#define EXEC_VM_2 0
+#define EXEC_VM_2 1
 #define EXEC_VM_3 1
 
 #define VM_QNT 4

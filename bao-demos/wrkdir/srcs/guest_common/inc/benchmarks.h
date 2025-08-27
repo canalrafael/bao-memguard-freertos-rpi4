@@ -18,7 +18,7 @@ void sorting_wrapper(void *context);
 
 // #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#//
 
-#define BENCH_ARRAY_INDEX 159
+#define BENCH_ARRAY_INDEX 0
 #define NUM_BENCHMARKS 1280
 #define FORMULA_COUNT 11
 
