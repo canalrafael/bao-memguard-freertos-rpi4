@@ -1755,19 +1755,11 @@ void sorting_wrapper(void *context) {
 
 // NEW: Function to create and initialize a unique context for every task
 void initialize_all_benchmark_contexts() {
-  // Calculate the starting point of the active benchmark "window".
-  // Replaced the old MAX_TASKS with the more descriptive calculation from the
-  // header.
+  // Calculate the starting point of the active benchmark "window"
   int start_index = (VM_QNT * TASK_QUANTITY) * BENCH_ARRAY_INDEX;
-
-  // Calculate how many benchmarks are in this window.
-  // This now correctly uses the defines from regulation.h.
   int num_active_benchmarks = VM_QNT * TASK_QUANTITY;
-
-  // Calculate the end of the window
   int end_index = start_index + num_active_benchmarks;
 
-  // A safety check to prevent going out of bounds
   if (end_index > NUM_BENCHMARKS) {
     printf("ERROR: Active benchmark range exceeds NUM_BENCHMARKS!\n");
     return;
@@ -1781,6 +1773,8 @@ void initialize_all_benchmark_contexts() {
     Function *f = &_local_function_table[i];
 
     if (strcmp(f->name, "bandwidth_wrapper") == 0) {
+      // This part was already correct and doesn't need changes.
+      // It correctly allocates memory within the task's private context.
       bandwidth_context_t *ctx = malloc(sizeof(bandwidth_context_t));
       ctx->mem_ptr = (int *)malloc(BW_DEFAULT_ALLOC_SIZE);
       memset((char *)ctx->mem_ptr, 1, BW_DEFAULT_ALLOC_SIZE);
@@ -1790,8 +1784,25 @@ void initialize_all_benchmark_contexts() {
       ctx->sum = 0;
       f->context = ctx;
     } else if (strcmp(f->name, "mser_wrapper") == 0) {
+      // NEW: MSER logic is now integrated here.
       mser_context_t *ctx = malloc(sizeof(mser_context_t));
-      // IMPORTANT: Add your complete MSER init logic here
+
+      // Perform MSER-specific data preparation (image transposition)
+      I2D *I = (I2D *)mserb;   // Source image from global data
+      I2D *It = (I2D *)mserb1; // Destination buffer from global data
+
+      int rows = I->height;
+      int cols = I->width;
+      int k = 0;
+
+      for (int col_idx = 0; col_idx < cols; col_idx++) {
+        for (int row_idx = 0; row_idx < rows; row_idx++) {
+          asubsref(It, k++) = subsref(I, row_idx, col_idx);
+        }
+      }
+
+      // Assign the prepared (transposed) image buffer to the context
+      ctx->It = It;
       f->context = ctx;
     }
     // ... add other 'else if' blocks as needed ...
