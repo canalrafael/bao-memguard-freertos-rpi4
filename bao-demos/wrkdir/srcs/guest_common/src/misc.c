@@ -1,5 +1,5 @@
 // Filename: misc.c
-// Author: Everaldo Pereira Gomes
+//         João Almeida (https://github.com/nynepebbles/)
 
 #include "../inc/misc.h"
 #include "../inc/regulation.h"

@@ -1,5 +1,6 @@
 // Filename: misc.h
 // Author: Everaldo Pereira Gomes
+//         João Almeida (https://github.com/nynepebbles/)
 
 #ifndef MISC_H
 #define MISC_H

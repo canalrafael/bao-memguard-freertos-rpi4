@@ -1,5 +1,6 @@
 // Filename: regulation.h
 // Author: Everaldo Pereira Gomes
+//         João Almeida (https://github.com/nynepebbles/)
 
 #ifndef REGULATOR_H
 #define REGULATOR_H

@@ -1,5 +1,6 @@
 // Filename: pmu.c
 // Author: Everaldo Pereira Gomes
+//         João Almeida (https://github.com/nynepebbles/)
 
 #include <pmu.h>
 #include <regulator.h>
