@@ -1,6 +1,15 @@
 #include "../inc/benchmarks.h"
 #include "../inc/regulation.h" // for TASK_QUANTITY
 //
+#include "../../benchmarks/bandwidth/inc/bandwidth.h"
+#include "../../benchmarks/dijkstra/inc/dijkstra.h"
+#include "../../benchmarks/disparity/inc/disparity.h"
+#include "../../benchmarks/fft/inc/fft.h"
+#include "../../benchmarks/mser/inc/mser.h"
+#include "../../benchmarks/qsort/inc/qsort.h"
+#include "../../benchmarks/sha/inc/sha.h"
+#include "../../benchmarks/sorting/inc/sorting.h"
+//
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -1619,6 +1628,15 @@ int _get_info_index(int vm_num, int task_num) {
 //   free(g_mem_ptr);
 // }
 
+typedef struct {
+  int *mem_ptr;
+  uint64_t sum;
+} bandwidth_context_t;
+
+typedef struct {
+  I2D *It;
+} mser_context_t;
+
 void empty_wrapper(void *context) {
   while (1) {
     printf("\t(empty_wrapper) this should never happen.\n");
@@ -1737,7 +1755,29 @@ void sorting_wrapper(void *context) {
 
 // NEW: Function to create and initialize a unique context for every task
 void initialize_all_benchmark_contexts() {
-  for (int i = 0; i < NUM_BENCHMARKS; i++) {
+  // Calculate the starting point of the active benchmark "window".
+  // Replaced the old MAX_TASKS with the more descriptive calculation from the
+  // header.
+  int start_index = (VM_QNT * TASK_QUANTITY) * BENCH_ARRAY_INDEX;
+
+  // Calculate how many benchmarks are in this window.
+  // This now correctly uses the defines from regulation.h.
+  int num_active_benchmarks = VM_QNT * TASK_QUANTITY;
+
+  // Calculate the end of the window
+  int end_index = start_index + num_active_benchmarks;
+
+  // A safety check to prevent going out of bounds
+  if (end_index > NUM_BENCHMARKS) {
+    printf("ERROR: Active benchmark range exceeds NUM_BENCHMARKS!\n");
+    return;
+  }
+
+  printf("Initializing active benchmarks in range [%d, %d)\n", start_index,
+         end_index);
+
+  // Loop ONLY over the active benchmarks
+  for (int i = start_index; i < end_index; i++) {
     Function *f = &_local_function_table[i];
 
     if (strcmp(f->name, "bandwidth_wrapper") == 0) {
@@ -1748,19 +1788,15 @@ void initialize_all_benchmark_contexts() {
         ctx->mem_ptr[j] = j;
       }
       ctx->sum = 0;
-      f->context = ctx; // Assign the unique context
+      f->context = ctx;
     } else if (strcmp(f->name, "mser_wrapper") == 0) {
       mser_context_t *ctx = malloc(sizeof(mser_context_t));
-      // Perform MSER-specific initialization and allocate its data
-      // For example:
-      // I2D *I = (I2D *)mserb;
-      // ctx->It = (I2D *)mserb1;
-      // ... (rest of the init logic from old init_data)
+      // IMPORTANT: Add your complete MSER init logic here
       f->context = ctx;
     }
-    // ... add 'else if' blocks for fft, disparity, sha, etc.
+    // ... add other 'else if' blocks as needed ...
     else {
-      f->context = NULL; // For wrappers with no context (like dijkstra)
+      f->context = NULL;
     }
   }
   _context_initialized = true;
@@ -1768,17 +1804,22 @@ void initialize_all_benchmark_contexts() {
 
 // NEW: Function to clean up all allocated contexts
 void free_all_benchmark_contexts() {
-  for (int i = 0; i < NUM_BENCHMARKS; i++) {
+  int start_index = (VM_QNT * TASK_QUANTITY) * BENCH_ARRAY_INDEX;
+  int num_active_benchmarks = VM_QNT * TASK_QUANTITY;
+  int end_index = start_index + num_active_benchmarks;
+
+  if (end_index > NUM_BENCHMARKS)
+    return;
+
+  for (int i = start_index; i < end_index; i++) {
     Function *f = &_local_function_table[i];
     if (f->context != NULL) {
-      // Free any memory inside the context struct first
       if (strcmp(f->name, "bandwidth_wrapper") == 0) {
         bandwidth_context_t *ctx = (bandwidth_context_t *)f->context;
         free(ctx->mem_ptr);
       }
-      // ... add 'else if' for other contexts that need deep cleaning
+      // ... add 'else if' for other contexts that need deep cleaning ...
 
-      // Finally, free the context struct itself
       free(f->context);
     }
   }

@@ -62,7 +62,7 @@
 #include <data.h>
 #include <misc.h>
 
-#if 0
+#if 1
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)
@@ -950,8 +950,8 @@ void ctrl_task(void *pvParameters) {
           end_application = true;
         } else {
           // task_conf.show_exe_info = 0;
-          PRINT("set budget formula from %d to %d\n", //
-                get_budget_formula(), formula);       //
+          PRINT("set budget formula from %d to %d\n",       //
+                benchmark_get_formula(benchmark), formula); //
           benchmark_set_formula(benchmark, formula);
         }
       }
@@ -1069,10 +1069,14 @@ void delayed_task(void *pvParameters) {
 }
 
 int main(void) {
+  printf("initialize_all_benchmark_contexts\n");
   initialize_all_benchmark_contexts();
+  printf("benchmark_create\n");
   benchmark = benchmark_create();
+  printf("benchmark_init\n");
   benchmark_init(benchmark);
 
+  printf("print_vm_header\n");
   print_vm_header();
 
 #if VM_0_REGULATION

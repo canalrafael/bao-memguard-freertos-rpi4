@@ -9,7 +9,7 @@
 #include <vm.h>
 #include <pmu.h>
 
-#include "../../../../guest_common/inc/budget.h"
+#include "../../../../guest_common/inc/benchmarks.h"
 
 #define NO 0
 #define YES 1
@@ -173,7 +173,7 @@ uint32_t regulator_get_pmu_counter_value(const uint8_t pmu_index);
 
 #endif
 
-#if 0
+#if 1
 #define PRINT(fmt, ...) printk("[BAO] " fmt "\n", ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)

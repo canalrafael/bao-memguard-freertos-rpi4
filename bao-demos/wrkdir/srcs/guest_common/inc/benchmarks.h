@@ -1,19 +1,11 @@
 #ifndef BENCHMARKS_H
 #define BENCHMARKS_H
 
+#include "regulation.h"
 #include <stdint.h>
 #include <stdlib.h>
 
 // #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#//
-
-#include "../../benchmarks/bandwidth/inc/bandwidth.h"
-#include "../../benchmarks/dijkstra/inc/dijkstra.h"
-#include "../../benchmarks/disparity/inc/disparity.h"
-#include "../../benchmarks/fft/inc/fft.h"
-#include "../../benchmarks/mser/inc/mser.h"
-#include "../../benchmarks/qsort/inc/qsort.h"
-#include "../../benchmarks/sha/inc/sha.h"
-#include "../../benchmarks/sorting/inc/sorting.h"
 
 void empty_wrapper(void *context);
 void bandwidth_wrapper(void *context);
@@ -47,15 +39,6 @@ typedef enum {
   PIC_FORMULA,
   // FORMULA_COUNT,
 } formula_t;
-
-typedef struct {
-  int *mem_ptr;
-  uint64_t sum;
-} bandwidth_context_t;
-
-typedef struct {
-  I2D *It;
-} mser_context_t;
 
 typedef struct {
   int index;
