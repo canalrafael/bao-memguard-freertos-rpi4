@@ -1,2 +1,3 @@
 - [ ] set which functions to run on benchmark_add_info instead of using a fixed table.
 - [ ] assert etc/arquivos_SD are being copied to sd card
+- [ ] implement a dedicated hypercall to change the current used formula

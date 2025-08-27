@@ -118,7 +118,7 @@ enum Hypercall_ID {
   HC_REGULATOR_BUDGET_DEPLETED = 12,
   HC_REGULATOR_CHECK_PERIOD = 13,
   HC_REGULATOR_PERIOD_EXPIRED = 14,
-  HC_REGULATOR_GET_TOTAL_CALCULATED_NEW_BUDGET = 15, // not used
+  HC_REGULATOR_GET_RAW_PMU_VALUES = 15, // not used
   HC_REGULATOR_GET_TOTAL_USED_BUDGET = 16,
   HC_REGULATOR_GET_CURRENT_USED_BUDGET = 17,
   HC_REGULATOR_GET_NEW_BUDGET = 18
@@ -301,11 +301,10 @@ HC_regulator_get_current_used_budget(const uint8_t task_num,
   return ret;
 }
 
-static inline uint64_t
-HC_regulator_get_total_calculated_new_budget(const uint8_t task_num,
-                                             const uint8_t op_type) {
+static inline uint64_t HC_regulator_get_raw_PMU_values(const uint8_t task_num,
+                                                       const uint8_t op_type) {
   const uint32_t hc_id =
-      SMCC64_FID_VND_HYP_SRVC | HC_REGULATOR_GET_TOTAL_CALCULATED_NEW_BUDGET;
+      SMCC64_FID_VND_HYP_SRVC | HC_REGULATOR_GET_RAW_PMU_VALUES;
   uint32_t ret = 0;
 
   ASM("mov x0, %1\n\t"

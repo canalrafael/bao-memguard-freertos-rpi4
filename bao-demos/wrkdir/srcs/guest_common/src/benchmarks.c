@@ -1769,9 +1769,6 @@ void initialize_all_benchmark_contexts() {
     return;
   }
 
-  printf("Initializing active benchmarks in range [%d, %d)\n", start_index,
-         end_index);
-
   // Loop ONLY over the active benchmarks
   for (int i = start_index; i < end_index; i++) {
     Function *f = &_local_function_table[i];

@@ -878,7 +878,7 @@ void ctrl_task(void *pvParameters) {
     if (get_budget) {
       for (int i = 0; i < PMU_COUNT; ++i) {
         vm_conf[VM_NUM].PMU_raw_values[i][idx] =
-            HC_regulator_get_total_calculated_new_budget(i, UNUSED_ARG);
+            HC_regulator_get_raw_PMU_values(i, UNUSED_ARG);
       }
 
       PRINT("calling HC_regulator_get_new_budget\n");
@@ -1069,14 +1069,10 @@ void delayed_task(void *pvParameters) {
 }
 
 int main(void) {
-  printf("initialize_all_benchmark_contexts\n");
   initialize_all_benchmark_contexts();
-  printf("benchmark_create\n");
   benchmark = benchmark_create();
-  printf("benchmark_init\n");
   benchmark_init(benchmark);
 
-  printf("print_vm_header\n");
   print_vm_header();
 
 #if VM_0_REGULATION
@@ -1108,7 +1104,7 @@ int main(void) {
       printf("NULL task_handle, returning\n");
       return 0;
     } else {
-      printf("got %s (%d)\n", info->function.name, info->function.index);
+      PRINT("got %s (%d)\n", info->function.name, info->function.index);
     }
   }
 
