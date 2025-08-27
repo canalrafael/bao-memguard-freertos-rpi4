@@ -1,4 +1,4 @@
-// Filename: regulation.c
+// Fifatload mmc 0 0x200000 bao.bin; go 0x200000lename: regulation.c
 // Author: Everaldo Pereira Gomes
 
 #include <regulator.h>

@@ -62,7 +62,7 @@
 #include <data.h>
 #include <misc.h>
 
-#if 1
+#if 0
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
 #define PRINT(fmt, ...) ((void)0)

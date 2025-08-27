@@ -1,7 +1,6 @@
 #ifndef BENCHMARKS_H
 #define BENCHMARKS_H
 
-#include "regulation.h"
 #include <stdint.h>
 #include <stdlib.h>
 

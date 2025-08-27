@@ -104,8 +104,12 @@ void benchmark_set_formula(Benchmark *b, formula_t formula) {
 info_t *benchmark_get_info(Benchmark *b, int vm_num, int task_num) {
   int index = _get_info_index(vm_num, task_num);
 
-  if (index < 0 || index >= b->info_size) {
-    printf("\tInvalid call to benchark_get_info\n");
+  // Check if a benchmark has been added at this slot.
+  // This is reliable because benchmark_init() zeroed the whole array.
+  if (b->info[index].function.pointer == NULL) {
+    printf("\tError: benchmark_get_info called for an unconfigured task (vm: "
+           "%d, task: %d, index: %d)\n",
+           vm_num, task_num, index);
     return NULL;
   }
 
@@ -1815,22 +1819,35 @@ void initialize_all_benchmark_contexts() {
 
 // NEW: Function to clean up all allocated contexts
 void free_all_benchmark_contexts() {
+  // Calculate the exact same "window" of active benchmarks as the init function
   int start_index = (VM_QNT * TASK_QUANTITY) * BENCH_ARRAY_INDEX;
   int num_active_benchmarks = VM_QNT * TASK_QUANTITY;
   int end_index = start_index + num_active_benchmarks;
 
+  // Safety check
   if (end_index > NUM_BENCHMARKS)
     return;
 
+  // Loop ONLY over the active benchmarks that were initialized
   for (int i = start_index; i < end_index; i++) {
     Function *f = &_local_function_table[i];
+
+    // Only try to free contexts that were actually allocated
     if (f->context != NULL) {
+
+      // Perform a "deep free" for contexts that contain their own malloc'd
+      // pointers. This correctly replaces the old "free(g_mem_ptr)".
       if (strcmp(f->name, "bandwidth_wrapper") == 0) {
         bandwidth_context_t *ctx = (bandwidth_context_t *)f->context;
-        free(ctx->mem_ptr);
+        free(ctx->mem_ptr); // First, free the memory INSIDE the context
+      } else if (strcmp(f->name, "mser_wrapper") == 0) {
+        // Currently, mser_context->It points to a global buffer (mserb1),
+        // so we don't need to free it. If you change the init logic to
+        // malloc memory for It, you would add a free() call here.
       }
-      // ... add 'else if' for other contexts that need deep cleaning ...
 
+      // Finally, free the context struct itself. This is done for ALL
+      // contexts that were allocated (bandwidth, mser, etc.).
       free(f->context);
     }
   }
