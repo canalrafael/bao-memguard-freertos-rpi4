@@ -1068,6 +1068,60 @@ void delayed_task(void *pvParameters) {
   vTaskDelete(NULL);
 }
 
+
+//=======================================================================
+//task
+//=======================================================================
+
+void task_A(void* arg) {
+  const TickType_t xPeriod = pdMS_TO_TICKS(3000); //define o periodo como 1s
+
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  while(1) {
+
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+
+    printf("rodando task A por 1s\n");
+    fflush(stdout);
+  }
+
+  
+}
+
+void task_B(void* arg) {
+  const TickType_t xPeriod = pdMS_TO_TICKS(3000); //define o periodo como 1s
+
+  vTaskDelay(pdMS_TO_TICKS(1000));
+
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  while(1) {
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+
+    printf("rodando task B por 1s\n");
+    fflush(stdout);
+  }
+}
+
+void task_benchmark(void* arg) {
+  info_t *info = (info_t *)arg; 
+  const TickType_t xPeriod = pdMS_TO_TICKS(3000);
+
+  vTaskDelay(pdMS_TO_TICKS(2000)); 
+
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  while(1) {
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+    
+    printf("Rodando Benchmark...\n");
+    if (info != NULL) {
+       info->function.pointer(info->function.context);
+    }
+  }
+}
+
 int main(void) {
   initialize_all_benchmark_contexts();
   benchmark = benchmark_create();
@@ -1087,6 +1141,35 @@ int main(void) {
   xTaskCreate(ctrl_task, "vm_ctrl_task", 1400, NULL, CTRL_TASK_PRIORITY, NULL);
 #endif
 
+  xTaskCreate(
+    task_A,
+    "taskA",
+    TASK_STACK_SIZE,
+    NULL,
+    OTHER_TASK_PRIORITY,
+    NULL
+  );
+
+  xTaskCreate(
+    task_B,
+    "taskB",
+    TASK_STACK_SIZE,
+    NULL,
+    OTHER_TASK_PRIORITY,
+    NULL
+  );
+
+  info_t *info_bench = benchmark_add_info(benchmark, VM_NUM, 0, PERIOD_MS_TASK_ANY);
+
+  xTaskCreate(
+    task_benchmark,
+    "taskBenchmark",
+    TASK_STACK_SIZE,
+    info_bench,
+    OTHER_TASK_PRIORITY,
+    NULL
+  );
+ /*
   for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
     info_t *info =
         benchmark_add_info(benchmark, VM_NUM, task_num, PERIOD_MS_TASK_ANY);
@@ -1107,6 +1190,7 @@ int main(void) {
       PRINT("got %s (%d)\n", info->function.name, info->function.index);
     }
   }
+ */
 
   config_counter();
   start_counter();

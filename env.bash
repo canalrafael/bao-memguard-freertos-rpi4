@@ -4,7 +4,7 @@ current_path=$(realpath .)
 bao_folder="bao-demos"
 toolchain_folder="etc/arm-gnu-toolchain"
 sd_card_partition=/dev/sda
-sd_card_path=/media/$USER/boot
+sd_card_path=/media/$USER/BOOT
 export EDITOR="nvim"
 
 if [ ! -d "$bao_folder" ]; then
