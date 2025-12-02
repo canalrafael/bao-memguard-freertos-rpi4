@@ -166,7 +166,12 @@ wait_flag:
     mov x3, #SPSel_SP							
 	msr SPSEL, x3	
 
-    adr x1, _stack_base
+
+    //auterei para evitar overflow causado pela fann
+    //comando original: adr x1, _stack_base (agora eh adrp ... e o add ...)
+
+    adrp x1, _stack_base
+    add x1, x1, #:lo12:_stack_base
     ldr x2, =STACK_SIZE
     add x1, x1, x2
 #ifndef SINGLE_CORE

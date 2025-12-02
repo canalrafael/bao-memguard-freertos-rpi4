@@ -1,5 +1,11 @@
 {
     "files.associations": {
-        "timers.h": "c"
+        "timers.h": "c",
+        "pmu.h": "c",
+        "regulation.h": "c",
+        "config.h": "c",
+        "time.h": "c",
+        "misc.h": "c",
+        "fann.h": "c"
     }
 }
