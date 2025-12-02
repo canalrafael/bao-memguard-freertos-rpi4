@@ -1174,129 +1174,7 @@ void task_benchmark(void* arg) {
   printf("Benchmarks finalizados\n");
   vTaskDelete(NULL);
 }
-
-// void cria_dataset(char* dataset) {
-//   FILE* arquivo = fopen(dataset, "w");
-
-//   float branch_misses, cache_misses, instructions, cpu_cycles;
-//   int num_amostras = 100;
-//   //cabecalho
-//   fprintf(arquivo, "%d %d %d\n", num_amostras, 4, 1);
-
-//   for (int i = 0; i < num_amostras; i++) {
-//     int saida = rand() % 2;
-
-//     if (!saida) {
-//         //(rand() % (max - min + 1)) + min
-//     branch_misses = (rand() % (500 - 10 + 1)) + 10; //intervalo de 10 a 500
-//     cache_misses  = (rand() % (200 - 10 + 1)) + 10;       // 10 a 200
-//     instructions  = (rand() % (50000 - 1000 + 1)) + 1000; // 1000 a 50000
-//     cpu_cycles    = (rand() % (40000 - 2000 + 1)) + 2000; // 2000 a 40000
-// } else {
-//     branch_misses = (rand() % (10000 - 5000 + 1)) + 5000; // 5000 a 10000
-//     cache_misses  = (rand() % (5000 - 2000 + 1)) + 2000;  // 2000 a 5000
-//     instructions  = (rand() % (50000 - 1000 + 1)) + 1000; // 1000 a 50000
-//     cpu_cycles    = (rand() % (40000 - 2000 + 1)) + 2000; // 2000 a 40000
-//     }
-
-//     //entradas
-//     fprintf(arquivo, "%.2f %.2f %.2f %.2f\n", branch_misses, cache_misses, instructions, cpu_cycles);
-//     //saida esperada
-//     fprintf(arquivo, "%d\n", saida);
-//   }
-//   fclose(arquivo);
-// }
-
-// void task_fann(void *arg) {
-//   const unsigned int num_input = 4;
-//   const unsigned int num_output = 1;
-//   const unsigned int num_layers = 3;
-//   const unsigned int num_neurons_hidden = 10;
-//   const float desired_error = 0.001f;
-//   const unsigned int max_epochs = 500000;
-//   const unsigned int epochs_between_reports = 1000;
-
-//   char* train_file = "pmu_train.data";
-//   char* model_file = "pmu_model.net";
-
-//   //cria_dataset(train_file);
-
-//   const TickType_t xPeriod = pdMS_TO_TICKS(4000);
-
-//   vTaskDelay(pdMS_TO_TICKS(3000));
-
-//   TickType_t xLastWakeTime = xTaskGetTickCount();
-
-//   for (int i = 0; i < 10 ; i++) {
-//     vTaskDelayUntil(&xLastWakeTime, xPeriod);
-    
-//     printf("rodando FANN\n");
-
-//     HC_PMU_reset_counter(PMU_COUNTER_1);
-//     HC_PMU_start_counter(PMU_COUNTER_1);
-
-//     struct fann *ann = fann_create_standard(num_layers, num_input, num_neurons_hidden, num_output);
-  
-//     fann_set_activation_function_hidden(ann, FANN_SIGMOID);
-//     fann_set_activation_function_output(ann, FANN_SIGMOID);
-  
-//     fann_train_on_file(ann, train_file, max_epochs, epochs_between_reports, desired_error);
-//     fann_save(ann, model_file);
-  
-//     fann_destroy(ann);
-
-//     HC_PMU_stop_counter(PMU_COUNTER_1);
-//     uint32_t count = HC_PMU_get_counter_value(PMU_COUNTER_1);
-//     printf("ciclos FANN: %u\n", count);
-//   }
-//   printf("treino fann finalizad0\n");
-//   vTaskDelete(NULL);
-// }
-
-// float rand_float(float min, float max) {
-//     return ((float)rand() / (float)RAND_MAX) * (max - min) + min;
-// }
-
-// struct fann_train_data* cria_dados_treino() {
-//     unsigned int num_amostras = 100;
-//     unsigned int num_input = 4;
-//     unsigned int num_output = 1;
-
-//     struct fann_train_data *data = fann_create_train(num_amostras, num_input, num_output);
-    
-//     if (data == NULL) {
-//         printf("ERRO: Falha ao alocar memoria para o dataset!\n");
-//         return NULL;
-//     }
-
-//     for (unsigned int i = 0; i < num_amostras; i++) {
-//         int saida = rand() % 2;
-//         float branch_misses, cache_misses, instructions, cpu_cycles;
-
-//         if (!saida) {
-//             branch_misses = rand_float(10, 500);
-//             cache_misses  = rand_float(10, 200);
-//             instructions  = rand_float(1000, 50000);
-//             cpu_cycles    = rand_float(2000, 40000);
-//         } else {
-//             branch_misses = rand_float(5000, 10000);
-//             cache_misses  = rand_float(2000, 5000);
-//             instructions  = rand_float(1000, 50000);
-//             cpu_cycles    = rand_float(2000, 40000);
-//         }
-
-//         data->input[i][0] = (fann_type)branch_misses;
-//         data->input[i][1] = (fann_type)cache_misses;
-//         data->input[i][2] = (fann_type)instructions;
-//         data->input[i][3] = (fann_type)cpu_cycles;
-
-//         data->output[i][0] = (fann_type)saida;
-//     }
-    
-//     printf("Dataset gerado na memoria com sucesso.\n");
-//     return data;
-// }
-
+//exemplos de inputs e outputs
 static const float pmu_inputs[10][4] = {
     {5149.00, 4973.00, 45173.00, 16300.00},
     {392.00, 160.00, 34002.00, 30800.00},
@@ -1353,7 +1231,7 @@ void task_fann(void *arg) {
     struct fann_train_data *train_data = cria_dados_treino();
     
     if (train_data == NULL) {
-        printf("Abortando task_fann por falta de memoria.\n");
+        printf("abortando task por falta de memoria\n");
         vTaskDelete(NULL);
     }
 
@@ -1365,7 +1243,7 @@ void task_fann(void *arg) {
     for (int i = 0; i < 10 ; i++) {
         vTaskDelayUntil(&xLastWakeTime, xPeriod);
         
-        printf("Rodando FANN (Iteracao %d)\n", i);
+        printf("rodando FANN (iteracao %d)\n", i);
 
         HC_PMU_reset_counter(PMU_COUNTER_1);
         HC_PMU_start_counter(PMU_COUNTER_1);
@@ -1390,7 +1268,7 @@ void task_fann(void *arg) {
 
     fann_destroy_train(train_data);
 
-    printf("Treino FANN finalizado.\n");
+    printf("Treino FANN finalizado\n");
     vTaskDelete(NULL);
 }
 
