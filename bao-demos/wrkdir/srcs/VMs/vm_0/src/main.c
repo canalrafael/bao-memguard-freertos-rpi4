@@ -1174,47 +1174,83 @@ void task_benchmark(void* arg) {
   printf("Benchmarks finalizados\n");
   vTaskDelete(NULL);
 }
-//exemplos de inputs e outputs
-static const float pmu_inputs[10][4] = {
-    {5149.00, 4973.00, 45173.00, 16300.00},
-    {392.00, 160.00, 34002.00, 30800.00},
-    {7190.00, 3288.00, 7337.00, 22568.00},
-    {58.00, 51.00, 15632.00, 13399.00},
-    {220.00, 37.00, 46586.00, 33424.00},
-    {219.00, 185.00, 3024.00, 2980.00},
-    {128.00, 159.00, 32056.00, 30665.00},
-    {477.00, 199.00, 37234.00, 28716.00},
-    {9235.00, 4292.00, 49479.00, 29871.00},
-    {5951.00, 2579.00, 39703.00, 11765.00}
-};
+// //exemplos de inputs e outputs
+// static const float pmu_inputs[10][4] = {
+//     {5149.00, 4973.00, 45173.00, 16300.00},
+//     {392.00, 160.00, 34002.00, 30800.00},
+//     {7190.00, 3288.00, 7337.00, 22568.00},
+//     {58.00, 51.00, 15632.00, 13399.00},
+//     {220.00, 37.00, 46586.00, 33424.00},
+//     {219.00, 185.00, 3024.00, 2980.00},
+//     {128.00, 159.00, 32056.00, 30665.00},
+//     {477.00, 199.00, 37234.00, 28716.00},
+//     {9235.00, 4292.00, 49479.00, 29871.00},
+//     {5951.00, 2579.00, 39703.00, 11765.00}
+// };
 
-static const float pmu_outputs[10][1] = {
-    {1}, {0}, {1}, {0}, {0}, {0}, {0}, {0}, {1}, {1}
-};
+// static const float pmu_outputs[10][1] = {
+//     {1}, {0}, {1}, {0}, {0}, {0}, {0}, {0}, {1}, {1}
+// };
 
-struct fann_train_data* cria_dados_treino() {
-    unsigned int num_amostras = 10;
-    unsigned int num_input = 4;
-    unsigned int num_output = 1;
+// struct fann_train_data* cria_dados_treino() {
+//     unsigned int num_amostras = 10;
+//     unsigned int num_input = 4;
+//     unsigned int num_output = 1;
 
-    struct fann_train_data *data = fann_create_train(num_amostras, num_input, num_output);
+//     struct fann_train_data *data = fann_create_train(num_amostras, num_input, num_output);
     
-    if (data == NULL) {
-        printf("erro em alocar memoria para o dataset\n");
-        return NULL;
-    }
+//     if (data == NULL) {
+//         printf("erro em alocar memoria para o dataset\n");
+//         return NULL;
+//     }
 
-    for (unsigned int i = 0; i < num_amostras; i++) {
-        for (unsigned int j = 0; j < num_input; j++) {
-            data->input[i][j] = (fann_type)pmu_inputs[i][j];
-        }
-        for (unsigned int k = 0; k < num_output; k++) {
-            data->output[i][k] = (fann_type)pmu_outputs[i][k];
-        }
+//     for (unsigned int i = 0; i < num_amostras; i++) {
+//         for (unsigned int j = 0; j < num_input; j++) {
+//             data->input[i][j] = (fann_type) pmu_inputs[i][j];
+//         }
+//         for (unsigned int k = 0; k < num_output; k++) {
+//             data->output[i][k] = (fann_type) pmu_outputs[i][k];
+//         }
+//     }
+    
+//     printf("dataset carregado com sucesso\n");
+//     return data;
+// }
+
+int gera_valor_range(int min, int max) {
+  return (rand() % (max - min +1 )) + min;
+}
+
+struct fann_train_data* cria_dataset() {
+  float branch_misses, cache_misses, instructions, cpu_cycles;
+
+  unsigned int num_amostras = 100;
+  unsigned int num_input = 4;
+  unsigned int num_output = 1;
+
+  struct fann_train_data *data = fann_create_train(num_amostras, num_input, num_output);
+  
+  for (int i = 0; i < num_amostras; i++) {
+    int saida = rand() % 2;
+    if (!saida) {
+      branch_misses = gera_valor_range(10, 500);
+      cache_misses  = gera_valor_range(10, 200);
+      instructions  = gera_valor_range(1000, 50000);
+      cpu_cycles    = gera_valor_range(2000, 40000);
+    } else {
+      branch_misses = gera_valor_range(5000, 10000);
+      cache_misses  = gera_valor_range(2000, 5000); 
+      instructions  = gera_valor_range(1000, 50000);
+      cpu_cycles    = gera_valor_range(2000, 40000);
     }
     
-    printf("dataset carregado com sucesso\n");
-    return data;
+    data->input[i][0] = (fann_type) branch_misses;
+    data->input[i][1] = (fann_type) cache_misses;
+    data->input[i][2] = (fann_type) instructions;
+    data->input[i][3] = (fann_type) cpu_cycles;
+    data->output[i][0] = (fann_type) saida;
+  }
+  return data;
 }
 
 void task_fann(void *arg) {
@@ -1225,49 +1261,44 @@ void task_fann(void *arg) {
     const float desired_error = 0.001f;
     const unsigned int max_epochs = 500000;
     const unsigned int epochs_between_reports = 1000;
-
-    const TickType_t xPeriod = pdMS_TO_TICKS(4000);
-
-    struct fann_train_data *train_data = cria_dados_treino();
     
-    if (train_data == NULL) {
-        printf("abortando task por falta de memoria\n");
-        vTaskDelete(NULL);
-    }
-
-    fann_scale_train_data(train_data, 0, 1);
-
+    
+    struct fann *ann = fann_create_standard(num_layers, num_input, num_neurons_hidden, num_output);
+    
+    fann_set_activation_function_hidden(ann, FANN_SIGMOID);
+    fann_set_activation_function_output(ann, FANN_SIGMOID);
+    
+    const TickType_t xPeriod = pdMS_TO_TICKS(4000);
+    
     vTaskDelay(pdMS_TO_TICKS(3000));
     TickType_t xLastWakeTime = xTaskGetTickCount();
-
-    for (int i = 0; i < 10 ; i++) {
-        vTaskDelayUntil(&xLastWakeTime, xPeriod);
-        
-        printf("rodando FANN (iteracao %d)\n", i);
-
-        HC_PMU_reset_counter(PMU_COUNTER_1);
-        HC_PMU_start_counter(PMU_COUNTER_1);
-
-        struct fann *ann = fann_create_standard(num_layers, num_input, num_neurons_hidden, num_output);
     
-        if (ann) {
-            fann_set_activation_function_hidden(ann, FANN_SIGMOID);
-            fann_set_activation_function_output(ann, FANN_SIGMOID);
-        
-            fann_train_on_data(ann, train_data, max_epochs, epochs_between_reports, desired_error);
+    
+    for (int i = 0; i < 10 ; i++) {
+      vTaskDelayUntil(&xLastWakeTime, xPeriod);
+      
+      HC_PMU_reset_counter(PMU_COUNTER_1);
+      HC_PMU_start_counter(PMU_COUNTER_1);
+      
+      printf("rodando FANN (iteracao %d)\n", i);
+      
+      struct fann_train_data *train_data = cria_dataset();
+      if (train_data == NULL) {
+        printf("abortando task por falta de memoria\n");
+        vTaskDelete(NULL);
+      }
+      fann_scale_train_data(train_data, 0, 1);
+      
+      fann_train_on_data(ann, train_data, max_epochs, epochs_between_reports, desired_error);
+      
+      fann_destroy_train(train_data);
 
-            fann_destroy(ann);
-        } else {
-            printf("erro ao criar a rede neural\n");
-        }
-
-        HC_PMU_stop_counter(PMU_COUNTER_1);
-        uint32_t count = HC_PMU_get_counter_value(PMU_COUNTER_1);
-        printf("ciclos FANN: %u\n", count);
+      HC_PMU_stop_counter(PMU_COUNTER_1);
+      uint32_t count = HC_PMU_get_counter_value(PMU_COUNTER_1);
+      printf("ciclos FANN: %u\n", count);
     }
-
-    fann_destroy_train(train_data);
-
+    fann_destroy(ann);
+    
     printf("Treino FANN finalizado\n");
     vTaskDelete(NULL);
 }
@@ -1326,7 +1357,7 @@ int main(void) {
   xTaskCreate(
     task_fann,
     "taskFANN",
-    2048,
+    8192,
     NULL,
     OTHER_TASK_PRIORITY,
     NULL

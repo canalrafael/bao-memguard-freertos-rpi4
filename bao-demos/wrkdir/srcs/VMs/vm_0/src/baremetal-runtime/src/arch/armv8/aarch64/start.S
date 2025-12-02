@@ -170,6 +170,7 @@ wait_flag:
     //auterei para evitar overflow causado pela fann
     //comando original: adr x1, _stack_base (agora eh adrp ... e o add ...)
 
+    //adr x1, _stack_base
     adrp x1, _stack_base
     add x1, x1, #:lo12:_stack_base
     ldr x2, =STACK_SIZE
