@@ -52,38 +52,12 @@ include $(app_src_dir)/sources.mk
 C_SRC+=$(addprefix $(app_src_dir)/, $(src_c_srcs))
 
 #fann
-# FANN_ROOT=$(ROOT_DIR)/fann
-# FANN_SRC=$(FANN_ROOT)/src
-# FANN_INC=$(FANN_ROOT)/src/include
-
-# SRC_DIRS+=$(FANN_ROOT)/src
-#  INC_DIRS+=$(FANN_INC)
-
-# C_SRC+=$(wildcard $(FANN_SRC)/*.c)
-
-#  ALL_FANN_SRCS = $(wildcard $(FANN_SRC)/*.c)
-#  EXCLUDED_FANN_SRCS = \
-#      $(FANN_SRC)/parallel_fann.c \
-#      $(FANN_SRC)/fann_io.c \
-#      $(FANN_SRC)/doublefann.c \
-#      $(FANN_SRC)/fixedfann.c
-# C_SRC += $(filter-out $(EXCLUDED_FANN_SRCS), $(ALL_FANN_SRCS))
-
 
 FANN_ROOT = $(BAO_DEMOS_WRKDIR_SRC)/fann
 FANN_SRC  = $(FANN_ROOT)/src
 FANN_INC  = $(FANN_ROOT)/src/include
 
 INC_DIRS += $(FANN_INC)
-
-# ALL_FANN_SRCS = $(wildcard $(FANN_SRC)/*.c)
-# EXCLUDED_FANN_SRCS = \
-#     $(FANN_SRC)/parallel_fann.c \
-#     $(FANN_SRC)/fann_io.c \
-#     $(FANN_SRC)/doublefann.c \
-#     $(FANN_SRC)/fixedfann.c
-# C_SRC += $(filter-out $(EXCLUDED_FANN_SRCS), $(ALL_FANN_SRCS))
-
 C_SRC += $(FANN_SRC)/floatfann.c
 
 LD_LIBS += -lm

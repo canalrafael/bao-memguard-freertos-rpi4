@@ -121,7 +121,8 @@ enum Hypercall_ID {
   HC_REGULATOR_GET_RAW_PMU_VALUES = 15, // not used
   HC_REGULATOR_GET_TOTAL_USED_BUDGET = 16,
   HC_REGULATOR_GET_CURRENT_USED_BUDGET = 17,
-  HC_REGULATOR_GET_NEW_BUDGET = 18
+  HC_REGULATOR_GET_NEW_BUDGET = 18,
+  HC_SEC_MONITOR = 19 // Security monitor hypercall
 };
 
 static inline void HC_PMU_config_counter(const uint8_t counter,

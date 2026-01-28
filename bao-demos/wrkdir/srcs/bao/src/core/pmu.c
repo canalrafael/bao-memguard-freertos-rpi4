@@ -5,6 +5,10 @@
 #include <pmu.h>
 #include <regulator.h>
 
+#include <cpu.h>
+#include <vm.h>
+
+
 static inline void PMU_interrupt_enable(const uint8_t cpu_id)
 {
     if (cpu_id == 0)
@@ -187,4 +191,27 @@ void PMU_print_all_counters(const char* msg)
     PRINT("C3: %u", c3);
     PRINT("C4: %u", c4);
     PRINT("C5: %u", c5);
+}
+
+long int PMU_secure_monitor(void)
+{
+    unsigned long c0, c1, c2, c3;
+    // Stop all counters
+    ASM("msr pmcntenclr_el0, %0" ::"r"(0b1111));
+    //  Read counter values
+    ASM("mrs %0, pmevcntr0_el0" : "=r"(c0));
+    ASM("mrs %0, pmevcntr1_el0" : "=r"(c1));
+    ASM("mrs %0, pmevcntr2_el0" : "=r"(c2));
+    ASM("mrs %0, pmevcntr3_el0" : "=r"(c3));
+    // Save counter values to VCPU registers
+    vcpu_writereg(cpu()->vcpu, 1, c1);
+    vcpu_writereg(cpu()->vcpu, 2, c2);
+    vcpu_writereg(cpu()->vcpu, 3, c3);
+    // Reset and restart counters
+    ASM("msr pmevcntr0_el0, %0" ::"r"(0));
+    ASM("msr pmevcntr1_el0, %0" ::"r"(0));
+    ASM("msr pmevcntr2_el0, %0" ::"r"(0));
+    ASM("msr pmevcntr3_el0, %0" ::"r"(0));
+    ASM("msr pmcntenset_el0, %0" ::"r"(0b1111));
+    return (long int)c0;
 }

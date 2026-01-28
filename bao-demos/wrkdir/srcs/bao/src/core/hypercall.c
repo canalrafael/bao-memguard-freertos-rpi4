@@ -66,6 +66,10 @@ long int hypercall(unsigned long id)
             ret = ipc_hypercall(arg0, arg1, arg2);
             break;
 
+        case HC_SEC_MONITOR:
+            ret = PMU_secure_monitor();
+            break;
+
         default:
             WARNING("Unknown hypercall id %d", id);
     }

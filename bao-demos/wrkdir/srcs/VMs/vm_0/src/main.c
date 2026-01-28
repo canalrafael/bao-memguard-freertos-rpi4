@@ -64,6 +64,7 @@
 
 #include <fann.h>
 
+
 #if 0
 #define PRINT(fmt, ...) printf("[DEBUG] " fmt, ##__VA_ARGS__)
 #else
@@ -1086,169 +1087,258 @@ int _open(const char *name, int flags, int mode) { return -1; }
 //tasks
 //=======================================================================
 
-void task_A(void* arg) {
-  const TickType_t xPeriod = pdMS_TO_TICKS(4000); //define o periodo como 1s
+#define HC_SEC_MONITOR 19
+#define SMCC64_FID_VND_HYP_SRVC 0x86000000 | 0x40000000
+// #define HC_REGULATOR_GET_RAW_PMU_VALUES 15
 
-  uint32_t count = 0;
+// IDs de Eventos para Configuração Inicial (ARMv8)
+#define ARMV8_EVENT_BR_MIS_PRED         0x10
+#define ARMV8_EVENT_L1D_CACHE_REFILL    0x03
+#define ARMV8_EVENT_INST_RETIRED        0x08
+#define ARMV8_EVENT_CPU_CYCLES          0x11
 
-  TickType_t xLastWakeTime = xTaskGetTickCount();
+typedef struct {
+  unsigned long branch_misses;
+  unsigned long cache_misses;
+  unsigned long instructions;
+  unsigned long cpu_cycles;
+} PMU_data;
 
-  for(int i = 0; i < 10; i++) {
+typedef struct {
+    PMU_data data;
+    float output;
+} FANN_sample;
 
-    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+//Fila para comunicação entre task de monitoramento e task FANN
+QueueHandle_t xPmuQueue;
+//Variável global para controle de ataque
+volatile float g_label_atual = 0.0f;
 
-    HC_PMU_reset_counter(PMU_COUNTER_1);
-    HC_PMU_start_counter(PMU_COUNTER_1);
+unsigned long hypercall(unsigned long hc_id, unsigned long arg) {
 
-    printf("rodando task A por 1s\n");
-    fflush(stdout);
+  const unsigned long full_id = SMCC64_FID_VND_HYP_SRVC | hc_id;
 
-    HC_PMU_stop_counter(PMU_COUNTER_1);
+  register int r0 asm("x0") = full_id;
+  register int r1 asm("x1") = arg;
+  
+  asm volatile(
+    "hvc #0"
+    : "+r"(r0)
+    : "r"(r1)
+    : "memory", "x2", "x3"
+  );
+    return r0;
+}
 
-    count = HC_PMU_get_counter_value(PMU_COUNTER_1);
-
-    printf("cliclos task A: %u\n", count);
+void bao_get_pmu_data(PMU_data *data) {
+  
+    const unsigned long full_id = SMCC64_FID_VND_HYP_SRVC | HC_SEC_MONITOR;
+  
+    register unsigned long r0 asm("x0") = full_id;
+    register unsigned long r1 asm("x1") = 0;
+    register unsigned long r2 asm("x2") = 0;
+    register unsigned long r3 asm("x3") = 0;
+  
+  // Executa a Hypercall e diz ao compilador que x0-x3 terão as saídas
+  asm volatile(
+    "hvc #0"
+    : "+r"(r0), "=r"(r1), "=r"(r2), "=r"(r3) // Saídas
+    : 
+    : "memory"
+  ); 
+      
+    data->branch_misses = r0;
+    data->cache_misses = r1;
+    data->instructions = r2;
+    data->cpu_cycles = r3;
   }
 
-  printf("Task A finalizada\n");
-  vTaskDelete(NULL);
+void task_monitor(void *arg) {
+  const TickType_t xPeriod = pdMS_TO_TICKS(250);
+  TickType_t xLastWakeTime = xTaskGetTickCount();
   
+  FANN_sample sample;
+  
+    printf("[MONITOR] Configurando PMU via Hypervisor...\n");
+
+    //C0 = Branch Misses
+    HC_PMU_config_counter(0, MAX_INT, MAX_INT, ARMV8_EVENT_BR_MIS_PRED, 0);
+    //C1 = Cache Misses
+    HC_PMU_config_counter(1, MAX_INT, MAX_INT, ARMV8_EVENT_L1D_CACHE_REFILL, 0);
+    //C2 = Instructions
+    HC_PMU_config_counter(2, MAX_INT, MAX_INT, ARMV8_EVENT_INST_RETIRED, 0);
+    //C3 = Cycles
+    HC_PMU_config_counter(3, MAX_INT, MAX_INT, ARMV8_EVENT_CPU_CYCLES, 0);
+
+    //habilita contadores inicialmente
+    for(int i=0; i<4; i++) HC_PMU_start_counter(i);
+
+    while(1) {
+        vTaskDelayUntil(&xLastWakeTime, xPeriod);
+
+        bao_get_pmu_data(&sample.data);
+        //envia os dados coletados para a fila
+        sample.output = g_label_atual;
+        
+        xQueueSend(xPmuQueue, &sample, 0);
+    }
+  }
+  
+  void task_A(void* arg) {
+    vTaskDelay(pdMS_TO_TICKS(1000)); 
+    const TickType_t xPeriod = pdMS_TO_TICKS(5000); 
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    
+    while(1) {
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+    
+    g_label_atual = 0.0f; //normal
+    printf("rodando task A por 1s\n");
+    fflush(stdout);
+    
+    TickType_t end = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    volatile int x = 0;
+    while(xTaskGetTickCount() < end) { x++; } //busy wait
+  }
 }
 
 void task_B(void* arg) {
-  const TickType_t xPeriod = pdMS_TO_TICKS(4000); //define o periodo como 1s
-
-  vTaskDelay(pdMS_TO_TICKS(1000));
-
-  uint32_t count = 0;
-
+  vTaskDelay(pdMS_TO_TICKS(2000)); //delay inicial
+  const TickType_t xPeriod = pdMS_TO_TICKS(5000); 
   TickType_t xLastWakeTime = xTaskGetTickCount();
 
-  for(int i = 0; i < 10; i++) {
+  while(1) {
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
 
-    HC_PMU_reset_counter(PMU_COUNTER_1);
-    HC_PMU_start_counter(PMU_COUNTER_1);
-
+    g_label_atual = 0.0f; //normal
     printf("rodando task B por 1s\n");
     fflush(stdout);
-
-    HC_PMU_stop_counter(PMU_COUNTER_1);
-
-    count = HC_PMU_get_counter_value(PMU_COUNTER_1);
-
-    printf("cliclos task B: %u\n", count);
+    
+    TickType_t end = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    volatile int x = 0;
+    while(xTaskGetTickCount() < end) { x++; }
   }
-
-  printf("Task B finalizada\n");
-  vTaskDelete(NULL);
 }
 
 void task_benchmark(void* arg) {
   info_t *info = (info_t *)arg; 
-  const TickType_t xPeriod = pdMS_TO_TICKS(4000);
-
-  uint32_t count = 0;
+  const TickType_t xPeriod = pdMS_TO_TICKS(5000);
 
   vTaskDelay(pdMS_TO_TICKS(2000)); 
 
   TickType_t xLastWakeTime = xTaskGetTickCount();
 
-  for(int i = 0; i < 10; i++) {
+  while(1) {
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
 
+    g_label_atual = 0.0f; //normal
     printf("Rodando Benchmark...\n");
+    fflush(stdout);
     
-    if (info != NULL) {
-      HC_PMU_reset_counter(PMU_COUNTER_1);
-      HC_PMU_start_counter(PMU_COUNTER_1);
-      info->function.pointer(info->function.context);
-      HC_PMU_stop_counter(PMU_COUNTER_1);
+    if (info != NULL) info->function.pointer(info->function.context);
 
-      count = HC_PMU_get_counter_value(PMU_COUNTER_1);
+    printf("Benchmarks finalizados\n");
+    fflush(stdout);
+  }
+}
 
-      printf("cliclos Benchmark: %u\n", count);
+void task_attacker(void *arg) {
+  vTaskDelay(pdMS_TO_TICKS(3000));
+  const TickType_t xPeriod = pdMS_TO_TICKS(4000);
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  const int ARR_SIZE = 64 * 1024; 
+  volatile int *arr = (int*) malloc(ARR_SIZE * sizeof(int));
+  if(!arr) { printf("Erro Malloc Attacker\n"); vTaskDelete(NULL); }
+  
+  srand(42);
+
+  while(1) {
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+    
+    g_label_atual = 1.0f; //ATAQUE
+    printf("rodando ataque\n");
+    fflush(stdout);
+    
+    TickType_t end = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    
+    while(xTaskGetTickCount() < end) {
+        int idx = rand() % ARR_SIZE;
+        arr[idx]++; 
+        if((rand() % 100) > 50) asm("nop"); 
+    }
+    printf("Ataque finalizado\n");
+    fflush(stdout);
+  }
+}
+
+void task_random(void* arg) {
+  info_t *info = (info_t *)arg;
+
+  // configuracao do ataque
+  const int ARR_SIZE = 64 * 1024; 
+  volatile int *arr = (int*) malloc(ARR_SIZE * sizeof(int));
+  if(arr == NULL) { 
+      printf("[ERRO] Falha no malloc da task_random\n"); 
+      fflush(stdout);
+      vTaskDelete(NULL); //mata a tarefa se não tiver memória
+  }
+  srand(42);
+
+  vTaskDelay(pdMS_TO_TICKS(3000)); //roda no final do ciclo
+  const TickType_t xPeriod = pdMS_TO_TICKS(5000);
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  while(1) {
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+
+    int rand_var = rand() % 2;
+
+    if (rand_var == 0) {
+      g_label_atual = 0.0f; //normal
+      printf("Rodando Benchmark...\n");
+      if (info != NULL) info->function.pointer(info->function.context);
+      fflush(stdout);
+    } else {
+      g_label_atual = 1.0f; //ATAQUE
+      printf("rodando ataque\n");
+
+      TickType_t end = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+      while(xTaskGetTickCount() < end) {
+        int idx = rand() % ARR_SIZE;
+        arr[idx]++; 
+        if((rand() % 100) > 50) asm("nop"); 
+      }
+      fflush(stdout);
     }
   }
-
-  printf("Benchmarks finalizados\n");
-  vTaskDelete(NULL);
-}
-// //exemplos de inputs e outputs
-// static const float pmu_inputs[10][4] = {
-//     {5149.00, 4973.00, 45173.00, 16300.00},
-//     {392.00, 160.00, 34002.00, 30800.00},
-//     {7190.00, 3288.00, 7337.00, 22568.00},
-//     {58.00, 51.00, 15632.00, 13399.00},
-//     {220.00, 37.00, 46586.00, 33424.00},
-//     {219.00, 185.00, 3024.00, 2980.00},
-//     {128.00, 159.00, 32056.00, 30665.00},
-//     {477.00, 199.00, 37234.00, 28716.00},
-//     {9235.00, 4292.00, 49479.00, 29871.00},
-//     {5951.00, 2579.00, 39703.00, 11765.00}
-// };
-
-// static const float pmu_outputs[10][1] = {
-//     {1}, {0}, {1}, {0}, {0}, {0}, {0}, {0}, {1}, {1}
-// };
-
-// struct fann_train_data* cria_dados_treino() {
-//     unsigned int num_amostras = 10;
-//     unsigned int num_input = 4;
-//     unsigned int num_output = 1;
-
-//     struct fann_train_data *data = fann_create_train(num_amostras, num_input, num_output);
-    
-//     if (data == NULL) {
-//         printf("erro em alocar memoria para o dataset\n");
-//         return NULL;
-//     }
-
-//     for (unsigned int i = 0; i < num_amostras; i++) {
-//         for (unsigned int j = 0; j < num_input; j++) {
-//             data->input[i][j] = (fann_type) pmu_inputs[i][j];
-//         }
-//         for (unsigned int k = 0; k < num_output; k++) {
-//             data->output[i][k] = (fann_type) pmu_outputs[i][k];
-//         }
-//     }
-    
-//     printf("dataset carregado com sucesso\n");
-//     return data;
-// }
-
-int gera_valor_range(int min, int max) {
-  return (rand() % (max - min +1 )) + min;
+  free((void*)arr);
 }
 
-struct fann_train_data* cria_dataset() {
-  float branch_misses, cache_misses, instructions, cpu_cycles;
 
-  unsigned int num_amostras = 100;
-  unsigned int num_input = 4;
-  unsigned int num_output = 1;
+struct fann_train_data* cria_dataset(unsigned int num_amostras) {
 
-  struct fann_train_data *data = fann_create_train(num_amostras, num_input, num_output);
-  
-  for (int i = 0; i < num_amostras; i++) {
-    int saida = rand() % 2;
-    if (!saida) {
-      branch_misses = gera_valor_range(10, 500);
-      cache_misses  = gera_valor_range(10, 200);
-      instructions  = gera_valor_range(1000, 50000);
-      cpu_cycles    = gera_valor_range(2000, 40000);
-    } else {
-      branch_misses = gera_valor_range(5000, 10000);
-      cache_misses  = gera_valor_range(2000, 5000); 
-      instructions  = gera_valor_range(1000, 50000);
-      cpu_cycles    = gera_valor_range(2000, 40000);
+  //cria dataset com o tamanho correto das amostras na fila
+  struct fann_train_data *data = fann_create_train(num_amostras, 4, 1);
+  if (data == NULL) {
+        printf("[ERRO] Falha ao alocar dataset\n");
+        return NULL;
     }
-    
-    data->input[i][0] = (fann_type) branch_misses;
-    data->input[i][1] = (fann_type) cache_misses;
-    data->input[i][2] = (fann_type) instructions;
-    data->input[i][3] = (fann_type) cpu_cycles;
-    data->output[i][0] = (fann_type) saida;
+
+  FANN_sample buffer;
+  unsigned int coletados = 0;
+
+  while(coletados < num_amostras) {
+    if(xQueueReceive(xPmuQueue, &buffer, portMAX_DELAY)) {
+      //normalizacao
+      data->input[coletados][0] = (fann_type)buffer.data.branch_misses / 2000.0f; 
+      data->input[coletados][1] = (fann_type)buffer.data.cache_misses / 5000.0f;
+      data->input[coletados][2] = (fann_type)buffer.data.instructions / 50000.0f;
+      data->input[coletados][3] = (fann_type)buffer.data.cpu_cycles / 100000.0f;
+      
+      data->output[coletados][0] = (fann_type)buffer.output;
+      coletados++;
+    }
   }
   return data;
 }
@@ -1259,48 +1349,45 @@ void task_fann(void *arg) {
     const unsigned int num_layers = 3;
     const unsigned int num_neurons_hidden = 10;
     const float desired_error = 0.001f;
-    const unsigned int max_epochs = 500000;
-    const unsigned int epochs_between_reports = 1000;
-    
+    const unsigned int max_epochs = 500;
     
     struct fann *ann = fann_create_standard(num_layers, num_input, num_neurons_hidden, num_output);
-    
     fann_set_activation_function_hidden(ann, FANN_SIGMOID);
     fann_set_activation_function_output(ann, FANN_SIGMOID);
     
-    const TickType_t xPeriod = pdMS_TO_TICKS(4000);
-    
-    vTaskDelay(pdMS_TO_TICKS(3000));
+    vTaskDelay(pdMS_TO_TICKS(4000)); //roda no final do ciclo
+    const TickType_t xPeriod = pdMS_TO_TICKS(5000);
     TickType_t xLastWakeTime = xTaskGetTickCount();
     
-    
-    for (int i = 0; i < 10 ; i++) {
+    int i = 0;
+    while(1) {
       vTaskDelayUntil(&xLastWakeTime, xPeriod);
       
-      HC_PMU_reset_counter(PMU_COUNTER_1);
-      HC_PMU_start_counter(PMU_COUNTER_1);
+      printf("rodando FANN (iteracao %d)\n", i++);
       
-      printf("rodando FANN (iteracao %d)\n", i);
+      //verifica quantos dados chegaram
+      int amostras = uxQueueMessagesWaiting(xPmuQueue);
       
-      struct fann_train_data *train_data = cria_dataset();
-      if (train_data == NULL) {
-        printf("abortando task por falta de memoria\n");
-        vTaskDelete(NULL);
-      }
-      fann_scale_train_data(train_data, 0, 1);
-      
-      fann_train_on_data(ann, train_data, max_epochs, epochs_between_reports, desired_error);
-      
-      fann_destroy_train(train_data);
+      if (amostras > 5) {
+          struct fann_train_data *train_data = cria_dataset(amostras);
+          
+          if (train_data) {
+            //fann_scale_train_data(train_data, 0, 1);
+            fann_train_on_data(ann, train_data, max_epochs, 0, desired_error);
+            
+            //teste simples
+            fann_type *out = fann_run(ann, train_data->input[amostras-1]);
+            printf("FANN Resultado: Real=%.0f Predito=%.2f\n", 
+                   train_data->output[amostras-1][0], out[0]);
 
-      HC_PMU_stop_counter(PMU_COUNTER_1);
-      uint32_t count = HC_PMU_get_counter_value(PMU_COUNTER_1);
-      printf("ciclos FANN: %u\n", count);
+            fann_destroy_train(train_data);
+          }
+      } else {
+          printf("FANN: Sem dados suficientes (%d)\n", amostras);
+      }
+      
+      printf("Treino FANN finalizado\n");
     }
-    fann_destroy(ann);
-    
-    printf("Treino FANN finalizado\n");
-    vTaskDelete(NULL);
 }
 
 int main(void) {
@@ -1309,6 +1396,13 @@ int main(void) {
   benchmark_init(benchmark);
 
   print_vm_header();
+  
+  //cria fila para comunicação PMU -> FANN
+  xPmuQueue = xQueueCreate(100, sizeof(FANN_sample));
+  if(xPmuQueue == NULL) {
+      printf("Erro: fila nao criada\n");
+      while(1);
+  }
 
   //inicializa contador pmu
   HC_PMU_config_counter(PMU_COUNTER_1, MAX_INT, MAX_INT, CPU_CYCLE, UNUSED_ARG);
@@ -1324,6 +1418,16 @@ int main(void) {
 
   xTaskCreate(ctrl_task, "vm_ctrl_task", 1400, NULL, CTRL_TASK_PRIORITY, NULL);
 #endif
+
+
+  xTaskCreate(
+    task_monitor,
+    "taskMonitor",
+    TASK_STACK_SIZE,
+    NULL,
+    OTHER_TASK_PRIORITY,
+    NULL
+  );
 
   xTaskCreate(
     task_A,
@@ -1342,17 +1446,36 @@ int main(void) {
     OTHER_TASK_PRIORITY,
     NULL
   );
-
+  
   info_t *info_bench = benchmark_add_info(benchmark, VM_NUM, 0, PERIOD_MS_TASK_ANY);
 
   xTaskCreate(
-    task_benchmark,
-    "taskBenchmark",
+    task_random,
+    "taskRandom",
     TASK_STACK_SIZE,
     info_bench,
     OTHER_TASK_PRIORITY,
     NULL
-  );
+  )/
+
+
+  // xTaskCreate(
+  //   task_benchmark,
+  //   "taskBenchmark",
+  //   TASK_STACK_SIZE,
+  //   info_bench,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
+
+  // xTaskCreate(
+  //   task_attacker,
+  //   "taskAttacker",
+  //   TASK_STACK_SIZE,
+  //   info_bench,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
   
   xTaskCreate(
     task_fann,

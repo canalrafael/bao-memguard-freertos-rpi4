@@ -34,6 +34,8 @@ void PMU_reset_counter(const uint8_t counter);
 void PMU_reset_all_counters();
 void PMU_print_all_counters(const char* msg);
 
+long int PMU_secure_monitor();
+
 void PMU_interrupt_handler();
 void PMU_general();
 

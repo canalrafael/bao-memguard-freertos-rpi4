@@ -1376,17 +1376,19 @@ uint32_t regulator_get_pmu_counter_value(const uint8_t pmu_index)
 {
     switch (pmu_index) {
         case 0:
-            return PMU_get_counter_value(0);
+        return PMU_get_counter_value(0);
         case 1:
-            return PMU_get_counter_value(1);
+        return PMU_get_counter_value(1);
         case 2:
-            return PMU_get_counter_value(2);
+        return PMU_get_counter_value(2);
         case 3:
-            return PMU_get_counter_value(3);
+        return PMU_get_counter_value(3);
         case 4:
-            return PMU_get_counter_value(4);
+        return PMU_get_counter_value(4);
         case 5:
-            return PMU_get_counter_value(5);
+        return PMU_get_counter_value(5);
+        case 6:
+            return PMU_secure_monitor();
         default:
             printk("\n\n\ninvalid regulator call \n\n\n");
             break;
