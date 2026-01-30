@@ -64,6 +64,10 @@ LD_LIBS += -lm
 
 CFLAGS+= -Os -ffunction-sections -fdata-sections
 
+#header pesos
+fann_wdir=$(BAO_DEMOS_WRKDIR_SRC)/fann-wrdir
+INC_DIRS += $(fann_wdir)
+
 # OTHERS SRCS
 C_SRC+=$(wildcard $(SRC_GUEST_COMMON)/*.c)
 C_SRC+=$(wildcard $(SRC_DISPARITY)/*.c)
