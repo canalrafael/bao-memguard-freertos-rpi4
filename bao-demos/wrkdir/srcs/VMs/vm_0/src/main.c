@@ -1091,13 +1091,14 @@ void exportar_datasets_csv(struct fann_train_data *data) {
     // printf("BranchMiss_Norm,CacheMiss_Norm,Instr_Norm,Cycles_Norm,Label\n");
 
     for(unsigned int i = 0; i < data->num_data; i++) {
-        printf("%f,%f,%f,%f,%f\n",
+        printf("%lu,%lu,%lu,%lu,%lu\n",
                data->input[i][0], // Branch Misses Normalizado
                data->input[i][1], // Cache Misses Normalizado
                data->input[i][2], // Instructions Normalizado
                data->input[i][3], // CPU Cycles Normalizado
                data->output[i][0] // Label (0 ou 1)
         );
+        fflush(stdout);
         //pequeno delay a cada 50 linhas para não saturar o buffer da UART se o dataset for gigante
         if (i % 50 == 0) {
              for(volatile int k=0; k<1000; k++); 
@@ -1297,11 +1298,6 @@ void task_attacker(void *arg) {
 }
 
 //definiçoes necessarias para o spectre
-// extern uint8_t array1[16];
-// extern uint8_t array2[256 * 512];
-// extern char* secret;
-// extern unsigned int array1_size;
-
 unsigned int array1_size = 16;
 uint8_t unused1[64]; // Padding para evitar fetch de cache adjacente
 uint8_t array1[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
@@ -1434,27 +1430,56 @@ void task_random(void* arg) {
 
     if (rand_var == 0) {
       g_label_atual = 0.0f; //normal
-      printf("Rodando Benchmark...\n");
+      // printf("Rodando Benchmark...\n");
       if (info != NULL) info->function.pointer(info->function.context);
-      fflush(stdout);
+      // fflush(stdout);
     } else {
       g_label_atual = 1.0f; //sinaliza ataque para a FANN
-      printf("[SPECTRE] Iniciando extração de dados especulativa...\n");
-      fflush(stdout);
+      // printf("[SPECTRE] Iniciando extração de dados especulativa...\n");
+      // fflush(stdout);
 
       for (int i = 0; i < 10; i++) { //tenta ler os primeiros 10 bytes do segredo
           read_memory_byte_spectre(cache_hit_threshold, malicious_x++, value, score);
-          printf("[SPECTRE] Lendo: 0x%02X='%c' score=%d\n", value[0], 
-                  (value[0] > 31 && value[0] < 127 ? value[0] : '?'), score[0]);
-          fflush(stdout);
+          // printf("[SPECTRE] Lendo: 0x%02X='%c' score=%d\n", value[0], 
+                  // (value[0] > 31 && value[0] < 127 ? value[0] : '?'), score[0]);
+          // fflush(stdout);
       }
 
-      printf("[SPECTRE] Ciclo de ataque finalizado.\n");
-      fflush(stdout);
+      // printf("[SPECTRE] Ciclo de ataque finalizado.\n");
+      // fflush(stdout);
     }
   }
 }
 
+#define NORM_BRANCH      100000000.0f
+#define NORM_CACHE       50000000.0f 
+#define NORM_INSTR       200000000.0f
+#define NORM_CYCLES      400000000.0f
+
+#define WINDOW_SIZE 5
+FANN_sample window_buffer[WINDOW_SIZE];
+int buffer_index = 0;
+int buffer_filled = 0;
+
+void update_window(FANN_sample new_sample) {
+    window_buffer[buffer_index] = new_sample;
+    buffer_index = (buffer_index + 1) % WINDOW_SIZE;
+    if (buffer_index == 0) buffer_filled = 1;
+}
+
+void get_flattened_window(fann_type *input_vector) {
+    int current = buffer_index; 
+    
+    
+    for (int i = 0; i < WINDOW_SIZE; i++) {
+        int idx = (buffer_index + i) % WINDOW_SIZE; 
+        
+        input_vector[i*4 + 0] = (fann_type)window_buffer[idx].data.branch_misses / NORM_BRANCH;
+        input_vector[i*4 + 1] = (fann_type)window_buffer[idx].data.cache_misses / NORM_CACHE;
+        input_vector[i*4 + 2] = (fann_type)window_buffer[idx].data.instructions / NORM_INSTR;
+        input_vector[i*4 + 3] = (fann_type)window_buffer[idx].data.cpu_cycles / NORM_CYCLES;
+    }
+}
 
 struct fann_train_data* cria_dataset(unsigned int num_amostras) {
 
@@ -1470,16 +1495,17 @@ struct fann_train_data* cria_dataset(unsigned int num_amostras) {
 
   while(coletados < num_amostras) {
     if(xQueueReceive(xPmuQueue, &buffer, portMAX_DELAY)) {
-      //normalizacao
-      data->input[coletados][0] = (fann_type)buffer.data.branch_misses / 2000.0f; 
-      data->input[coletados][1] = (fann_type)buffer.data.cache_misses / 5000.0f;
-      data->input[coletados][2] = (fann_type)buffer.data.instructions / 25000.0f;
-      data->input[coletados][3] = (fann_type)buffer.data.cpu_cycles / 40000.0f;
-      
-      data->output[coletados][0] = (fann_type)buffer.output;
-      coletados++;
+        update_window(buffer);
+
+        if (buffer_filled) {
+            get_flattened_window(data->input[coletados]);
+            
+            data->output[coletados][0] = (fann_type)buffer.output;
+            
+            coletados++;
+        }
     }
-  }
+}
   return data;
 }
 
@@ -1489,7 +1515,7 @@ void task_fann(void *arg) {
     const unsigned int num_layers = 3;
     const unsigned int num_neurons_hidden = 10;
     const float desired_error = 0.001f;
-    const unsigned int max_epochs = 500;
+    const unsigned int max_epochs = 1;
     
     struct fann *ann = fann_create_standard(num_layers, num_input, num_neurons_hidden, num_output);
     fann_set_activation_function_hidden(ann, FANN_SIGMOID);
@@ -1513,7 +1539,7 @@ void task_fann(void *arg) {
         //aplica os pesos de volta na rede
         fann_set_weight_array(ann, conexoes, NUM_PESOS);
         free(conexoes);
-        printf("[FANN] Rede carregada e pronta!\n");
+        // printf("[FANN] Rede carregada e pronta!\n");
     }
     #endif
     
@@ -1525,7 +1551,7 @@ void task_fann(void *arg) {
     while(1) {
       vTaskDelayUntil(&xLastWakeTime, xPeriod);
       
-      printf("rodando FANN (iteracao %d)\n", i++);
+      // printf("rodando FANN (iteracao %d)\n", i++);
       
       //verifica quantos dados chegaram
       int amostras = uxQueueMessagesWaiting(xPmuQueue);
@@ -1534,23 +1560,30 @@ void task_fann(void *arg) {
           struct fann_train_data *train_data = cria_dataset(amostras);
           
           if (train_data) {
-            //fann_scale_train_data(train_data, 0, 1);
-            fann_train_on_data(ann, train_data, max_epochs, 0, desired_error);
+            float predicao_media = 0.0f;
+            for(int k=0; k<train_data->num_data; k++) {
+                fann_type *out = fann_run(ann, train_data->input[k]);
+                predicao_media += out[0];
+            }
+            predicao_media /= train_data->num_data;
 
-            exportar_datasets_csv(train_data);
-            
-            //teste simples
-            fann_type *out = fann_run(ann, train_data->input[amostras-1]);
-            printf("FANN Resultado: Real=%.0f Predito=%.2f\n", 
-                   train_data->output[amostras-1][0], out[0]);
+            // exportar_datasets_csv(train_data);
+
+            // printf("FANN Monitor: Real=%.0f Predito=%.2f\n", 
+              // train_data->output[0][0], predicao_media);
+
+            if (abs(train_data->output[0][0] - predicao_media) > 0.5) {
+                // printf("[AUTO-AJUSTE] Refinando pesos...\n");
+                fann_train_on_data(ann, train_data, 1, 0, 0.001f); 
+            }
 
             fann_destroy_train(train_data);
           }
       } else {
-          printf("FANN: Sem dados suficientes (%d)\n", amostras);
+          // printf("FANN: Sem dados suficientes (%d)\n", amostras);
       }
       
-      printf("Treino FANN finalizado\n");
+      // printf("Treino FANN finalizado\n");
     }
 }
 
