@@ -55,6 +55,7 @@
 #include <sdvbs_common.h>
 #include <sha.h>
 #include <sorting.h>
+#include <math.h>
 
 // #include <bench.h>
 // #include <budget.h>
@@ -1084,28 +1085,27 @@ int _gettimeofday(struct timeval *tv, void *tz) {
 
 int _open(const char *name, int flags, int mode) { return -1; }
 
-void exportar_datasets_csv(struct fann_train_data *data) {
-    if (data == NULL) return;
+// void exportar_datasets_csv(struct fann_train_data *data) {
+//     if (data == NULL) return;
 
-    // printf("== EXPORTANDO DADOS ==\n");
-    // printf("BranchMiss_Norm,CacheMiss_Norm,Instr_Norm,Cycles_Norm,Label\n");
+//     // printf("== EXPORTANDO DADOS ==\n");
+//     // printf("BranchMiss_Norm,CacheMiss_Norm,Instr_Norm,Cycles_Norm,Label\n");
 
-    for(unsigned int i = 0; i < data->num_data; i++) {
-        printf("%lu,%lu,%lu,%lu,%lu\n",
-               data->input[i][0], // Branch Misses Normalizado
-               data->input[i][1], // Cache Misses Normalizado
-               data->input[i][2], // Instructions Normalizado
-               data->input[i][3], // CPU Cycles Normalizado
-               data->output[i][0] // Label (0 ou 1)
-        );
-        fflush(stdout);
-        //pequeno delay a cada 50 linhas para não saturar o buffer da UART se o dataset for gigante
-        if (i % 50 == 0) {
-             for(volatile int k=0; k<1000; k++); 
-        }
-    }
-    // printf("== FIM DOS DADOS ==\n");
-}
+//     // for(unsigned int i = 0; i < data->num_data; i++) {
+//     printf("%lu,%lu,%lu,%lu,%lu\n",
+//             data->input[i][0], // Branch Misses Normalizado
+//             data->input[i][1], // Cache Misses Normalizado
+//             data->input[i][2], // Instructions Normalizado
+//             data->input[i][3], // CPU Cycles Normalizado
+//             data->output[i][0]); // Label (0 ou 1)
+//     fflush(stdout);
+//     //pequeno delay a cada 50 linhas para não saturar o buffer da UART se o dataset for gigante
+//     if (i % 50 == 0) {
+//           for(volatile int k=0; k<1000; k++); 
+//     }
+//     // }
+//     // printf("== FIM DOS DADOS ==\n");
+// }
 
 
 //=======================================================================
@@ -1457,6 +1457,9 @@ void task_random(void* arg) {
 #define NORM_CYCLES      400000000.0f
 
 #define WINDOW_SIZE 5
+#define METRICS 4
+#define TOTAL_INPUTS (WINDOW_SIZE * METRICS)
+
 FANN_sample window_buffer[WINDOW_SIZE];
 int buffer_index = 0;
 int buffer_filled = 0;
@@ -1468,9 +1471,6 @@ void update_window(FANN_sample new_sample) {
 }
 
 void get_flattened_window(fann_type *input_vector) {
-    int current = buffer_index; 
-    
-    
     for (int i = 0; i < WINDOW_SIZE; i++) {
         int idx = (buffer_index + i) % WINDOW_SIZE; 
         
@@ -1482,108 +1482,99 @@ void get_flattened_window(fann_type *input_vector) {
 }
 
 struct fann_train_data* cria_dataset(unsigned int num_amostras) {
+    struct fann_train_data *data = fann_create_train(num_amostras, TOTAL_INPUTS, 1);
+    if (data == NULL) return NULL;
 
-  //cria dataset com o tamanho correto das amostras na fila
-  struct fann_train_data *data = fann_create_train(num_amostras, 4, 1);
-  if (data == NULL) {
-        // printf("[ERRO] Falha ao alocar dataset\n");
-        return NULL;
-    }
+    FANN_sample buffer;
+    unsigned int coletados = 0;
+    unsigned int processados = 0;
 
-  FANN_sample buffer;
-  unsigned int coletados = 0;
+    while(processados < num_amostras) {
+        if(xQueueReceive(xPmuQueue, &buffer, 10)) {
+            update_window(buffer);
+            processados++;
 
-  while(coletados < num_amostras) {
-    if(xQueueReceive(xPmuQueue, &buffer, portMAX_DELAY)) {
-        update_window(buffer);
-
-        if (buffer_filled) {
-            get_flattened_window(data->input[coletados]);
-            
-            data->output[coletados][0] = (fann_type)buffer.output;
-            
-            coletados++;
+            if (buffer_filled) {
+                get_flattened_window(data->input[coletados]);
+                data->output[coletados][0] = (fann_type)buffer.output;
+                coletados++;
+            }
+        } else {
+            break;
         }
     }
-}
-  return data;
+    
+    data->num_data = coletados;
+    if (coletados == 0) {
+        fann_destroy_train(data);
+        return NULL;
+    }
+    return data;
 }
 
 void task_fann(void *arg) {
-    const unsigned int num_input = 4;
+    const unsigned int num_input = TOTAL_INPUTS;
     const unsigned int num_output = 1;
     const unsigned int num_layers = 3;
     const unsigned int num_neurons_hidden = 10;
     const float desired_error = 0.001f;
-    const unsigned int max_epochs = 1;
+    const unsigned int max_epochs = 500000;
+    const unsigned int epochs_between_reports = 100;
     
     struct fann *ann = fann_create_standard(num_layers, num_input, num_neurons_hidden, num_output);
     fann_set_activation_function_hidden(ann, FANN_SIGMOID);
     fann_set_activation_function_output(ann, FANN_SIGMOID);
 
-    //carrega pesos treinados
     #ifdef NUM_PESOS
-    
-    //aloca estrutura temporaria para passar os pesos
     struct fann_connection *conexoes = (struct fann_connection *)malloc(NUM_PESOS * sizeof(struct fann_connection));
-    
     if (conexoes) {
-        //recupera a estrutura de conexoes da rede vazia
         fann_get_connection_array(ann, conexoes);
-        
-        //substitui os pesos aleatórios pelos pesos treinados
-        for(int i=0; i<NUM_PESOS; i++) {
-            conexoes[i].weight = (fann_type)pesos_iniciais[i];
+        if (NUM_PESOS == fann_get_total_connections(ann)) {
+             for(int i=0; i<NUM_PESOS; i++) conexoes[i].weight = (fann_type)pesos_iniciais[i];
+             fann_set_weight_array(ann, conexoes, NUM_PESOS);
+             printf("[FANN] Pesos carregados com sucesso!\n");
         }
-        
-        //aplica os pesos de volta na rede
-        fann_set_weight_array(ann, conexoes, NUM_PESOS);
         free(conexoes);
-        // printf("[FANN] Rede carregada e pronta!\n");
     }
     #endif
     
-    vTaskDelay(pdMS_TO_TICKS(1000)); //roda no final do ciclo
+    vTaskDelay(pdMS_TO_TICKS(1000));
     const TickType_t xPeriod = pdMS_TO_TICKS(2000);
     TickType_t xLastWakeTime = xTaskGetTickCount();
     
-    int i = 0;
+    int iteracao = 0;
     while(1) {
       vTaskDelayUntil(&xLastWakeTime, xPeriod);
       
-      // printf("rodando FANN (iteracao %d)\n", i++);
-      
-      //verifica quantos dados chegaram
       int amostras = uxQueueMessagesWaiting(xPmuQueue);
-      
-      if (amostras > 5) {
-          struct fann_train_data *train_data = cria_dataset(amostras);
+      if (amostras > 0) {
+          struct fann_train_data *train_data = cria_dataset(amostras,);
           
           if (train_data) {
             float predicao_media = 0.0f;
-            for(int k=0; k<train_data->num_data; k++) {
+            for(int k=0; k < train_data->num_data; k++) {
+                
+                if (k==0 && iteracao % 10 == 0) {
+                    printf("INPUT[0..3]: %.2f %.2f %.2f %.2f\n", 
+                           train_data->input[k][0], train_data->input[k][1], 
+                           train_data->input[k][2], train_data->input[k][3]);
+                }
+
                 fann_type *out = fann_run(ann, train_data->input[k]);
                 predicao_media += out[0];
             }
-            predicao_media /= train_data->num_data;
+            // predicao_media /= train_data->num_data;
 
-            // exportar_datasets_csv(train_data);
+            printf("FANN #%d: Real=%.0f Predito=%.2f\n", 
+                   iteracao++, train_data->output[0][0], predicao_media);
 
-            // printf("FANN Monitor: Real=%.0f Predito=%.2f\n", 
-              // train_data->output[0][0], predicao_media);
-
-            if (abs(train_data->output[0][0] - predicao_media) > 0.5) {
-                // printf("[AUTO-AJUSTE] Refinando pesos...\n");
-                fann_train_on_data(ann, train_data, 1, 0, 0.001f); 
+            if (fabsf(train_data->output[0][0] - predicao_media) > 0.5f) {
+                fann_train_on_data(ann, train_data, max_epochs, epochs_between_reports, desired_error); 
             }
 
             fann_destroy_train(train_data);
           }
-      } else {
-          // printf("FANN: Sem dados suficientes (%d)\n", amostras);
       }
-      
-      // printf("Treino FANN finalizado\n");
     }
 }
 
