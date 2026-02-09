@@ -10,6 +10,7 @@
 #include <pmu.h>
 #include <stdio.h>
 #include <regulator.h>
+#include <arch/generic_timer.h>
 
 long int hypercall(unsigned long id)
 {
@@ -67,7 +68,19 @@ long int hypercall(unsigned long id)
             break;
 
         case HC_SEC_MONITOR:
-            ret = PMU_secure_monitor();
+            cpuid_t my_id = cpu()->id;
+            
+            if (my_id < PMU_MAX_CPUS) {
+                // Ler os dados apenas desta CPU
+                vcpu_writereg(cpu()->vcpu, 0, g_pmu_data[my_id].branch_misses);
+                vcpu_writereg(cpu()->vcpu, 1, g_pmu_data[my_id].cache_misses);
+                vcpu_writereg(cpu()->vcpu, 2, g_pmu_data[my_id].instuctions);
+                vcpu_writereg(cpu()->vcpu, 3, g_pmu_data[my_id].cpu_cycles);
+                
+                ret = g_pmu_data[my_id].branch_misses;
+            } else {
+                ret = 0; // Erro de indice
+            }
             break;
 
         default:

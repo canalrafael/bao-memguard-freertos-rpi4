@@ -12,6 +12,7 @@
 #include <platform.h>
 #include <vmm.h>
 #include <regulator.h>
+#include <arch/generic_timer.h>
 
 #define DMA_BASE 0xFE007000
 #define DMA_CHANNEL_0 (DMA_BASE + 0x000)
@@ -134,6 +135,7 @@ void init(cpuid_t cpu_id, paddr_t load_addr)
     }
 
     interrupts_init();
+    timer_arch_init();
     vmm_init();
 
     /* Should never reach here */

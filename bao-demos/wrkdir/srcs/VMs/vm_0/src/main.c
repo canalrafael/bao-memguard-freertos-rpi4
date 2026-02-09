@@ -1160,9 +1160,9 @@ void bao_get_pmu_data(PMU_data *data) {
     const unsigned long full_id = SMCC64_FID_VND_HYP_SRVC | HC_SEC_MONITOR;
   
     register unsigned long r0 asm("x0") = full_id;
-    register unsigned long r1 asm("x1") = 0;
-    register unsigned long r2 asm("x2") = 0;
-    register unsigned long r3 asm("x3") = 0;
+    register unsigned long r2 asm("x2");
+    register unsigned long r1 asm("x1");
+    register unsigned long r3 asm("x3");
   
   // Executa a Hypercall e diz ao compilador que x0-x3 terão as saídas
   asm volatile(
@@ -1176,36 +1176,30 @@ void bao_get_pmu_data(PMU_data *data) {
     data->cache_misses = r1;
     data->instructions = r2;
     data->cpu_cycles = r3;
-  }
+}
 
 void task_monitor(void *arg) {
   const TickType_t xPeriod = pdMS_TO_TICKS(250);
   TickType_t xLastWakeTime = xTaskGetTickCount();
   
   FANN_sample sample;
-  
-    // printf("[MONITOR] Configurando PMU via Hypervisor...\n");
 
-    //C0 = Branch Misses
-    HC_PMU_config_counter(0, MAX_INT, MAX_INT, ARMV8_EVENT_BR_MIS_PRED, 0);
-    //C1 = Cache Misses
-    HC_PMU_config_counter(1, MAX_INT, MAX_INT, ARMV8_EVENT_L1D_CACHE_REFILL, 0);
-    //C2 = Instructions
-    HC_PMU_config_counter(2, MAX_INT, MAX_INT, ARMV8_EVENT_INST_RETIRED, 0);
-    //C3 = Cycles
-    HC_PMU_config_counter(3, MAX_INT, MAX_INT, ARMV8_EVENT_CPU_CYCLES, 0);
+  while(1) {
+      vTaskDelayUntil(&xLastWakeTime, xPeriod);
 
-    //habilita contadores inicialmente
-    for(int i=0; i<4; i++) HC_PMU_start_counter(i);
+      bao_get_pmu_data(&sample.data);
+      //envia os dados coletados para a fila
+      sample.output = g_label_atual;
+      
+      xQueueSend(xPmuQueue, &sample.data, 0);
 
-    while(1) {
-        vTaskDelayUntil(&xLastWakeTime, xPeriod);
-
-        bao_get_pmu_data(&sample.data);
-        //envia os dados coletados para a fila
-        sample.output = g_label_atual;
-        
-        xQueueSend(xPmuQueue, &sample, 0);
+      // print para ver se ta funcionando
+      printf("P: %lu | I: %lu | C: %lu | B: %lu | L: %.1f\n",
+              sample.data.cpu_cycles,
+              sample.data.instructions,
+              sample.data.cache_misses,
+              sample.data.branch_misses,
+              sample.output);
     }
   }
   
@@ -1548,7 +1542,7 @@ void task_fann(void *arg) {
       
       int amostras = uxQueueMessagesWaiting(xPmuQueue);
       if (amostras > 0) {
-          struct fann_train_data *train_data = cria_dataset(amostras,);
+          struct fann_train_data *train_data = cria_dataset(amostras);
           
           if (train_data) {
             float predicao_media = 0.0f;
@@ -1680,14 +1674,14 @@ int main(void) {
   //   NULL
   // );
   
-  xTaskCreate(
-    task_fann,
-    "taskFANN",
-    8192,
-    NULL,
-    OTHER_TASK_PRIORITY,
-    NULL
-  );
+  // xTaskCreate(
+  //   task_fann,
+  //   "taskFANN",
+  //   8192,
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
 
  /*
   for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {

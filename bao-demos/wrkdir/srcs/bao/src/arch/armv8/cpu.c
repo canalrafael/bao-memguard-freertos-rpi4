@@ -15,6 +15,8 @@ void cpu_arch_init(cpuid_t cpuid, paddr_t load_addr)
 {   
     cpu()->arch.mpidr = sysreg_mpidr_el1_read();
     cpu_arch_profile_init(cpuid, load_addr);
+
+    //timer_arch_init();
 }
 
 unsigned long cpu_id_to_mpidr(cpuid_t id)

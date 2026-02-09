@@ -8,7 +8,28 @@
 
 #include <bao.h>
 
+// definicoes para o timer.c
+
+#define GENERIC_TIMER_ENABLE    (0x1)   //bit 0
+#define GENERIC_TIMER_IMASK     (0x2)   //bit 1
+#define GENERIC_TIMER_ISTATUS   (0x4)   //bit 2
+
 #define GENERIC_TIMER_CNTCTL_CNTCR_EN   (0x1)
+
+#define PMU_MAX_CPUS 4
+
+// varieaveis globais para armazenar os dados coletados da PMU, para serem enviados para a VM
+typedef struct {
+    uint64_t cpu_cycles;
+    uint64_t instuctions;
+    uint64_t branch_misses;
+    uint64_t cache_misses;
+} pmu_data_t;
+
+//array global para armazenar os dados da PMU de cada CPU
+extern volatile pmu_data_t g_pmu_data[PMU_MAX_CPUS];
+
+void timer_arch_init(void);
 
 struct generic_timer_cntctrl  {
     uint32_t CNTCR;
