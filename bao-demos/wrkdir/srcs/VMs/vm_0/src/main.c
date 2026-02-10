@@ -1172,10 +1172,10 @@ void bao_get_pmu_data(PMU_data *data) {
     : "memory"
   ); 
       
-    data->branch_misses = r0;
+    data->cpu_cycles = r0;
     data->cache_misses = r1;
     data->instructions = r2;
-    data->cpu_cycles = r3;
+    data->branch_misses = r3;
 }
 
 void task_monitor(void *arg) {
@@ -1191,10 +1191,10 @@ void task_monitor(void *arg) {
       //envia os dados coletados para a fila
       sample.output = g_label_atual;
       
-      xQueueSend(xPmuQueue, &sample.data, 0);
+      xQueueSend(xPmuQueue, &sample, 0);
 
       // print para ver se ta funcionando
-      printf("P: %lu | I: %lu | C: %lu | B: %lu | L: %.1f\n",
+      printf("CPU: %lu | INST: %lu | CACHEMIS: %lu | BRANCHMIS: %lu | OUT: %.1f\n",
               sample.data.cpu_cycles,
               sample.data.instructions,
               sample.data.cache_misses,

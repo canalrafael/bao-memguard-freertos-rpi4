@@ -70,19 +70,17 @@ long int hypercall(unsigned long id)
         case HC_SEC_MONITOR:
             cpuid_t my_id = cpu()->id;
             
-            if (my_id < PMU_MAX_CPUS) {
-                // Ler os dados apenas desta CPU
-                vcpu_writereg(cpu()->vcpu, 0, g_pmu_data[my_id].branch_misses);
-                vcpu_writereg(cpu()->vcpu, 1, g_pmu_data[my_id].cache_misses);
-                vcpu_writereg(cpu()->vcpu, 2, g_pmu_data[my_id].instuctions);
-                vcpu_writereg(cpu()->vcpu, 3, g_pmu_data[my_id].cpu_cycles);
-                
-                ret = g_pmu_data[my_id].branch_misses;
-            } else {
-                ret = 0; // Erro de indice
+            if (my_id >= PMU_MAX_CPUS || g_pmu_data[my_id].cpu_cycles == 0) {
+                my_id = 0;
             }
-            break;
 
+            vcpu_writereg(cpu()->vcpu, 0, g_pmu_data[my_id].cpu_cycles);
+            vcpu_writereg(cpu()->vcpu, 1, g_pmu_data[my_id].cache_misses);
+            vcpu_writereg(cpu()->vcpu, 2, g_pmu_data[my_id].instuctions);
+            vcpu_writereg(cpu()->vcpu, 3, g_pmu_data[my_id].branch_misses);
+            
+            ret = g_pmu_data[my_id].cpu_cycles;
+            break;
         default:
             WARNING("Unknown hypercall id %d", id);
     }

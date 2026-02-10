@@ -38,24 +38,41 @@ static uint64_t us_to_ticks(uint64_t us) {
 static void pmu_init_registers(void) {
     uint64_t val;
 
-    // 1. Configurar o Tipo de Evento para cada Contador
-    // Counter 0 -> Instructions
-    MSR(pmevtyper0_el0, PMU_EVT_INST_RETIRED);
-    // Counter 1 -> Cache Misses
-    MSR(pmevtyper1_el0, PMU_EVT_L1D_CACHE_REFILL);
-    // Counter 2 -> Branch Misses
-    MSR(pmevtyper2_el0, PMU_EVT_BR_MIS_PRED);
+    //desabilita o PMU globalmente (PMCR.E = 0)
+    MRS(val, pmcr_el0);
+    val &= ~(1 << 0);
+    MSR(pmcr_el0, val);
 
-    // 2. Habilitar os Contadores (Incluindo o de Ciclos - Bit 31)
+    //desabilita explicitamente os contadores individuais (Crucial para configurar Tipos)
+    val = PMU_ENABLE_ALL;
+    MSR(pmcntenclr_el0, val); 
+
+    //configura o filtro de ciclos (0 = conta em todos os niveis de excecao permitidos)
+    asm volatile("msr pmccfiltr_el0, %0" :: "r" (0));
+
+    //configura contador de branch misses (Contador 0)
+    asm volatile("msr pmselr_el0, %0" :: "r" (0));
+    ISB();
+    asm volatile("msr pmxevtyper_el0, %0" :: "r" (PMU_EVT_BR_MIS_PRED));
+
+    //configura contador de cache misses (Contador 1)
+    asm volatile("msr pmselr_el0, %0" :: "r" (1));
+    ISB();
+    asm volatile("msr pmxevtyper_el0, %0" :: "r" (PMU_EVT_L1D_CACHE_REFILL));
+
+    //configura contador de instrucoes (Contador 3)
+    //usando o contador 3 porque o 2 esta sendo usado para os ciclos
+    asm volatile("msr pmselr_el0, %0" :: "r" (3));
+    ISB();
+    asm volatile("msr pmxevtyper_el0, %0" :: "r" (PMU_EVT_INST_RETIRED));
+
+    //habilita os contadores
     val = PMU_ENABLE_ALL;
     MSR(pmcntenset_el0, val);
 
-    // 3. Resetar e Habilitar o PMU Globalmente (PMCR_EL0)
-    // Bit 0 (E): Enable
-    // Bit 1 (P): Reset Event Counters
-    // Bit 2 (C): Reset Cycle Counter
+    //reset e enable global
     MRS(val, pmcr_el0);
-    val |= (1 << 0) | (1 << 1) | (1 << 2); 
+    val |= (1 << 0) | (1 << 1) | (1 << 2); // Enable, Reset Counters, Reset Cycle
     MSR(pmcr_el0, val);
 }
 
@@ -64,15 +81,17 @@ static inline void pmu_collect_data(void) {
     uint64_t val;
 
     cpuid_t id = cpu()->id;
+    if (id >= PMU_MAX_CPUS) return;
+
     //cpu cycles
     MRS(val, pmccntr_el0); // sysreg_pmccntr_el0_read
     g_pmu_data[id].cpu_cycles = val;
 
-    //instrucoes
+    //branch misses
     asm volatile("msr pmselr_el0, %0" :: "r" (0));
     ISB();
     MRS(val, pmxevcntr_el0);
-    g_pmu_data[id].instuctions = val;
+    g_pmu_data[id].branch_misses = val;
 
     //cache misses
     asm volatile("msr pmselr_el0, %0" :: "r" (1));
@@ -80,11 +99,20 @@ static inline void pmu_collect_data(void) {
     MRS(val, pmxevcntr_el0);
     g_pmu_data[id].cache_misses = val;
 
-    //branch misses
-    asm volatile("msr pmselr_el0, %0" :: "r" (2));
+    //instrucoes
+    asm volatile("msr pmselr_el0, %0" :: "r" (3));
     ISB();
     MRS(val, pmxevcntr_el0);
-    g_pmu_data[id].branch_misses = val;
+    g_pmu_data[id].instuctions = val;
+
+    //reseta os contadores para a proxima coleta
+    uint64_t pmcr;
+    MRS(pmcr, pmcr_el0);
+
+    //mantem o bit 0 (enable) e seta os bits de reset (Eventos e Ciclos)
+    pmcr |= (1 << 2) | (1 << 1); 
+    
+    MSR(pmcr_el0, pmcr);
 }
 
 void timer_handler(irqid_t irq_id) {
@@ -126,4 +154,3 @@ void timer_arch_init(void) {
     interrupts_reserve(CNTHP_IRQ, timer_handler);
     interrupts_arch_enable(CNTHP_IRQ, true);
 }
-
