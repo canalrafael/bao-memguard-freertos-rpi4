@@ -1107,6 +1107,137 @@ int _open(const char *name, int flags, int mode) { return -1; }
 //     // printf("== FIM DOS DADOS ==\n");
 // }
 
+//=======================================================================
+//benchmarks
+//=======================================================================
+
+
+//bandwidth benchmark
+
+#define NUM_INTS (BW_DEFAULT_ALLOC_SIZE / sizeof(int))
+#define CACHE_LINE_INTS (CACHE_LINE_SIZE / sizeof(int)) // 16 indices = 64 bytes
+
+typedef struct {
+    int *mem_ptr;
+    int64_t sum;
+} bandwidth_context_fann_t;
+
+// Array global
+int g_bw_memory[NUM_INTS] __attribute__((aligned(CACHE_LINE_SIZE)));
+
+void bandwidth_wrapper_fann(void *context) {
+  bandwidth_context_fann_t *c = (bandwidth_context_fann_t *)context;
+
+  c->sum += bench_read(c->mem_ptr);
+  c->sum += bench_write(c->mem_ptr);
+
+  return;
+}
+
+//disparity benchmark
+
+void disparity_wrapper_fann() {
+  I2D *imleft = (I2D *)img1;
+  I2D *imright = (I2D *)img2;
+  int WIN_SZ = 8, SHIFT = 64;
+  char signature[2] = {66, 77};
+  short int bits_per_pixel = 24;
+
+  // Check if images are valid BMP images.
+  if (imleft->height <= 0 || imleft->width <= 0 || signature[0] != 'B' ||
+      signature[1] != 'M' || (bits_per_pixel != 24 && bits_per_pixel != 8)) {
+    return;
+  }
+
+  if (imright->height <= 0 || imright->width <= 0 || signature[0] != 'B' ||
+      signature[1] != 'M' || (bits_per_pixel != 24 && bits_per_pixel != 8)) {
+    return;
+  }
+
+  I2D *retDisparity = getDisparity(imleft, imright, WIN_SZ, SHIFT);
+  return;
+}
+
+//qsort benchmark
+
+void qsort_wrapper_fann() {
+  struct my3DVertexStruct array[QSORT_MAXARRAY];
+
+  int numRows = sizeof(qsort_input_data) / sizeof(qsort_input_data[0]);
+  int count = 0;
+
+  // Process the array instead of reading from a file
+  for (int i = 0; i < numRows && count < QSORT_MAXARRAY; i++) {
+    array[count].x = qsort_input_data[i][0];
+    array[count].y = qsort_input_data[i][1];
+    array[count].z = qsort_input_data[i][2];
+    array[count].distance = (array[count].x * array[count].x) +
+                            (array[count].y * array[count].y) +
+                            (array[count].z * array[count].z);
+    count++;
+  }
+
+  qsort(array, count, sizeof(struct my3DVertexStruct), qsort_compare);
+  return;
+}
+
+//dijkstra benchmark
+
+void dijkstra_wrapper_fann() {
+  int i, j, k;
+
+  for (i = 0, j = NUM_NODES / 2; i < 100; i++, j++) {
+    j = j % NUM_NODES;
+    dijkstra(i, j);
+  }
+
+  return;
+}
+
+//sha benchmark
+
+void sha_wrapper_fann() {
+  SHA_INFO sha_info;
+  sha_stream(&sha_info);
+  return;
+}
+
+//fft benchmark
+
+void fft_wrapper_fann() {
+  uint32_t A_re[NUM_POINTS];
+  uint32_t A_im[NUM_POINTS];
+  uint32_t W_re[NUM_POINTS / 2];
+  uint32_t W_im[NUM_POINTS / 2];
+
+  int n = NUM_POINTS;
+  init_array(n, A_re, A_im);
+  compute_W(n, W_re, W_im);
+  fft(n, A_re, A_im, W_re, W_im);
+  permute_bitrev(n, A_re, A_im);
+
+  return;
+}
+
+//sorting benchmark
+
+void sorting_wrapper_fann() {
+  int orig[MAX_SORTING], copy[MAX_SORTING], i;
+
+  void *function[NUM_SORT] = {&selection_sort, &quick_sort,     &shell_sort,
+                              &stdlib_qsort,   &insertion_sort, &bubble_sort};
+  char *sort_name[NUM_SORT] = {"Selection sort", "Quicksort",
+                               "Shellsort",      "Qsort",
+                               "Insertion sort", "Bubble sort"};
+
+  fill_array(orig, MAX_SORTING);
+
+  for (i = 0; i < NUM_SORT; i++) {
+    execute_sort(orig, copy, MAX_SORTING, sort_name[i], function[i]);
+  }
+
+  return;
+}
 
 //=======================================================================
 //tasks
@@ -1184,6 +1315,7 @@ void task_monitor(void *arg) {
   
   FANN_sample sample;
   printf("CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL\n");
+  fflush(stdout);
 
   while(1) {
       vTaskDelayUntil(&xLastWakeTime, xPeriod);
@@ -1203,40 +1335,150 @@ void task_monitor(void *arg) {
               sample.output);
     }
   }
-  
-  void task_A(void* arg) {
-    vTaskDelay(pdMS_TO_TICKS(1000)); 
-    const TickType_t xPeriod = pdMS_TO_TICKS(6000); 
-    TickType_t xLastWakeTime = xTaskGetTickCount();
-    
-    while(1) {
-    vTaskDelayUntil(&xLastWakeTime, xPeriod);
-    
-    g_label_atual = 0.0f; //normal
-    // printf("rodando task A por 1s\n");
-    // fflush(stdout);
-    
-    TickType_t end = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
-    volatile int x = 0;
-    while(xTaskGetTickCount() < end) { x++; } //busy wait
-  }
-}
 
-void task_B(void* arg) {
-  vTaskDelay(pdMS_TO_TICKS(2000)); //delay inicial
-  const TickType_t xPeriod = pdMS_TO_TICKS(6000); 
+void task_bandwidth(void *arg) {
+  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
   TickType_t xLastWakeTime = xTaskGetTickCount();
+  
+  bandwidth_context_fann_t ctx;
+  ctx.mem_ptr = g_bw_memory;
+  ctx.sum = 0;
+
+  printf("[BENCHMARK] Task Bandwidth iniciada (4MB Alocados)...\n");
+  fflush(stdout);
 
   while(1) {
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
-
-    g_label_atual = 0.0f; //normal
-    // printf("rodando task B por 1s\n");
-    // fflush(stdout);
     
-    TickType_t end = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
-    volatile int x = 0;
-    while(xTaskGetTickCount() < end) { x++; }
+    g_label_atual = 0.0f;
+    
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    
+    while (xTaskGetTickCount() < end_bench) {
+      bandwidth_wrapper_fann(&ctx);
+      // Evita otimizacao do compilador
+      asm volatile("" : : "r"(ctx.sum) : "memory");
+    }
+  }
+}
+
+void task_disparity(void *arg) {
+  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  printf("[BENCHMARK] Task Disparity iniciada...\n");
+  fflush(stdout);
+
+  while(1) {
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+    
+    g_label_atual = 0.0f;
+    
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    
+    while (xTaskGetTickCount() < end_bench) {
+      disparity_wrapper_fann();
+    }
+  }
+}
+
+void task_qsort(void *arg) {
+  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  printf("[BENCHMARK] Task Qsort iniciada...\n");
+  fflush(stdout);
+
+  while(1) {
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+    
+    g_label_atual = 0.0f;
+    
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    
+    while (xTaskGetTickCount() < end_bench) {
+      qsort_wrapper_fann();
+    }
+  }
+}
+
+void task_dijkstra(void *arg) {
+  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  printf("[BENCHMARK] Task Dijkstra iniciada...\n");
+  fflush(stdout);
+
+  while(1) {
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+    
+    g_label_atual = 0.0f;
+    
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    
+    while (xTaskGetTickCount() < end_bench) {
+      dijkstra_wrapper_fann();
+    }
+  }
+}
+
+void task_sha(void *arg) {
+  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  printf("[BENCHMARK] Task SHA iniciada...\n");
+  fflush(stdout);
+
+  while(1) {
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+    
+    g_label_atual = 0.0f;
+    
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    
+    while (xTaskGetTickCount() < end_bench) {
+      sha_wrapper_fann();
+    }
+  }
+}
+
+void task_fft(void *arg) {
+  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  printf("[BENCHMARK] Task FFT iniciada...\n");
+  fflush(stdout);
+
+  while(1) {
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+    
+    g_label_atual = 0.0f;
+    
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    
+    while (xTaskGetTickCount() < end_bench) {
+      fft_wrapper_fann();
+    }
+  }
+}
+
+void task_sorting(void *arg) {
+  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  printf("[BENCHMARK] Task Sorting iniciada...\n");
+  fflush(stdout);
+
+  while(1) {
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+    
+    g_label_atual = 0.0f;
+    
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    
+    while (xTaskGetTickCount() < end_bench) {
+      sorting_wrapper_fann();
+    }
   }
 }
 
@@ -1258,36 +1500,6 @@ void task_benchmark(void* arg) {
     if (info != NULL) info->function.pointer(info->function.context);
 
     // printf("Benchmarks finalizados\n");
-    // fflush(stdout);
-  }
-}
-
-void task_attacker(void *arg) {
-  vTaskDelay(pdMS_TO_TICKS(3000));
-  const TickType_t xPeriod = pdMS_TO_TICKS(4000);
-  TickType_t xLastWakeTime = xTaskGetTickCount();
-
-  const int ARR_SIZE = 64 * 1024; 
-  volatile int *arr = (int*) malloc(ARR_SIZE * sizeof(int));
-  if(!arr) { /* printf("Erro Malloc Attacker\n"); */ vTaskDelete(NULL); }
-  
-  srand(42);
-
-  while(1) {
-    vTaskDelayUntil(&xLastWakeTime, xPeriod);
-    
-    g_label_atual = 1.0f; //ATAQUE
-    // printf("rodando ataque\n");
-    // fflush(stdout);
-    
-    TickType_t end = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
-    
-    while(xTaskGetTickCount() < end) {
-        int idx = rand() % ARR_SIZE;
-        arr[idx]++; 
-        if((rand() % 100) > 50) asm("nop"); 
-    }
-    // printf("Ataque finalizado\n");
     // fflush(stdout);
   }
 }
@@ -1482,97 +1694,107 @@ void task_meltdown(void *arg) {
     }
 }
 
-// // //ARMAGEDDON
+//ARMAGEDDON
 
-// //area de monitoramento compartilhada para o ataque flush+reload
-// uint8_t shared_probe_data[4096] __attribute__((aligned(4096))); 
-// volatile uint8_t *target_addr = &shared_probe_data[2048];
+//area de monitoramento compartilhada para o ataque flush+reload
+uint8_t shared_probe_data[4096] __attribute__((aligned(4096))); 
+volatile uint8_t *target_addr = &shared_probe_data[2048];
 
-// //primitiva de flush
-// inline void arm_flush(void *addr) {
-//     asm volatile("dc civac, %0" : : "r"(addr) : "memory");
-//     asm volatile("dsb sy"); //garante que o flush terminou
-// }
+//primitiva de flush
+__attribute__((always_inline)) static inline void arm_flush(void *addr) {
+    asm volatile("dc civac, %0" : : "r"(addr) : "memory");
+    asm volatile("dsb sy \n isb"); //garante que o flush terminou
+}
 
-// //primitiva de medição de tempo usando o contador de ciclos virtual (cntvct_el0)
-// inline uint64_t arm_measure_access(void *addr) {
-//     uint64_t start, end;
-//     asm volatile("isb \n mrs %0, cntvct_el0" : "=r"(start));
-//     volatile uint8_t junk = *(volatile uint8_t *)addr;
-//     asm volatile("isb \n mrs %0, cntvct_el0" : "=r"(end));
-//     return end - start;
-// }
-
-// uint64_t calibrate_threshold() {
-//     uint64_t hit_time = 0, miss_time = 0;
-//     int samples = 1000;
-
-//     for(int i=0; i<samples; i++) {
-//         volatile uint8_t reload = *target_addr;
-//         hit_time += arm_measure_access((void*)target_addr);
-//     }
-//     hit_time /= samples;
-
-//     for(int i=0; i<samples; i++) {
-//         arm_flush((void*)target_addr);
-//         miss_time += arm_measure_access((void*)target_addr);
-//     }
-//     miss_time /= samples;
-
-//     uint64_t threshold = (hit_time + miss_time) / 2;
-//     printf("[ARMAGEDDON] Calibração: Hit=%lu, Miss=%lu, Threshold=%lu\n", hit_time, miss_time, threshold);
-//     return threshold;
-// }
-
-// void simulate_victim_access() {
-//     volatile uint8_t dummy = *target_addr;
-// }
-
-// void task_flush_reload(void *arg) {
-//     const TickType_t xPeriod = pdMS_TO_TICKS(2000); 
-//     TickType_t xLastWakeTime = xTaskGetTickCount();
+//primitiva de medição de tempo usando o contador de ciclos virtual (cntvct_el0)
+__attribute__((always_inline)) static inline uint64_t arm_measure_access(void *addr) {
+    uint64_t start, end;
+    asm volatile("isb \n mrs %0, cntvct_el0" : "=r"(start));
     
-//     *target_addr = 0xAA;
+    volatile uint8_t junk = *(volatile uint8_t *)addr;
     
-//     vTaskDelay(pdMS_TO_TICKS(100));
-//     uint64_t threshold = calibrate_threshold();
+    //o dsb sy forca a CPU a esperar o dado ser carregado da memoria
+    asm volatile("dsb sy \n isb \n mrs %0, cntvct_el0" : "=r"(end) : : "memory");
     
-//     int hits = 0;
-//     int probes = 0;
+    //evita otimizacao do compilador
+    asm volatile("" : : "r"(junk) : "memory");
+    
+    return end - start;
+}
 
-//     printf("[ARMAGEDDON] Iniciando Monitoramento Flush+Reload...\n");
+uint64_t calibrate_threshold() {
+    uint64_t hit_time = 0, miss_time = 0;
+    int samples = 1000;
 
-//     while(1) {
-//         vTaskDelayUntil(&xLastWakeTime, xPeriod);
-        
-//         g_label_atual = 1.0f; 
-        
-//         TickType_t end_attack = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
-        
-//         hits = 0;
-//         probes = 0;
+    for(int i=0; i<samples; i++) {
+        volatile uint8_t reload = *target_addr;
+        asm volatile("" : : "r"(reload) : "memory"); //evita otimizacao
+        hit_time += arm_measure_access((void*)target_addr);
+    }
+    hit_time /= samples;
 
-//         while(xTaskGetTickCount() < end_attack) {
-//             arm_flush((void*)target_addr);
+    for(int i=0; i<samples; i++) {
+        arm_flush((void*)target_addr);
+        miss_time += arm_measure_access((void*)target_addr);
+    }
+    miss_time /= samples;
+
+    uint64_t threshold = (hit_time + miss_time) / 2;
+    printf("[ARMAGEDDON] Calibração: Hit=%lu, Miss=%lu, Threshold=%lu\n", hit_time, miss_time, threshold);
+    return threshold;
+}
+
+void simulate_victim_access() {
+    volatile uint8_t dummy = *target_addr;
+    asm volatile("" : : "r"(dummy) : "memory"); //forca a leitura real
+}
+
+void task_flush_reload(void *arg) {
+    const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    
+    *target_addr = 0xAA;
+    
+    vTaskDelay(pdMS_TO_TICKS(100));
+    uint64_t threshold = calibrate_threshold();
+    
+    int hits = 0;
+    int probes = 0;
+
+    printf("[ARMAGEDDON] Iniciando Monitoramento Flush+Reload...\n");
+
+    while(1) {
+        vTaskDelayUntil(&xLastWakeTime, xPeriod);
+        
+        g_label_atual = 1.0f; 
+        
+        TickType_t end_attack = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+        
+        hits = 0;
+        probes = 0;
+
+        while(xTaskGetTickCount() < end_attack) {
+            arm_flush((void*)target_addr);
             
-//             if ((rand() % 100) < 30) { // 30% de chance da vítima acessar
-//                 simulate_victim_access();
-//             }
+            //30% de chance da vítima acessar, usando matematica simples em vez de rand()
+            if ((probes % 3) == 0) { 
+                simulate_victim_access();
+            }
 
-//             uint64_t time = arm_measure_access((void*)target_addr);
-//             probes++;
+            uint64_t time = arm_measure_access((void*)target_addr);
+            probes++;
 
-//             if (time < threshold) {
-//                 hits++; //alguem acessou.
-//             }
-//         }
+            if (time < threshold) {
+                hits++; //alguem acessou.
+            }
+        }
 
-//         // printf("[ARMAGEDDON] Stats: %d Hits em %d Probes (Ratio: %.2f)\n", hits, probes, (float)hits/probes);
+        // printf("[ARMAGEDDON] Stats: %d Hits em %d Probes (Ratio: %.2f)\n", hits, probes, (float)hits/probes);
         
-//         // Período de descanso (Label 0) para o benchmark
-//         g_label_atual = 0.0f;
-//     }
-// }
+        // Período de descanso (Label 0) para o benchmark
+        g_label_atual = 0.0f;
+    }
+}
 
 //ZOMBIELOAD
 
@@ -1779,7 +2001,7 @@ void task_fann(void *arg) {
         for (int i=0; i<NUM_PESOS; i++) conexoes[i].weight = (fann_type)pesos_iniciais[i];
 
         fann_set_weight_array(ann, conexoes, NUM_PESOS);
-        printf("[FANN] Pesos carregados com sucesso!\n")
+        printf("[FANN] Pesos carregados com sucesso!\n");
       }
       free(conexoes);
     }
@@ -1831,9 +2053,9 @@ void task_fann(void *arg) {
 }
 
 int main(void) {
-  initialize_all_benchmark_contexts();
-  benchmark = benchmark_create();
-  benchmark_init(benchmark);
+  // initialize_all_benchmark_contexts();
+  // benchmark = benchmark_create();
+  // benchmark_init(benchmark);
 
   print_vm_header();
   
@@ -1869,9 +2091,11 @@ int main(void) {
     NULL
   );
 
+  //benchmarks
+
   // xTaskCreate(
-  //   task_A,
-  //   "taskA",
+  //   task_bandwidth,
+  //   "taskBandwidth",
   //   TASK_STACK_SIZE,
   //   NULL,
   //   OTHER_TASK_PRIORITY,
@@ -1879,15 +2103,62 @@ int main(void) {
   // );
 
   // xTaskCreate(
-  //   task_B,
-  //   "taskB",
+  //   task_disparity,
+  //   "taskDisparity",
   //   TASK_STACK_SIZE,
   //   NULL,
   //   OTHER_TASK_PRIORITY,
   //   NULL
   // );
+
+  // xTaskCreate(
+  //   task_qsort,
+  //   "taskQsort",
+  //   TASK_STACK_SIZE,
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
+
+  // xTaskCreate(
+  //   task_dijkstra,
+  //   "taskDijkstra",
+  //   TASK_STACK_SIZE,
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
+
+  // xTaskCreate(
+  //   task_sha,
+  //   "taskSHA",
+  //   TASK_STACK_SIZE,
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
+
+  // xTaskCreate(
+  //   task_fft,
+  //   "taskFFT",
+  //   TASK_STACK_SIZE,
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
+
+  // xTaskCreate(
+  //   task_sorting,
+  //   "taskSorting",
+  //   TASK_STACK_SIZE,
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
+
+
   
-  info_t *info_bench = benchmark_add_info(benchmark, VM_NUM, 2, PERIOD_MS_TASK_ANY);
+  // info_t *info_bench = benchmark_add_info(benchmark, VM_NUM, 2, PERIOD_MS_TASK_ANY);
 
   //inicializa array2 para o ataque spectre
   for (int i = 0; i < (int)sizeof(array2); i++) {
@@ -1903,6 +2174,7 @@ int main(void) {
   //   NULL
   // );
 
+  //ataques:
 
   // xTaskCreate(
   //   task_spectre,
@@ -1922,42 +2194,26 @@ int main(void) {
   //   NULL
   // );
 
-  xTaskCreate(
-    task_zombieload,
-    "taskZombieload",
-    TASK_STACK_SIZE,
-    NULL,
-    OTHER_TASK_PRIORITY,
-    NULL
-  );
-
   // xTaskCreate(
-  //   task_flush_reload,
-  //   "taskFlushReload",
+  //   task_zombieload,
+  //   "taskZombieload",
   //   TASK_STACK_SIZE,
   //   NULL,
   //   OTHER_TASK_PRIORITY,
   //   NULL
   // );
 
-  // xTaskCreate(
-  //   task_benchmark,
-  //   "taskBenchmark",
-  //   TASK_STACK_SIZE,
-  //   info_bench,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
+  xTaskCreate(
+    task_flush_reload,
+    "taskFlushReload",
+    TASK_STACK_SIZE,
+    NULL,
+    OTHER_TASK_PRIORITY,
+    NULL
+  );
 
-  // xTaskCreate(
-  //   task_attacker,
-  //   "taskAttacker",
-  //   TASK_STACK_SIZE,
-  //   info_bench,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-  
+  //fann:
+
   // xTaskCreate(
   //   task_fann,
   //   "taskFANN",

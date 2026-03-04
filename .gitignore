@@ -12,3 +12,5 @@ benchmarks/logs/cleaned_logs/bao-*.csv
 **/GPATH
 **/GRTAGS
 **/GTAGS
+
+data
