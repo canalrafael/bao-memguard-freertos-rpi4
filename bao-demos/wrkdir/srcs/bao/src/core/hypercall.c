@@ -78,6 +78,8 @@ long int hypercall(unsigned long id)
             vcpu_writereg(cpu()->vcpu, 1, g_pmu_data[my_id].cache_misses);
             vcpu_writereg(cpu()->vcpu, 2, g_pmu_data[my_id].instuctions);
             vcpu_writereg(cpu()->vcpu, 3, g_pmu_data[my_id].branch_misses);
+            vcpu_writereg(cpu()->vcpu, 4, g_pmu_data[my_id].timestamp);
+            
             
             ret = g_pmu_data[my_id].cpu_cycles;
             break;

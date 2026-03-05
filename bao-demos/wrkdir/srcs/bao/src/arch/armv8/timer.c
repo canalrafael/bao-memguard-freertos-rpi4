@@ -105,6 +105,10 @@ static inline void pmu_collect_data(void) {
     MRS(val, pmxevcntr_el0);
     g_pmu_data[id].instuctions = val;
 
+    //timestamp
+    MRS(val, cntpct_el0); 
+    g_pmu_data[id].timestamp = val;
+
     //reseta os contadores para a proxima coleta
     uint64_t pmcr;
     MRS(pmcr, pmcr_el0);

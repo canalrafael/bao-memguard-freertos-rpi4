@@ -1254,6 +1254,7 @@ void sorting_wrapper_fann() {
 #define ARMV8_EVENT_CPU_CYCLES          0x11
 
 typedef struct {
+  unsigned long timestamp;
   unsigned long branch_misses;
   unsigned long cache_misses;
   unsigned long instructions;
@@ -1294,11 +1295,12 @@ void bao_get_pmu_data(PMU_data *data) {
     register unsigned long r2 asm("x2");
     register unsigned long r1 asm("x1");
     register unsigned long r3 asm("x3");
+    register unsigned long r4 asm("x4");
   
   // Executa a Hypercall e diz ao compilador que x0-x3 terão as saídas
   asm volatile(
     "hvc #0"
-    : "+r"(r0), "=r"(r1), "=r"(r2), "=r"(r3) // Saídas
+    : "+r"(r0), "=r"(r1), "=r"(r2), "=r"(r3), "=r"(r4) // Saídas
     : 
     : "memory"
   ); 
@@ -1307,15 +1309,19 @@ void bao_get_pmu_data(PMU_data *data) {
     data->cache_misses = r1;
     data->instructions = r2;
     data->branch_misses = r3;
+    data->timestamp = r4;
 }
 
 void task_monitor(void *arg) {
-  const TickType_t xPeriod = pdMS_TO_TICKS(250);
+  const TickType_t xPeriod = pdMS_TO_TICKS(10);
   TickType_t xLastWakeTime = xTaskGetTickCount();
   
   FANN_sample sample;
-  printf("CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL\n");
+  printf("TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL\n");
   fflush(stdout);
+
+  uint64_t timer_freq;
+  asm volatile("mrs %0, cntfrq_el0" : "=r"(timer_freq));
 
   while(1) {
       vTaskDelayUntil(&xLastWakeTime, xPeriod);
@@ -1326,8 +1332,16 @@ void task_monitor(void *arg) {
       
       xQueueSend(xPmuQueue, &sample, 0);
 
+      uint64_t total_seconds = sample.data.timestamp / timer_freq;
+      uint64_t ticks_remainder = sample.data.timestamp % timer_freq;
+      uint32_t milliseconds = (ticks_remainder * 1000) / timer_freq;
+      uint32_t hours = total_seconds / 3600;
+      uint32_t minutes = (total_seconds % 3600) / 60;
+      uint32_t seconds = total_seconds % 60;
+
       // print para ver se ta funcionando
-      printf("%lu %lu %lu %lu %.1f\n",
+      printf("%02lu:%02lu:%02lu.%03lu %lu %lu %lu %lu %.1f\n",
+              hours, minutes, seconds, milliseconds,
               sample.data.cpu_cycles,
               sample.data.instructions,
               sample.data.cache_misses,
@@ -1337,7 +1351,7 @@ void task_monitor(void *arg) {
   }
 
 void task_bandwidth(void *arg) {
-  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  const TickType_t xPeriod = pdMS_TO_TICKS(100); 
   TickType_t xLastWakeTime = xTaskGetTickCount();
   
   bandwidth_context_fann_t ctx;
@@ -1352,7 +1366,7 @@ void task_bandwidth(void *arg) {
     
     g_label_atual = 0.0f;
     
-    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(100);
     
     while (xTaskGetTickCount() < end_bench) {
       bandwidth_wrapper_fann(&ctx);
@@ -2093,14 +2107,14 @@ int main(void) {
 
   //benchmarks
 
-  // xTaskCreate(
-  //   task_bandwidth,
-  //   "taskBandwidth",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
+  xTaskCreate(
+    task_bandwidth,
+    "taskBandwidth",
+    TASK_STACK_SIZE,
+    NULL,
+    OTHER_TASK_PRIORITY,
+    NULL
+  );
 
   // xTaskCreate(
   //   task_disparity,
@@ -2203,14 +2217,14 @@ int main(void) {
   //   NULL
   // );
 
-  xTaskCreate(
-    task_flush_reload,
-    "taskFlushReload",
-    TASK_STACK_SIZE,
-    NULL,
-    OTHER_TASK_PRIORITY,
-    NULL
-  );
+  // xTaskCreate(
+  //   task_flush_reload,
+  //   "taskFlushReload",
+  //   TASK_STACK_SIZE,
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
 
   //fann:
 

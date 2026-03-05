@@ -20,6 +20,7 @@
 
 // varieaveis globais para armazenar os dados coletados da PMU, para serem enviados para a VM
 typedef struct {
+    uint64_t timestamp;
     uint64_t cpu_cycles;
     uint64_t instuctions;
     uint64_t branch_misses;
