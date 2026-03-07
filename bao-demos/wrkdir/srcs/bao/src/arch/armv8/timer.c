@@ -8,7 +8,7 @@
 #define MSR(r, v) __asm__ volatile("msr " #r ", %0" : : "r" (v))
 #define ISB()     __asm__ volatile("isb")
 
-#define TIMMER_PERIOD 2000 // 2ms 
+#define TIMMER_PERIOD 200000 // 200ms 
 #define CNTHP_IRQ 26 // ID do timer fisico EL2
 
 //eventos pmu

@@ -156,7 +156,7 @@ struct Regulation_config {
 extern struct Regulation_config reg_conf[VM_QNT];
 
 void init_regulation_config();
-void regulator_budget_depleted(const uint8_t task_num, formula_t formula);
+// void regulator_budget_depleted(const uint8_t task_num, formula_t formula);
 uint32_t regulator_get_new_budget(const uint8_t task_num,
                                   const uint8_t op_type);
 

@@ -6,15 +6,15 @@
 
 // #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#//
 
-void empty_wrapper(void *context);
-void bandwidth_wrapper(void *context);
-void dijkstra_wrapper(void *context);
-void disparity_wrapper(void *context);
-void fft_wrapper(void *context);
-void mser_wrapper(void *context);
-void qsort_wrapper(void *context);
-void sha_wrapper(void *context);
-void sorting_wrapper(void *context);
+// void empty_wrapper(void *context);
+// void bandwidth_wrapper(void *context);
+// void dijkstra_wrapper(void *context);
+// void disparity_wrapper(void *context);
+// void fft_wrapper(void *context);
+// void mser_wrapper(void *context);
+// void qsort_wrapper(void *context);
+// void sha_wrapper(void *context);
+// void sorting_wrapper(void *context);
 
 // #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#//
 

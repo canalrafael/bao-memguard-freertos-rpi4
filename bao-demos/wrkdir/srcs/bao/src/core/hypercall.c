@@ -44,7 +44,7 @@ long int hypercall(unsigned long id)
             break;
 
         case HC_REGULATOR_BUDGET_DEPLETED:
-            regulator_budget_depleted(arg0, (formula_t)arg1);
+            // regulator_budget_depleted(arg0, (formula_t)arg1);
             break;
 
         case HC_REGULATOR_GET_NEW_BUDGET:

@@ -114,7 +114,7 @@ void init(cpuid_t cpu_id, paddr_t load_addr)
         // printk("sizeof(uint64_t) %d\n", sizeof(uint64_t));
         // printk("sizeof(unsigned long long) %d\n", sizeof(unsigned long
         // long));
-        printk("BENCH_ARRAY_INDEX %d\n", BENCH_ARRAY_INDEX);
+        // printk("BENCH_ARRAY_INDEX %d\n", BENCH_ARRAY_INDEX);
         init_regulation_config();
 
         // working cycles count

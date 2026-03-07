@@ -35,7 +35,7 @@ ifneq ($(NO_FIRMWARE),)
 CPPFLAGS+=-DNO_FIRMWARE=y
 endif
 ASFLAGS += $(GENERIC_FLAGS) $(CPPFLAGS) $(ARCH_ASFLAGS) 
-CFLAGS += $(GENERIC_FLAGS) $(CPPFLAGS) $(ARCH_CFLAGS) 
+CFLAGS += $(GENERIC_FLAGS) $(CPPFLAGS) $(ARCH_CFLAGS) -mcmodel=large
 LDFLAGS += $(GENERIC_FLAGS) $(ARCH_LDFLAGS) -nostartfiles
 
 target:=$(BUILD_DIR)/$(NAME)
@@ -49,7 +49,7 @@ $(target).bin: $(target).elf
 	$(objcopy) -O binary $< $@
 
 $(target).elf: $(objs) $(gen_ld_file)
-	$(cc) $(LDFLAGS) -T$(gen_ld_file) $(objs) -o $@
+	$(cc) $(LDFLAGS) -T$(gen_ld_file) $(objs) $(LD_LIBS) -o $@
 	$(objdump) -S $@ > $(target).asm
 	$(objdump) -x -d --wide $@ > $(target).lst
 

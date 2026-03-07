@@ -1264,100 +1264,100 @@ void print_bool_array(const bool arr[], int size)
 //     print_bool_array(arr, size);
 // }
 
-void reset_state_on_new_formula(formula_t const formula)
-{
-    // HACK:
-    static int last_formula = -1;
-    if (last_formula != formula) {
-        last_formula = formula;
-        reset_vm(cpu()->id);
-        reset_budget_formulas(cpu()->id);
-        PRINT("CHANGED FORMULA, NULL-oed VM struct");
-    }
-}
+// void reset_state_on_new_formula(formula_t const formula)
+// {
+//     // HACK:
+//     static int last_formula = -1;
+//     if (last_formula != formula) {
+//         last_formula = formula;
+//         reset_vm(cpu()->id);
+//         reset_budget_formulas(cpu()->id);
+//         PRINT("CHANGED FORMULA, NULL-oed VM struct");
+//     }
+// }
 
-void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
-{
-    PRINT("regulator_budget_depleted\t formula %d", formula);
-    print_VM(&reg_conf[cpu()->id].vm, true);
-    print_counters(true);
+// void regulator_budget_depleted(const uint8_t pmu_id, formula_t formula)
+// {
+//     PRINT("regulator_budget_depleted\t formula %d", formula);
+//     print_VM(&reg_conf[cpu()->id].vm, true);
+//     print_counters(true);
 
-    reg_conf[cpu()->id].vm.cycles = PMU_get_counter_value(2);
-    reg_conf[cpu()->id].vm.instructions = PMU_get_counter_value(3);
-    reg_conf[cpu()->id].vm.cache_misses = PMU_get_counter_value(4);
-    reg_conf[cpu()->id].vm.mispredicts = PMU_get_counter_value(5);
+//     reg_conf[cpu()->id].vm.cycles = PMU_get_counter_value(2);
+//     reg_conf[cpu()->id].vm.instructions = PMU_get_counter_value(3);
+//     reg_conf[cpu()->id].vm.cache_misses = PMU_get_counter_value(4);
+//     reg_conf[cpu()->id].vm.mispredicts = PMU_get_counter_value(5);
 
-    reset_state_on_new_formula(formula);
+//     reset_state_on_new_formula(formula);
 
-    cpuid_t cpu_id = cpu()->id;
-    bool new_read = (pmu_id == READ);
-    bool new_write = (pmu_id == WRITE);
+//     cpuid_t cpu_id = cpu()->id;
+//     bool new_read = (pmu_id == READ);
+//     bool new_write = (pmu_id == WRITE);
 
-    // This part is now correct
-    uint32_t actual_read_usage = get_operation_usage_v2(
-        READ, reg_conf[cpu_id].vm.defined_pmu_read_val, new_read);
-    uint32_t actual_write_usage = get_operation_usage_v2(
-        WRITE, reg_conf[cpu_id].vm.defined_pmu_write_val, new_write);
+//     // This part is now correct
+//     uint32_t actual_read_usage = get_operation_usage_v2(
+//         READ, reg_conf[cpu_id].vm.defined_pmu_read_val, new_read);
+//     uint32_t actual_write_usage = get_operation_usage_v2(
+//         WRITE, reg_conf[cpu_id].vm.defined_pmu_write_val, new_write);
 
-    switch (formula) {
-        case EWMA_FORMULA:
-            ewma(cpu_id, UNUSED_ARG);
-            break;
-        case EWMA_V2_FORMULA:
-            ewma_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
-            break;
-        case SW_FORMULA:
-            sw(cpu_id, UNUSED_ARG);
-            break;
-        case SW_V2_FORMULA:
-            sw_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
-            break;
-        case AFC_FORMULA:
-            afc(cpu_id, UNUSED_ARG);
-            break;
-        case AFC_V2_FORMULA:
-            afc_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
-            break;
-        case AMBP_FORMULA:
-            ambp(cpu()->id, UNUSED_ARG);
-            break;
-        case AMBP_V2_FORMULA:
-            ambp_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
-            break;
-        // case LR_FORMULA:
-        //     lr(cpu()->id, UNUSED_ARG);
-        //     break;
-        case LR_V2_FORMULA:
-            lr_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
-            break;
-        case PIC_FORMULA:
-            pic(cpu()->id, UNUSED_ARG);
-            break;
-        case PIC_V2_FORMULA:
-            pic_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
-            break;
-        default:
-            printk("something has gone very wrong!\n");
-            break;
-    }
+//     switch (formula) {
+//         case EWMA_FORMULA:
+//             ewma(cpu_id, UNUSED_ARG);
+//             break;
+//         case EWMA_V2_FORMULA:
+//             ewma_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+//             break;
+//         case SW_FORMULA:
+//             sw(cpu_id, UNUSED_ARG);
+//             break;
+//         case SW_V2_FORMULA:
+//             sw_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+//             break;
+//         case AFC_FORMULA:
+//             afc(cpu_id, UNUSED_ARG);
+//             break;
+//         case AFC_V2_FORMULA:
+//             afc_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+//             break;
+//         case AMBP_FORMULA:
+//             ambp(cpu()->id, UNUSED_ARG);
+//             break;
+//         case AMBP_V2_FORMULA:
+//             ambp_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+//             break;
+//         // case LR_FORMULA:
+//         //     lr(cpu()->id, UNUSED_ARG);
+//         //     break;
+//         case LR_V2_FORMULA:
+//             lr_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+//             break;
+//         case PIC_FORMULA:
+//             pic(cpu()->id, UNUSED_ARG);
+//             break;
+//         case PIC_V2_FORMULA:
+//             pic_budget_v2(cpu_id, actual_read_usage, actual_write_usage);
+//             break;
+//         default:
+//             printk("something has gone very wrong!\n");
+//             break;
+//     }
 
-    // --- BUG FIX: Update the defined budget for the NEXT period ---
-    // This ensures the next call to get_operation_usage_v2 has the correct
-    // starting value.
-    reg_conf[cpu_id].vm.defined_pmu_read_val =
-        reg_conf[cpu_id].vm.new_read_budget;
-    reg_conf[cpu_id].vm.defined_pmu_write_val =
-        reg_conf[cpu_id].vm.new_write_budget;
+//     // --- BUG FIX: Update the defined budget for the NEXT period ---
+//     // This ensures the next call to get_operation_usage_v2 has the correct
+//     // starting value.
+//     reg_conf[cpu_id].vm.defined_pmu_read_val =
+//         reg_conf[cpu_id].vm.new_read_budget;
+//     reg_conf[cpu_id].vm.defined_pmu_write_val =
+//         reg_conf[cpu_id].vm.new_write_budget;
 
-    reg_conf[cpu()->id].vm.depleated_op_type = UNKNOWN_VALUE;
-    PMU_reset_all_counters();
-    // for (int i = 0; i < PMU_COUNT; ++i) {
-    //     PMU_reset_counter(i);
-    // }
+//     reg_conf[cpu()->id].vm.depleated_op_type = UNKNOWN_VALUE;
+//     PMU_reset_all_counters();
+//     // for (int i = 0; i < PMU_COUNT; ++i) {
+//     //     PMU_reset_counter(i);
+//     // }
 
-    print_VM(&reg_conf[cpu()->id].vm, false);
-    print_counters(false);
-}
+//     print_VM(&reg_conf[cpu()->id].vm, false);
+//     print_counters(false);
+// }
 
 uint32_t regulator_get_new_budget(const uint8_t task_num, const uint8_t op_type)
 {
