@@ -47,8 +47,8 @@ void task_fann(void *arg) {
     struct fann *ann = init_fann_model();
     int iteracao = 0;
     
-    vTaskDelay(pdMS_TO_TICKS(1000));
-    const TickType_t xPeriod = pdMS_TO_TICKS(2000);
+    vTaskDelay(pdMS_TO_TICKS(500));
+    const TickType_t xPeriod = pdMS_TO_TICKS(500);
     TickType_t xLastWakeTime = xTaskGetTickCount();
     
     while(1) {
@@ -67,7 +67,7 @@ void task_fann(void *arg) {
 //==============================================================================
 
 void task_spectre(void *arg) {
-    const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+    const TickType_t xPeriod = pdMS_TO_TICKS(500); 
     TickType_t xLastWakeTime = xTaskGetTickCount();
     
     //configuracoes do ataque
@@ -90,8 +90,8 @@ void task_spectre(void *arg) {
 }
 
 void task_meltdown(void *arg) {
-    const TickType_t xPeriod = pdMS_TO_TICKS(1000);
-    uint32_t attack_duration_ms = 1000;
+    const TickType_t xPeriod = pdMS_TO_TICKS(500);
+    uint32_t attack_duration_ms = 500;
     TickType_t xLastWakeTime = xTaskGetTickCount();
     
     int cache_hit_threshold = 60;
@@ -139,8 +139,8 @@ void task_flush_reload(void *arg) {
 }
 
 void task_zombieload(void *arg) {
-    const TickType_t xPeriod = pdMS_TO_TICKS(1000);
-    uint32_t attack_duration_ms = 1000;
+    const TickType_t xPeriod = pdMS_TO_TICKS(500);
+    uint32_t attack_duration_ms = 500;
     TickType_t xLastWakeTime = xTaskGetTickCount();
     
     // configuracao do ataque
@@ -170,7 +170,7 @@ void task_zombieload(void *arg) {
 //==============================================================================
 
 void task_bandwidth(void *arg) {
-  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  const TickType_t xPeriod = pdMS_TO_TICKS(500); 
   TickType_t xLastWakeTime = xTaskGetTickCount();
   
   bandwidth_context_fann_t ctx;
@@ -191,7 +191,7 @@ void task_bandwidth(void *arg) {
     
     g_label_atual = 0.0f;
     
-    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(500);
     
     while (xTaskGetTickCount() < end_bench) {
       bandwidth_wrapper_fann(&ctx);
@@ -202,7 +202,7 @@ void task_bandwidth(void *arg) {
 }
 
 void task_disparity(void *arg) {
-  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  const TickType_t xPeriod = pdMS_TO_TICKS(500); 
   TickType_t xLastWakeTime = xTaskGetTickCount();
 
   printf("[BENCHMARK] Task Disparity iniciada...\n");
@@ -213,7 +213,7 @@ void task_disparity(void *arg) {
     
     g_label_atual = 0.0f;
     
-    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(500);
     
     while (xTaskGetTickCount() < end_bench) {
       disparity_wrapper_fann();
@@ -222,7 +222,7 @@ void task_disparity(void *arg) {
 }
 
 void task_qsort(void *arg) {
-  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  const TickType_t xPeriod = pdMS_TO_TICKS(500); 
   TickType_t xLastWakeTime = xTaskGetTickCount();
 
   printf("[BENCHMARK] Task Qsort iniciada...\n");
@@ -233,7 +233,7 @@ void task_qsort(void *arg) {
     
     g_label_atual = 0.0f;
     
-    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(500);
     
     while (xTaskGetTickCount() < end_bench) {
       qsort_wrapper_fann();
@@ -242,7 +242,7 @@ void task_qsort(void *arg) {
 }
 
 void task_dijkstra(void *arg) {
-  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  const TickType_t xPeriod = pdMS_TO_TICKS(500); 
   TickType_t xLastWakeTime = xTaskGetTickCount();
 
   printf("[BENCHMARK] Task Dijkstra iniciada...\n");
@@ -253,7 +253,7 @@ void task_dijkstra(void *arg) {
     
     g_label_atual = 0.0f;
     
-    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(500);
     
     while (xTaskGetTickCount() < end_bench) {
       dijkstra_wrapper_fann();
@@ -262,7 +262,7 @@ void task_dijkstra(void *arg) {
 }
 
 void task_sha(void *arg) {
-  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  const TickType_t xPeriod = pdMS_TO_TICKS(500); 
   TickType_t xLastWakeTime = xTaskGetTickCount();
 
   printf("[BENCHMARK] Task SHA iniciada...\n");
@@ -273,7 +273,7 @@ void task_sha(void *arg) {
     
     g_label_atual = 0.0f;
     
-    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(500);
     
     while (xTaskGetTickCount() < end_bench) {
       sha_wrapper_fann();
@@ -282,7 +282,7 @@ void task_sha(void *arg) {
 }
 
 void task_fft(void *arg) {
-  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  const TickType_t xPeriod = pdMS_TO_TICKS(500); 
   TickType_t xLastWakeTime = xTaskGetTickCount();
 
   printf("[BENCHMARK] Task FFT iniciada...\n");
@@ -293,7 +293,7 @@ void task_fft(void *arg) {
     
     g_label_atual = 0.0f;
     
-    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(500);
     
     while (xTaskGetTickCount() < end_bench) {
       fft_wrapper_fann();
@@ -302,7 +302,7 @@ void task_fft(void *arg) {
 }
 
 void task_sorting(void *arg) {
-  const TickType_t xPeriod = pdMS_TO_TICKS(1000); 
+  const TickType_t xPeriod = pdMS_TO_TICKS(500); 
   TickType_t xLastWakeTime = xTaskGetTickCount();
 
   printf("[BENCHMARK] Task Sorting iniciada...\n");
@@ -313,7 +313,7 @@ void task_sorting(void *arg) {
     
     g_label_atual = 0.0f;
     
-    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    TickType_t end_bench = xTaskGetTickCount() + pdMS_TO_TICKS(500);
     
     while (xTaskGetTickCount() < end_bench) {
       sorting_wrapper_fann();

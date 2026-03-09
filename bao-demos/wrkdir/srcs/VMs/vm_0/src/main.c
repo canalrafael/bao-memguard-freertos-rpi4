@@ -160,14 +160,14 @@ int main(void) {
   //   NULL
   // );
 
-  // xTaskCreate(
-  //   task_meltdown,
-  //   "taskMeltdown",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
+  xTaskCreate(
+    task_meltdown,
+    "taskMeltdown",
+    TASK_STACK_SIZE,
+    NULL,
+    OTHER_TASK_PRIORITY,
+    NULL
+  );
 
   // xTaskCreate(
   //   task_zombieload,
@@ -178,14 +178,14 @@ int main(void) {
   //   NULL
   // );
 
-  xTaskCreate(
-    task_flush_reload,
-    "taskFlushReload",
-    TASK_STACK_SIZE,
-    NULL,
-    OTHER_TASK_PRIORITY,
-    NULL
-  );
+  // xTaskCreate(
+  //   task_flush_reload,
+  //   "taskFlushReload",
+  //   TASK_STACK_SIZE,
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
 
   //fann:
 

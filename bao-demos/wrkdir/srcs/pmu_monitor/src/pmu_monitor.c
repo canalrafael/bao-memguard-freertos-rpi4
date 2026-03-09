@@ -53,14 +53,21 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
     
     xQueueSend(xPmuQueue, &sample, 0);
 
-    uint64_t total_seconds = sample.data.timestamp / timer_freq;
+    uint64_t boot_seconds = sample.data.timestamp / timer_freq;
     uint64_t ticks_remainder = sample.data.timestamp % timer_freq;
-    uint32_t milliseconds = (ticks_remainder * 1000) / timer_freq;
-    uint32_t hours = total_seconds / 3600;
-    uint32_t minutes = (total_seconds % 3600) / 60;
-    uint32_t seconds = total_seconds % 60;
 
-    printf("%02lu:%02lu:%02lu.%03lu %lu %lu %lu %lu %.1f\n",
+    #ifndef BUILD_EPOCH
+      #define BUILD_EPOCH 0
+    #endif
+
+    uint64_t real_time_seconds = BUILD_EPOCH + boot_seconds - 10800;
+
+    uint32_t milliseconds = (ticks_remainder * 1000) / timer_freq;
+    uint32_t hours = (real_time_seconds % 86400) / 3600;
+    uint32_t minutes = (real_time_seconds % 3600) / 60;
+    uint32_t seconds = real_time_seconds % 60;
+
+    printf("%02u:%02u:%02u:%03u %lu %lu %lu %lu %.1f\n",
             hours, minutes, seconds, milliseconds,
             sample.data.cpu_cycles,
             sample.data.instructions,

@@ -80,6 +80,10 @@ C_SRC += $(FANN_SRC)/floatfann.c
 LD_LIBS += -lm
 CFLAGS+= -Os -ffunction-sections -fdata-sections
 
+#injecao de tempo real
+EPOCH_TIME := $(shell date +%s)
+CFLAGS += -DBUILD_EPOCH=$(EPOCH_TIME)
+
 #neural network
 INC_NEURAL_NETWORK=$(BAO_DEMOS_WRKDIR_SRC)/neural_network/inc
 SRC_NEURAL_NETWORK=$(BAO_DEMOS_WRKDIR_SRC)/neural_network/src
