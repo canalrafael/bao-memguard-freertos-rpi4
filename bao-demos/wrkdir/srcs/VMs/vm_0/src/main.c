@@ -82,14 +82,14 @@ int main(void) {
   //   NULL
   // );
 
-  // xTaskCreate(
-  //   task_disparity,
-  //   "taskDisparity",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
+  xTaskCreate(
+    task_disparity,
+    "taskDisparity",
+    TASK_STACK_SIZE,
+    NULL,
+    OTHER_TASK_PRIORITY,
+    NULL
+  );
 
   // xTaskCreate(
   //   task_qsort,
@@ -136,10 +136,7 @@ int main(void) {
   //   NULL
   // );
 
-
   
-  // info_t *info_bench = benchmark_add_info(benchmark, VM_NUM, 2, PERIOD_MS_TASK_ANY);
-
   // xTaskCreate(
   //   task_random,
   //   "taskRandom",
@@ -160,14 +157,14 @@ int main(void) {
   //   NULL
   // );
 
-  xTaskCreate(
-    task_meltdown,
-    "taskMeltdown",
-    TASK_STACK_SIZE,
-    NULL,
-    OTHER_TASK_PRIORITY,
-    NULL
-  );
+  // xTaskCreate(
+  //   task_meltdown,
+  //   "taskMeltdown",
+  //   TASK_STACK_SIZE,
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
 
   // xTaskCreate(
   //   task_zombieload,
@@ -198,28 +195,6 @@ int main(void) {
   //   NULL
   // );
 
- /*
-  for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-    info_t *info =
-        benchmark_add_info(benchmark, VM_NUM, task_num, PERIOD_MS_TASK_ANY);
-    TaskHandle_t handler;
-    xTaskCreate(
-        delayed_task,            //
-        info->function.name,     //
-        TASK_STACK_SIZE,         //
-        info,                    // pvParameters to delayed_task
-        OTHER_TASK_PRIORITY,     // priority
-        &task_handlers[task_num] // where to store the retuned TaskHandler_t
-    );
-
-    if (task_handlers[task_num] == NULL) {
-      // printf("NULL task_handle, returning\n");
-      return 0;
-    } else {
-      PRINT("got %s (%d)\n", info->function.name, info->function.index);
-    }
-  }
- */
   vTaskStartScheduler();
   while (1) {
     //
