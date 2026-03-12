@@ -9,7 +9,19 @@ FANN_sample window_buffer[WINDOW_SIZE];
 int buffer_index = 0;
 int buffer_filled = 0;
 
+unsigned long last_hardware_timestamp = 0;
+
 void update_window(FANN_sample new_sample) {
+    unsigned long current_ts = new_sample.data.timestamp;
+    
+    unsigned long delta_cycles = (last_hardware_timestamp == 0) ? 0 : (current_ts - last_hardware_timestamp);
+    last_hardware_timestamp = current_ts;
+
+    float freq = (float)get_hardware_timer_freq();
+    float delta_ms = (delta_cycles * 1000.0f) / freq;
+
+    new_sample.data.timestamp = (unsigned long)delta_ms; 
+    
     window_buffer[buffer_index] = new_sample;
     buffer_index = (buffer_index + 1) % WINDOW_SIZE;
     if (buffer_index == 0) buffer_filled = 1;
@@ -18,11 +30,13 @@ void update_window(FANN_sample new_sample) {
 void get_flattened_window(fann_type *input_vector) {
     for (int i = 0; i < WINDOW_SIZE; i++) {
         int idx = (buffer_index + i) % WINDOW_SIZE; 
+        int offset = i * METRICS;
         
-        input_vector[i*4 + 0] = (fann_type)window_buffer[idx].data.branch_misses / NORM_BRANCH;
-        input_vector[i*4 + 1] = (fann_type)window_buffer[idx].data.cache_misses / NORM_CACHE;
-        input_vector[i*4 + 2] = (fann_type)window_buffer[idx].data.instructions / NORM_INSTR;
-        input_vector[i*4 + 3] = (fann_type)window_buffer[idx].data.cpu_cycles / NORM_CYCLES;
+        input_vector[offset + 0] = (fann_type)window_buffer[idx].data.branch_misses / NORM_BRANCH;
+        input_vector[offset + 1] = (fann_type)window_buffer[idx].data.cache_misses / NORM_CACHE;
+        input_vector[offset + 2] = (fann_type)window_buffer[idx].data.instructions / NORM_INSTR;
+        input_vector[offset + 3] = (fann_type)window_buffer[idx].data.cpu_cycles / NORM_CYCLES;
+        input_vector[offset + 4] = (fann_type)window_buffer[idx].data.timestamp / NORM_DELTA_TIME;
     }
 }
 
@@ -58,10 +72,10 @@ struct fann_train_data* cria_dataset(unsigned int num_amostras) {
 }
 
 struct fann* init_fann_model(void) {
-    const unsigned int num_input = TOTAL_INPUTS;
+    const unsigned int num_input = TOTAL_INPUTS; //25
     const unsigned int num_output = 1;
     const unsigned int num_layers = 4; 
-    const unsigned int num_neurons_hidden1 = 12;
+    const unsigned int num_neurons_hidden1 = 16;
     const unsigned int num_neurons_hidden2 = 8;
     
     struct fann *ann = fann_create_standard(num_layers, num_input, num_neurons_hidden1, num_neurons_hidden2, num_output);

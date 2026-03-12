@@ -9,10 +9,15 @@
 #define NORM_CACHE       50000000.0f 
 #define NORM_INSTR       200000000.0f
 #define NORM_CYCLES      400000000.0f
+#define NORM_TIMESTAMP   1000000.0f
 
 #define WINDOW_SIZE 5
-#define METRICS 4
+#define METRICS 5
 #define TOTAL_INPUTS (WINDOW_SIZE * METRICS)
+
+#define NORM_DELTA_TIME  1000000.0f 
+
+extern unsigned long last_hardware_timestamp;
 
 extern FANN_sample window_buffer[WINDOW_SIZE];
 extern int buffer_index;

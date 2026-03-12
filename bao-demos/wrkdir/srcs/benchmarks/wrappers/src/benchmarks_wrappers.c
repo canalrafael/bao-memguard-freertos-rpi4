@@ -13,11 +13,6 @@
 #include "../../sorting/inc/sorting.h"
 
 
-
-//==================================================================
-//WRAPPERS
-//==================================================================
-
 // Array global
 int g_bw_memory[NUM_INTS] __attribute__((aligned(CACHE_LINE_SIZE)));
 uint32_t qsort_input_data[164][3];

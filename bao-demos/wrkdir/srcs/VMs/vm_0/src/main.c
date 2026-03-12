@@ -82,28 +82,28 @@ int main(void) {
   //   NULL
   // );
 
-  xTaskCreate(
-    task_disparity,
-    "taskDisparity",
-    TASK_STACK_SIZE,
-    NULL,
-    OTHER_TASK_PRIORITY,
-    NULL
-  );
-
   // xTaskCreate(
-  //   task_qsort,
-  //   "taskQsort",
+  //   task_disparity,
+  //   "taskDisparity",
   //   TASK_STACK_SIZE,
   //   NULL,
   //   OTHER_TASK_PRIORITY,
   //   NULL
   // );
 
+  xTaskCreate(
+    task_qsort,
+    "taskQsort",
+    8192,
+    NULL,
+    OTHER_TASK_PRIORITY,
+    NULL
+  );
+
   // xTaskCreate(
   //   task_dijkstra,
   //   "taskDijkstra",
-  //   TASK_STACK_SIZE,
+  //   8192,
   //   NULL,
   //   OTHER_TASK_PRIORITY,
   //   NULL
@@ -141,7 +141,7 @@ int main(void) {
   //   task_random,
   //   "taskRandom",
   //   TASK_STACK_SIZE,
-  //   info_bench,
+  //   NULL,
   //   OTHER_TASK_PRIORITY,
   //   NULL
   // );

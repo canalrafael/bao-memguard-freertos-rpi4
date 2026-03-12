@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "FreeRTOS.h"
 #include "tasks_project.h"
 #include "queue.h"
@@ -21,7 +22,7 @@
 //==============================================================================
 
 void task_monitor(void *arg) {
-    const TickType_t xPeriod = pdMS_TO_TICKS(250);
+    const TickType_t xPeriod = pdMS_TO_TICKS(200);
     TickType_t xLastWakeTime = xTaskGetTickCount();
     
     printf("TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL\n");
@@ -319,4 +320,85 @@ void task_sorting(void *arg) {
       sorting_wrapper_fann();
     }
   }
+}
+
+//==============================================================================
+//random
+//==============================================================================
+
+void task_random(void *arg) {
+    const TickType_t xRunDuration = pdMS_TO_TICKS(3000);
+    
+    const char* nomes_testes[] = {
+        "Bandwidth", "Disparity", "Spectre","" , "Meltdown", "Flush+Reload", "ZombieLoad"
+    };
+
+    bandwidth_context_fann_t bw_ctx;
+    bw_ctx.mem_ptr = (int *)pvPortMalloc(1024 * 1024);
+    if (bw_ctx.mem_ptr == NULL) {
+        printf("[ERRO] Sem memoria Heap para o Bandwidth na Task Random!\n");
+        vTaskDelete(NULL);
+    }
+    bw_ctx.sum = 0;
+
+    for (int i = 0; i < 256 * 512; i++) array[i] = 1;
+    *target_addr = 0xAA;
+    
+    vTaskDelay(pdMS_TO_TICKS(500));
+    uint64_t fr_threshold = calibrate_threshold();
+
+    uint64_t seed;
+    asm volatile("mrs %0, cntpct_el0" : "=r"(seed));
+    srand((unsigned int)seed);
+
+    printf("\n[RANDOM] Task Geradora Iniciada! Alternando a cada 3 segundos...\n");
+    fflush(stdout);
+
+    while(1) {
+        // Sorteia um número de 0 a 10
+        int escolha = rand() % 11;
+        
+        TickType_t end_bench = xTaskGetTickCount() + xRunDuration;
+
+        if (escolha <= 1) {
+            g_label_atual = 0.0f; 
+            printf("\n>>> [NOVO ESTADO] BENCHMARK: %s (Label: 0.0) <<<\n", nomes_testes[escolha]);
+        } else {
+            g_label_atual = 1.0f; 
+            printf("\n>>> [NOVO ESTADO] ATAQUE: %s (Label: 1.0) <<<\n", nomes_testes[escolha]);
+        }
+
+        while (xTaskGetTickCount() < end_bench) {
+            switch(escolha) {
+                // BENCHMARKS
+                case 0:
+                    bandwidth_wrapper_fann(&bw_ctx);
+                    asm volatile("" : : "r"(bw_ctx.sum) : "memory");
+                    break;
+                case 1: disparity_wrapper_fann(); break;
+                case 2: fft_wrapper_fann(); break;
+                case 3: qsort_wrapper_fann(); break;
+                case 4: dijkstra_wrapper_fann(); break;
+                case 5: sha_wrapper_fann(); break;
+                case 6: sha_wrapper_fann(); break;
+                case 7: sorting_wrapper_fann(); break;
+                
+                // ATAQUES
+                case 8: 
+                    execute_spectre_attack(20, (size_t)(secret - (char *)array1), 10); 
+                    break;
+                case 9: 
+                    execute_meltdown_attack(60, 100); 
+                    break;
+                case 10: 
+                    execute_flush_reload_attack(fr_threshold, 100); 
+                    break;
+                case 11: 
+                    execute_zombieload_attack(88, 60, 100); 
+                    break;
+            }
+        }
+        g_label_atual = 0.0f;
+        vTaskDelay(pdMS_TO_TICKS(500)); 
+    }
 }
