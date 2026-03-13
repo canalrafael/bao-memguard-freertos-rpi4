@@ -73,14 +73,14 @@ int main(void) {
 
   //benchmarks
 
-  // xTaskCreate(
-  //   task_bandwidth,
-  //   "taskBandwidth",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
+  xTaskCreate(
+    task_bandwidth,
+    "taskBandwidth",
+    TASK_STACK_SIZE,
+    NULL,
+    OTHER_TASK_PRIORITY,
+    NULL
+  );
 
   // xTaskCreate(
   //   task_disparity,
@@ -91,14 +91,14 @@ int main(void) {
   //   NULL
   // );
 
-  xTaskCreate(
-    task_qsort,
-    "taskQsort",
-    8192,
-    NULL,
-    OTHER_TASK_PRIORITY,
-    NULL
-  );
+  // xTaskCreate(
+  //   task_qsort,
+  //   "taskQsort",
+  //   8192,
+  //   NULL,
+  //   OTHER_TASK_PRIORITY,
+  //   NULL
+  // );
 
   // xTaskCreate(
   //   task_dijkstra,

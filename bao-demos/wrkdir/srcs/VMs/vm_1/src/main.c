@@ -30,15 +30,14 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-#include "FreeRTOS.h"
+#include "linux-v6.1"
 #include "task.h"
 #include "queue.h"
 
 #include "tasks_project.h"
 #include "globals.h"
 
-QueueHandle_t xPmuQueue = NULL;
-volatile float g_label_atual = 0.0f;
+
 
 int _gettimeofday(struct timeval *tv, void *tz) {
     if (tv) {
@@ -54,176 +53,7 @@ void _init(void) {}
 void _fini(void) {}
 
 int main(void) {
-  // //cria fila para comunicação PMU -> FANN
-  // xPmuQueue = xQueueCreate(100, sizeof(FANN_sample));
-  // if(xPmuQueue == NULL) {
-  //     // printf("Erro: fila nao criada\n");
-  //     while(1);
-  // }
-
-  // xTaskCreate(
-  //   task_monitor,
-  //   "taskMonitor",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // //benchmarks
-
-  // xTaskCreate(
-  //   task_bandwidth,
-  //   "taskBandwidth",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_disparity,
-  //   "taskDisparity",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_qsort,
-  //   "taskQsort",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_dijkstra,
-  //   "taskDijkstra",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_sha,
-  //   "taskSHA",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_fft,
-  //   "taskFFT",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_sorting,
-  //   "taskSorting",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-
   
-  // info_t *info_bench = benchmark_add_info(benchmark, VM_NUM, 2, PERIOD_MS_TASK_ANY);
-
-  // xTaskCreate(
-  //   task_random,
-  //   "taskRandom",
-  //   TASK_STACK_SIZE,
-  //   info_bench,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  //ataques:
-
-  // xTaskCreate(
-  //   task_spectre,
-  //   "taskSpectre",
-  //   TASK_STACK_SIZE, //stack maior para lidar com array2 e operacoes
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_meltdown,
-  //   "taskMeltdown",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_zombieload,
-  //   "taskZombieload",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_flush_reload,
-  //   "taskFlushReload",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  //fann:
-
-  // xTaskCreate(
-  //   task_fann,
-  //   "taskFANN",
-  //   8192,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
- /*
-  for (int task_num = 0; task_num < TASK_QUANTITY; ++task_num) {
-    info_t *info =
-        benchmark_add_info(benchmark, VM_NUM, task_num, PERIOD_MS_TASK_ANY);
-    TaskHandle_t handler;
-    xTaskCreate(
-        delayed_task,            //
-        info->function.name,     //
-        TASK_STACK_SIZE,         //
-        info,                    // pvParameters to delayed_task
-        OTHER_TASK_PRIORITY,     // priority
-        &task_handlers[task_num] // where to store the retuned TaskHandler_t
-    );
-
-    if (task_handlers[task_num] == NULL) {
-      // printf("NULL task_handle, returning\n");
-      return 0;
-    } else {
-      PRINT("got %s (%d)\n", info->function.name, info->function.index);
-    }
-  }
- */
-  vTaskStartScheduler();
-  while (1) {
-    //
-  }
-  // printf("\nReturning from main.\n");
   return 0;
 }
 
