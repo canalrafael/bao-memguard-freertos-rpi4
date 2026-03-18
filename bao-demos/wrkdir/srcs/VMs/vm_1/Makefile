@@ -1,159 +1,74 @@
-# Prepare enviroment for baremetal-runtime
 NAME:=vm_1
 ROOT_DIR:=$(realpath .)
-BUILD_DIR:=$(ROOT_DIR)/build/$(PLATFORM)
 
-# Setup baremetal-runtime build
-bmrt_dir:=$(ROOT_DIR)/src/baremetal-runtime
-include $(bmrt_dir)/setup.mk
+.DEFAULT_GOAL := all
 
-#BAO_DEMOS_WRKDIR_SRC=$(ROOT_DIR)/../..
+wrkdir_demo_imgs := $(ROOT_DIR)/build/$(PLATFORM)
+TARGET := $(wrkdir_demo_imgs)/$(NAME).bin
 
-# Include all freertos sources
-INC_GUEST_COMMON=$(BAO_DEMOS_WRKDIR_SRC)/guest_common/inc
-SRC_GUEST_COMMON=$(BAO_DEMOS_WRKDIR_SRC)/guest_common/src
+# Apontando para a pasta compartilhada onde o Buildroot e os seus códigos estão
+wrkdir_src := $(realpath $(ROOT_DIR)/../shared_src)
+bao_demos ?= $(BAO_DEMOS)
 
-# Bandwidth
-INC_BANDWIDTH=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/bandwidth/inc
-SRC_BANDWIDTH=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/bandwidth/src
+include $(BAO_DEMOS)/guests/linux/make.mk
 
-# DISPARITY
-INC_DISPARITY=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/disparity/inc
-SRC_DISPARITY=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/disparity/src
+BUILDROOT_DIR := $(wrkdir_src)/buildroot-aarch64-v6.1
+CC_ARM := $(BUILDROOT_DIR)/output/host/bin/aarch64-buildroot-linux-uclibc-gcc
+OVERLAY_DIR := $(wrkdir_src)/custom_overlay/root
 
-# MSER
-INC_MSER=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/mser/inc
-SRC_MSER=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/mser/src
+# Caminhos exatos para os arquivos de ataque
+SPECTRE_SRC := $(wrkdir_src)/attacks/spectre/src/spectre_attack.c
+ARMAGEDDON_SRC := $(wrkdir_src)/attacks/armageddon/src/armageddon.c
 
-# FFT
-INC_FFT=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/fft/inc
-SRC_FFT=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/fft/src
+# Caminhos exatos para o IPC
+IPC_SRC := $(wrkdir_src)/ipc_receiver.c
 
-# Sorting
-INC_SORTING=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/sorting/inc
-SRC_SORTING=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/sorting/src
+# Lista de todos os arquivos .c que compõem o executável do Benchmark
+BENCH_SOURCES := $(wrkdir_src)/main_benchmark.c \
+                 $(wrkdir_src)/benchmarks/wrappers/src/benchmarks_wrappers.c \
+                 $(wrkdir_src)/benchmarks/bandwidth/src/bandwidth.c \
+                 $(wrkdir_src)/benchmarks/dijkstra/src/dijkstra.c \
+                 $(wildcard $(wrkdir_src)/benchmarks/disparity/src/*.c) \
+                 $(wildcard $(wrkdir_src)/benchmarks/fft/src/*.c) \
+                 $(wrkdir_src)/benchmarks/qsort/src/qsort.c \
+                 $(wrkdir_src)/benchmarks/sha/src/sha.c \
+                 $(wrkdir_src)/benchmarks/sorting/src/sorting.c
 
-# QSort
-INC_QSORT=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/qsort/inc
-SRC_QSORT=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/qsort/src
+# Variável contendo todos os binários finais que precisamos gerar no RootFS
+CUSTOM_APPS := $(OVERLAY_DIR)/ipc_receiver \
+               $(OVERLAY_DIR)/spectre \
+               $(OVERLAY_DIR)/armageddon \
+               $(OVERLAY_DIR)/benchmark
 
-# Dijkstra
-INC_DIJKSTRA=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/dijkstra/inc
-SRC_DIJKSTRA=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/dijkstra/src
+# --- Regras individuais de compilação ---
 
-# SHA
-INC_SHA=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/sha/inc
-SRC_SHA=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/sha/src
+$(OVERLAY_DIR)/ipc_receiver: $(IPC_SRC)
+	@echo ">> Compilando Receptor IPC..."
+	$(CC_ARM) -O2 $< -o $@
 
+$(OVERLAY_DIR)/spectre: $(SPECTRE_SRC)
+	@echo ">> Compilando Ataque Spectre..."
+	$(CC_ARM) -O2 $< -o $@
 
-# Main freertos application sources
-app_src_dir:=$(ROOT_DIR)/src
-include $(app_src_dir)/sources.mk
-C_SRC+=$(addprefix $(app_src_dir)/, $(src_c_srcs))
+$(OVERLAY_DIR)/armageddon: $(ARMAGEDDON_SRC)
+	@echo ">> Compilando Ataque Armageddon..."
+	$(CC_ARM) -O2 $< -o $@
 
+$(OVERLAY_DIR)/benchmark: $(BENCH_SOURCES)
+	@echo ">> Compilando pacote de Benchmarks..."
+	$(CC_ARM) -O2 $^ -o $@ -lm
 
-# Freertos kernel sources
-freertos_dir:=$(ROOT_DIR)/src/freertos
-SRC_DIRS+=$(freertos_dir) $(freertos_memmng_dir)
-INC_DIRS+=$(freertos_dir)/include
-C_SRC+=$(wildcard $(freertos_dir)/*.c)
-freertos_memmng_dir:=$(freertos_dir)/portable/MemMang
-C_SRC+=$(freertos_memmng_dir)/heap_4.c
+# --- Regra do RootFS ---
+$(BUILDROOT_DIR)/output/images/rootfs.cpio: $(CUSTOM_APPS)
+	@echo ">> Repacotando o sistema de arquivos do Linux com os novos executaveis..."
+	$(MAKE) -C $(BUILDROOT_DIR)
 
-# Freertos port arch-specific (Aqui o compilador descobre o portmacro.h do RPi4)
-arch_dir=$(ROOT_DIR)/src/arch/$(ARCH)
-SRC_DIRS+=$(arch_dir)
-INC_DIRS+=$(arch_dir)/inc
--include $(arch_dir)/arch.mk
--include $(arch_dir)/sources.mk
-C_SRC+=$(addprefix $(arch_dir)/, $(arch_c_srcs))
-ASM_SRC+=$(addprefix $(arch_dir)/, $(arch_s_srcs))
+all: $(CUSTOM_APPS) $(BUILDROOT_DIR)/output/images/rootfs.cpio $(TARGET)
 
-#fann
-FANN_ROOT = $(BAO_DEMOS_WRKDIR_SRC)/fann
-FANN_SRC  = $(FANN_ROOT)/src
-FANN_INC  = $(FANN_ROOT)/src/include
+VM1_DTS := $(BAO_DEMOS)/demos/linux+freertos/devicetrees/$(PLATFORM)/linux_vm_1.dts
 
-INC_DIRS += $(FANN_INC)
-C_SRC += $(FANN_SRC)/floatfann.c
+$(eval $(call build-linux, $(TARGET), $(VM1_DTS)))
 
-LD_LIBS += -lm
-CFLAGS+= -Os -ffunction-sections -fdata-sections
-
-#neural network
-INC_NEURAL_NETWORK=$(BAO_DEMOS_WRKDIR_SRC)/neural_network/inc
-SRC_NEURAL_NETWORK=$(BAO_DEMOS_WRKDIR_SRC)/neural_network/src
-INC_DIRS += $(INC_NEURAL_NETWORK)
-C_SRC+=$(wildcard $(SRC_NEURAL_NETWORK)/*.c)
-
-#pmu monitor
-INC_PMU_MONITOR=$(BAO_DEMOS_WRKDIR_SRC)/pmu_monitor/inc
-SRC_PMU_MONITOR=$(BAO_DEMOS_WRKDIR_SRC)/pmu_monitor/src
-INC_DIRS += $(INC_PMU_MONITOR)
-C_SRC+=$(wildcard $(SRC_PMU_MONITOR)/*.c)
-
-#benchmarks wrappers
-INC_BENCHMARKS=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/wrappers/inc
-SRC_BENCHMARKS=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/wrappers/src
-INC_DIRS += $(INC_BENCHMARKS)
-C_SRC+=$(wildcard $(SRC_BENCHMARKS)/*.c)
-
-#atacks
-
-#SPECTRE
-INC_SPECTRE=$(BAO_DEMOS_WRKDIR_SRC)/attacks/spectre/inc
-SRC_SPECTRE=$(BAO_DEMOS_WRKDIR_SRC)/attacks/spectre/src
-INC_DIRS += $(INC_SPECTRE)
-C_SRC+=$(wildcard $(SRC_SPECTRE)/*.c)
-
-#MELTDOWN
-INC_MELTDOWN=$(BAO_DEMOS_WRKDIR_SRC)/attacks/meltdown/inc
-SRC_MELTDOWN=$(BAO_DEMOS_WRKDIR_SRC)/attacks/meltdown/src
-INC_DIRS += $(INC_MELTDOWN)
-C_SRC+=$(wildcard $(SRC_MELTDOWN)/*.c)
-
-#ARMAGEDDON
-INC_ARMAGEDDON=$(BAO_DEMOS_WRKDIR_SRC)/attacks/armageddon/inc
-SRC_ARMAGEDDON=$(BAO_DEMOS_WRKDIR_SRC)/attacks/armageddon/src
-INC_DIRS += $(INC_ARMAGEDDON)
-C_SRC+=$(wildcard $(SRC_ARMAGEDDON)/*.c)
-
-#ZOMBIELOAD
-INC_ZOMBIELOAD=$(BAO_DEMOS_WRKDIR_SRC)/attacks/zombieload/inc
-SRC_ZOMBIELOAD=$(BAO_DEMOS_WRKDIR_SRC)/attacks/zombieload/src
-INC_DIRS += $(INC_ZOMBIELOAD)
-C_SRC+=$(wildcard $(SRC_ZOMBIELOAD)/*.c)
-
-# OTHERS SRCS
-C_SRC+=$(wildcard $(SRC_GUEST_COMMON)/*.c)
-C_SRC+=$(wildcard $(SRC_DISPARITY)/*.c)
-C_SRC+=$(wildcard $(SRC_MSER)/*.c)
-C_SRC+=$(wildcard $(SRC_BANDWIDTH)/*.c)
-C_SRC+=$(wildcard $(SRC_FFT)/*.c)
-C_SRC+=$(wildcard $(SRC_SORTING)/*.c)
-C_SRC+=$(wildcard $(SRC_QSORT)/*.c)
-C_SRC+=$(wildcard $(SRC_DIJKSTRA)/*.c)
-C_SRC+=$(wildcard $(SRC_SHA)/*.c)
-
-# OTHERS INCLUDES
-INC_DIRS+=$(INC_GUEST_COMMON)
-INC_DIRS+=$(INC_DISPARITY)
-INC_DIRS+=$(INC_MSER)
-INC_DIRS+=$(INC_BANDWIDTH)
-INC_DIRS+=$(INC_FFT)
-INC_DIRS+=$(INC_SORTING)
-INC_DIRS+=$(INC_QSORT)
-INC_DIRS+=$(INC_DIJKSTRA)
-INC_DIRS+=$(INC_SHA)
-
-#TASKS
-
-INC_TASKS=$(BAO_DEMOS_WRKDIR_SRC)/VMs/vm_0/src/tasks/inc
-SRC_TASKS=$(BAO_DEMOS_WRKDIR_SRC)/VMs/vm_0/src/tasks/src
-INC_DIRS += $(INC_TASKS)
-C_SRC+=$(wildcard $(SRC_TASKS)/*.c)
-
-LDFLAGS += $(CFLAGS)
-
-# Include the final baremetal-runtime build
-include $(bmrt_dir)/build.mk
+clean:
+	rm -f $(TARGET)
+	rm -f $(wrkdir_demo_imgs)/*.dtb

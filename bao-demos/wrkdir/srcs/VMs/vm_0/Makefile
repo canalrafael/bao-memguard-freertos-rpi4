@@ -13,39 +13,6 @@ include $(bmrt_dir)/setup.mk
 INC_GUEST_COMMON=$(BAO_DEMOS_WRKDIR_SRC)/guest_common/inc
 SRC_GUEST_COMMON=$(BAO_DEMOS_WRKDIR_SRC)/guest_common/src
 
-# Bandwidth
-INC_BANDWIDTH=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/bandwidth/inc
-SRC_BANDWIDTH=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/bandwidth/src
-
-# DISPARITY
-INC_DISPARITY=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/disparity/inc
-SRC_DISPARITY=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/disparity/src
-
-# MSER
-INC_MSER=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/mser/inc
-SRC_MSER=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/mser/src
-
-# FFT
-INC_FFT=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/fft/inc
-SRC_FFT=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/fft/src
-
-# Sorting
-INC_SORTING=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/sorting/inc
-SRC_SORTING=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/sorting/src
-
-# QSort
-INC_QSORT=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/qsort/inc
-SRC_QSORT=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/qsort/src
-
-# Dijkstra
-INC_DIJKSTRA=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/dijkstra/inc
-SRC_DIJKSTRA=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/dijkstra/src
-
-# SHA
-INC_SHA=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/sha/inc
-SRC_SHA=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/sha/src
-
-
 # Main freertos application sources
 app_src_dir:=$(ROOT_DIR)/src
 include $(app_src_dir)/sources.mk
@@ -96,59 +63,11 @@ SRC_PMU_MONITOR=$(BAO_DEMOS_WRKDIR_SRC)/pmu_monitor/src
 INC_DIRS += $(INC_PMU_MONITOR)
 C_SRC+=$(wildcard $(SRC_PMU_MONITOR)/*.c)
 
-#benchmarks wrappers
-INC_BENCHMARKS=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/wrappers/inc
-SRC_BENCHMARKS=$(BAO_DEMOS_WRKDIR_SRC)/benchmarks/wrappers/src
-INC_DIRS += $(INC_BENCHMARKS)
-C_SRC+=$(wildcard $(SRC_BENCHMARKS)/*.c)
-
-#atacks
-
-#SPECTRE
-INC_SPECTRE=$(BAO_DEMOS_WRKDIR_SRC)/attacks/spectre/inc
-SRC_SPECTRE=$(BAO_DEMOS_WRKDIR_SRC)/attacks/spectre/src
-INC_DIRS += $(INC_SPECTRE)
-C_SRC+=$(wildcard $(SRC_SPECTRE)/*.c)
-
-#MELTDOWN
-INC_MELTDOWN=$(BAO_DEMOS_WRKDIR_SRC)/attacks/meltdown/inc
-SRC_MELTDOWN=$(BAO_DEMOS_WRKDIR_SRC)/attacks/meltdown/src
-INC_DIRS += $(INC_MELTDOWN)
-C_SRC+=$(wildcard $(SRC_MELTDOWN)/*.c)
-
-#ARMAGEDDON
-INC_ARMAGEDDON=$(BAO_DEMOS_WRKDIR_SRC)/attacks/armageddon/inc
-SRC_ARMAGEDDON=$(BAO_DEMOS_WRKDIR_SRC)/attacks/armageddon/src
-INC_DIRS += $(INC_ARMAGEDDON)
-C_SRC+=$(wildcard $(SRC_ARMAGEDDON)/*.c)
-
-#ZOMBIELOAD
-INC_ZOMBIELOAD=$(BAO_DEMOS_WRKDIR_SRC)/attacks/zombieload/inc
-SRC_ZOMBIELOAD=$(BAO_DEMOS_WRKDIR_SRC)/attacks/zombieload/src
-INC_DIRS += $(INC_ZOMBIELOAD)
-C_SRC+=$(wildcard $(SRC_ZOMBIELOAD)/*.c)
-
 # OTHERS SRCS
 C_SRC+=$(wildcard $(SRC_GUEST_COMMON)/*.c)
-C_SRC+=$(wildcard $(SRC_DISPARITY)/*.c)
-C_SRC+=$(wildcard $(SRC_MSER)/*.c)
-C_SRC+=$(wildcard $(SRC_BANDWIDTH)/*.c)
-C_SRC+=$(wildcard $(SRC_FFT)/*.c)
-C_SRC+=$(wildcard $(SRC_SORTING)/*.c)
-C_SRC+=$(wildcard $(SRC_QSORT)/*.c)
-C_SRC+=$(wildcard $(SRC_DIJKSTRA)/*.c)
-C_SRC+=$(wildcard $(SRC_SHA)/*.c)
 
 # OTHERS INCLUDES
 INC_DIRS+=$(INC_GUEST_COMMON)
-INC_DIRS+=$(INC_DISPARITY)
-INC_DIRS+=$(INC_MSER)
-INC_DIRS+=$(INC_BANDWIDTH)
-INC_DIRS+=$(INC_FFT)
-INC_DIRS+=$(INC_SORTING)
-INC_DIRS+=$(INC_QSORT)
-INC_DIRS+=$(INC_DIJKSTRA)
-INC_DIRS+=$(INC_SHA)
 
 #TASKS
 

@@ -1,0 +1,208 @@
+Building all VMs...
+Building VM with index: 0
+make: Entrando no diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_0'
+make: Nada a ser feito para 'all'.
+make: Saindo do diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_0'
+Copying...
+Building VM with index: 1
+make: Entrando no diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_1'
+make: Nada a ser feito para 'all'.
+make: Saindo do diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_1'
+Copying...
+Building VM with index: 2
+make: Entrando no diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_2'
+make: Nada a ser feito para 'all'.
+make: Saindo do diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_2'
+Copying...
+Building VM with index: 3
+make: Entrando no diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3'
+make -C /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1 defconfig BR2_DEFCONFIG=/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config
+make[1]: Entrando no diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1'
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4488:warning: override: reassigning to symbol BR2_TOOLCHAIN_BUILDROOT_UCLIBC
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4488:warning: override: BR2_TOOLCHAIN_BUILDROOT_UCLIBC changes choice state
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4490:warning: override: reassigning to symbol BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_6_0
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4490:warning: override: BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_6_0 changes choice state
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4492:warning: override: reassigning to symbol BR2_TARGET_ROOTFS_CPIO
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4495:warning: override: reassigning to symbol BR2_TARGET_ROOTFS_INITRAMFS
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4497:warning: override: reassigning to symbol BR2_LINUX_KERNEL
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4498:warning: override: reassigning to symbol BR2_LINUX_KERNEL_USE_DEFCONFIG
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4499:warning: override: reassigning to symbol BR2_LINUX_KERNEL_USE_ARCH_DEFAULT_CONFIG
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4499:warning: override: BR2_LINUX_KERNEL_USE_ARCH_DEFAULT_CONFIG changes choice state
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4500:warning: override: reassigning to symbol BR2_LINUX_KERNEL_PATCH
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4501:warning: override: reassigning to symbol BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4503:warning: override: reassigning to symbol BR2_SYSTEM_DHCP
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4504:warning: override: reassigning to symbol BR2_TARGET_GENERIC_ROOT_PASSWD
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4506:warning: override: reassigning to symbol BR2_PACKAGE_DROPBEAR
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4511:warning: override: reassigning to symbol BR2_PACKAGE_HOST_QEMU
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/buildroot/aarch64.config:4513:warning: override: reassigning to symbol BR2_PACKAGE_URANDOM_SCRIPTS
+#
+# configuration written to /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/.config
+#
+make[1]: Saindo do diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1'
+make -C /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1 linux-reconfigure all
+make[1]: Entrando no diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1'
+rm -f /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/build/linux-custom/.stamp_rsynced
+rm -f /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/build/linux-custom/.stamp_installed
+rm -f /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/build/linux-custom/.stamp_staging_installed
+rm -f /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/build/linux-custom/.stamp_target_installed
+rm -f /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/build/linux-custom/.stamp_images_installed
+rm -f /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/build/linux-custom/.stamp_host_installed
+rm -f /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/build/linux-custom/.stamp_built
+rm -f /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/build/linux-custom/.stamp_dotconfig
+rm -f /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/build/linux-custom/.stamp_configured
+/usr/bin/make -j1 O=/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output HOSTCC="/usr/bin/gcc" HOSTCXX="/usr/bin/g++" syncconfig
+[7m>>> host-gcc-initial 11.3.0 Building[27m
+PATH="/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/bin:/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin" PKG_CONFIG="/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/bin/pkg-config" PKG_CONFIG_SYSROOT_DIR="/" PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1 PKG_CONFIG_ALLOW_SYSTEM_LIBS=1 PKG_CONFIG_LIBDIR="/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/lib/pkgconfig:/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/share/pkgconfig"  /usr/bin/make -j9 gcc_cv_libc_provides_ssp=no all-gcc all-target-libgcc -C /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/build/host-gcc-initial-11.3.0/build
+make[4]: Nada a ser feito para 'all'.
+true "AR_FLAGS=rc" "CC_FOR_BUILD=/usr/bin/gcc" "CFLAGS=-O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include" "CXXFLAGS=-O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include" "CFLAGS_FOR_BUILD=-O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include" "CFLAGS_FOR_TARGET=-D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64  -Os -g0 " "INSTALL=/usr/bin/install -c" "INSTALL_DATA=/usr/bin/install -c -m 644" "INSTALL_PROGRAM=/usr/bin/install -c" "INSTALL_SCRIPT=/usr/bin/install -c" "LDFLAGS=-static-libstdc++ -static-libgcc -L/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/lib -Wl,-rpath,/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/lib" "LIBCFLAGS=-O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include" "LIBCFLAGS_FOR_TARGET=-D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64  -Os -g0 " "MAKE=/usr/bin/make" "MAKEINFO=/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/build/host-gcc-initial-11.3.0/missing makeinfo --split-size=5000000 " "PICFLAG=" "PICFLAG_FOR_TARGET=" "SHELL=/bin/bash" "EXPECT=expect" "RUNTEST=runtest" "RUNTESTFLAGS=" "exec_prefix=/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host" "infodir=/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/share/info" "libdir=/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/lib" "prefix=/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host" "tooldir=/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/aarch64-buildroot-linux-uclibc" "AR=/usr/bin/ar" "AS=/usr/bin/as" "CC=/usr/bin/gcc" "CXX=/usr/bin/g++" "LD=/usr/bin/ld" "LIBCFLAGS=-O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include" "NM=/usr/bin/nm" "PICFLAG=" "RANLIB=/usr/bin/ranlib" "DESTDIR=" DO=all multi-do # /usr/bin/make
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection  ../../../libiberty/strncmp.c -o pic/strncmp.o; \
+else true; fi
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection  ../../../libiberty/simple-object-mach-o.c -o pic/simple-object-mach-o.o; \
+else true; fi
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection   ../../../libiberty/strncmp.c -o noasan/strncmp.o; \
+else true; fi
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection   ../../../libiberty/simple-object-mach-o.c -o noasan/simple-object-mach-o.o; \
+else true; fi
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection  ../../../libiberty/sort.c -o pic/sort.o; \
+else true; fi
+make[4]: Nada a ser feito para 'all'.
+/usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection ../../../libiberty/strncmp.c -o strncmp.o
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection  ../../../libiberty/spaces.c -o pic/spaces.o; \
+else true; fi
+/usr/bin/make  all-am
+if [ x"-fpic" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection -fpic ../../libiberty/strncmp.c -o pic/strncmp.o; \
+else true; fi
+/usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection ../../../libiberty/simple-object-mach-o.c -o simple-object-mach-o.o
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection   ../../../libiberty/sort.c -o noasan/sort.o; \
+else true; fi
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection   ../../../libiberty/spaces.c -o noasan/spaces.o; \
+else true; fi
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection  ../../../libiberty/splay-tree.c -o pic/splay-tree.o; \
+else true; fi
+make[4]: Nada a ser feito para 'all'.
+make[5]: Nada a ser feito para 'all'.
+/usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection ../../../libiberty/sort.c -o sort.o
+/usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection ../../../libiberty/spaces.c -o spaces.o
+if [ x"-fpic" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection -fpic ../../libiberty/simple-object-mach-o.c -o pic/simple-object-mach-o.o; \
+else true; fi
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection   ../../../libiberty/splay-tree.c -o noasan/splay-tree.o; \
+else true; fi
+/usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection ../../../libiberty/splay-tree.c -o splay-tree.o
+make[5]: Nada a ser feito para 'all'.
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection  ../../../libiberty/stack-limit.c -o pic/stack-limit.o; \
+else true; fi
+true  DO=all multi-do # /usr/bin/make
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection   ../../../libiberty/stack-limit.c -o noasan/stack-limit.o; \
+else true; fi
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection -fpic  ../../libiberty/strncmp.c -o noasan/strncmp.o; \
+else true; fi
+/usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection ../../../libiberty/stack-limit.c -o stack-limit.o
+/usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection ../../libiberty/strncmp.c -o strncmp.o
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection  ../../../libiberty/strerror.c -o pic/strerror.o; \
+else true; fi
+if [ x"-fpic" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection -fpic ../../libiberty/sort.c -o pic/sort.o; \
+else true; fi
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection   ../../../libiberty/strerror.c -o noasan/strerror.o; \
+else true; fi
+../../../libiberty/simple-object-mach-o.c: In function ‘simple_object_mach_o_write_segment’:
+/usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection ../../../libiberty/strerror.c -o strerror.o
+../../../libiberty/simple-object-mach-o.c:1231:17: error: passing argument 1 of ‘set_32’ from incompatible pointer type [-Wincompatible-pointer-types]
+ 1231 |         set_32 (&index[i], index[i]);
+      |                 ^~~~~~~~~
+      |                 |
+      |                 unsigned int *
+../../../libiberty/simple-object-mach-o.c:1231:17: note: expected ‘unsigned char *’ but argument is of type ‘unsigned int *’
+if [ x"-fpic" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection -fpic ../../libiberty/spaces.c -o pic/spaces.o; \
+else true; fi
+make[4]: *** [Makefile:1308: simple-object-mach-o.o] Error 1
+if [ x"-fpic" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection -fpic ../../libiberty/splay-tree.c -o pic/splay-tree.o; \
+else true; fi
+make[4]: ** Esperando que outros processos terminem.
+../../libiberty/simple-object-mach-o.c: In function ‘simple_object_mach_o_write_segment’:
+../../libiberty/simple-object-mach-o.c:1231:17: error: passing argument 1 of ‘set_32’ from incompatible pointer type [-Wincompatible-pointer-types]
+ 1231 |         set_32 (&index[i], index[i]);
+      |                 ^~~~~~~~~
+      |                 |
+      |                 unsigned int *
+../../libiberty/simple-object-mach-o.c:1231:17: note: expected ‘unsigned char *’ but argument is of type ‘unsigned int *’
+make[4]: *** [Makefile:1306: simple-object-mach-o.o] Error 1
+make[4]: ** Esperando que outros processos terminem.
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection -fpic  ../../libiberty/sort.c -o noasan/sort.o; \
+else true; fi
+/usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection ../../libiberty/sort.c -o sort.o
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection -fpic  ../../libiberty/spaces.c -o noasan/spaces.o; \
+else true; fi
+/usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection ../../libiberty/spaces.c -o spaces.o
+if [ x"" != x ]; then \
+  /usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection -fpic  ../../libiberty/splay-tree.c -o noasan/splay-tree.o; \
+else true; fi
+/usr/bin/gcc -c -DHAVE_CONFIG_H -O2 -I/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/host/include  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE -fcf-protection ../../libiberty/splay-tree.c -o splay-tree.o
+make[3]: *** [Makefile:2755: all-build-libiberty] Error 2
+make[3]: ** Esperando que outros processos terminem.
+make[3]: *** [Makefile:8446: all-libiberty] Error 2
+make[2]: *** [package/pkg-generic.mk:293: /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/build/host-gcc-initial-11.3.0/.stamp_built] Error 2
+make[1]: *** [Makefile:84: _all] Error 2
+make[1]: Saindo do diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1'
+make: *** [/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/guests/linux/make.mk:28: /home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3/src/buildroot-aarch64-v6.1/output/images/Image-rpi4] Error 2
+make: Saindo do diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/VMs/vm_3'
+Finished. Results:
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/imgs/rpi4/linux+freertos
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/imgs/rpi4/linux+freertos/config
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/imgs/rpi4/linux+freertos/config/linux+freertos.c
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/imgs/rpi4/linux+freertos/vm_2.bin
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/imgs/rpi4/linux+freertos/vm_0.bin
+/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/imgs/rpi4/linux+freertos/vm_1.bin
+make: Entrando no diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/bao'
+Compiling generator	 build/rpi4/linux+freertos/scripts/config_defs_gen
+Generating header	 build/rpi4/linux+freertos/config/config_defs_gen.h
+Creating dependency	 src/arch/armv8/aarch64/boot.S
+Creating dependency	 src/arch/armv8/armv8-a/iommu.c
+Creating dependency	 src/arch/armv8/vm.c
+Creating dependency	 src/arch/armv8/aborts.c
+Creating dependency	 src/arch/armv8/psci.c
+Creating dependency	 src/core/mem.c
+Creating dependency	 src/core/vmm.c
+Creating dependency	 src/core/vm.c
+Creating dependency	 src/core/config.c
+Creating dependency	 src/core/ipc.c
+Creating dependency	 src/core/mmu/mem.c
+Creating dependency	 src/core/mmu/vm.c
+Creating dependency	 build/rpi4/linux+freertos/config/linux+freertos
+Creating dependency	 src/linker.ld
+Compiling source	 src/arch/armv8/aarch64/boot.S
+Compiling source	 src/arch/armv8/armv8-a/iommu.c
+Compiling source	 src/arch/armv8/vm.c
+Compiling source	 src/arch/armv8/aborts.c
+Compiling source	 src/arch/armv8/psci.c
+Compiling source	 src/core/mem.c
+Compiling source	 src/core/vmm.c
+Compiling source	 src/core/vm.c
+Compiling source	 src/core/config.c
+Compiling source	 src/core/ipc.c
+Compiling source	 src/core/mmu/mem.c
+Compiling source	 src/core/mmu/vm.c
+make: *** Sem regra para processar o alvo '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/imgs/rpi4/linux+freertos/vm_3.bin', necessário por '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/bao/build/rpi4/linux+freertos/config/linux+freertos.o'.  Pare.
+make: Saindo do diretório '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/bao'
+cp: não foi possível obter estado de '/home/gabriel/bolsa-giovani/teste/bao-memguard-freertos-rpi4/bao-demos/wrkdir/srcs/bao/bin/rpi4/linux+freertos/bao.bin': Arquivo ou diretório inexistente

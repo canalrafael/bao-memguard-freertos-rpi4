@@ -62,6 +62,8 @@ int main(void) {
       while(1);
   }
 
+  printf("DEU CERTO!!!!!!!!!!!!!!!!!!!");
+
   xTaskCreate(
     task_monitor,
     "taskMonitor",
@@ -70,119 +72,6 @@ int main(void) {
     OTHER_TASK_PRIORITY,
     NULL
   );
-
-  //benchmarks
-
-  xTaskCreate(
-    task_bandwidth,
-    "taskBandwidth",
-    TASK_STACK_SIZE,
-    NULL,
-    OTHER_TASK_PRIORITY,
-    NULL
-  );
-
-  // xTaskCreate(
-  //   task_disparity,
-  //   "taskDisparity",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_qsort,
-  //   "taskQsort",
-  //   8192,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_dijkstra,
-  //   "taskDijkstra",
-  //   8192,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_sha,
-  //   "taskSHA",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_fft,
-  //   "taskFFT",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_sorting,
-  //   "taskSorting",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  
-  // xTaskCreate(
-  //   task_random,
-  //   "taskRandom",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  //ataques:
-
-  // xTaskCreate(
-  //   task_spectre,
-  //   "taskSpectre",
-  //   TASK_STACK_SIZE, //stack maior para lidar com array2 e operacoes
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_meltdown,
-  //   "taskMeltdown",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_zombieload,
-  //   "taskZombieload",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
-
-  // xTaskCreate(
-  //   task_flush_reload,
-  //   "taskFlushReload",
-  //   TASK_STACK_SIZE,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
 
   //fann:
 

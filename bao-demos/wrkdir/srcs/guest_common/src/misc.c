@@ -148,7 +148,7 @@ void print_vm_info(struct VM vm_info, Benchmark *b) {
   // write_clock_cycle(vm_info, &info);
 
   // printf("%ld,", info.period_duration_total);
-  printf("%s,", benchmark_get_formula_name(b));
+  // printf("%s,", benchmark_get_formula_name(b));
   printf("%ld,", info.PMU_counter_used_budget);
   printf("%ld,", info.PMU_counter_used_budget_r);
   printf("%ld,", info.PMU_counter_used_budget_w);

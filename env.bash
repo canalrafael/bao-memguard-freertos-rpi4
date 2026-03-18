@@ -6,7 +6,7 @@ toolchain_folder="etc/arm-gnu-toolchain"
 sd_card_partition=/dev/sda
 sd_card_path=/media/$USER/BOOT
 
-# sd_card_path=/home/gabriel/bolsa-giovani/bao-workspace/teste-boot
+# sd_card_path=/home/gabriel/bolsa-giovani/teste/boot
 export EDITOR="nvim"
 
 if [ ! -d "$bao_folder" ]; then

@@ -68,20 +68,20 @@ long int hypercall(unsigned long id)
             break;
 
         case HC_SEC_MONITOR:
-            cpuid_t my_id = cpu()->id;
-            
-            if (my_id >= PMU_MAX_CPUS || g_pmu_data[my_id].cpu_cycles == 0) {
-                my_id = 0;
+            cpuid_t target_cpu = vcpu_readreg(cpu()->vcpu, 1);            
+
+            if (target_cpu >= PMU_MAX_CPUS || g_pmu_data[target_cpu].cpu_cycles == 0) {
+                target_cpu = 0;
             }
 
-            vcpu_writereg(cpu()->vcpu, 0, g_pmu_data[my_id].cpu_cycles);
-            vcpu_writereg(cpu()->vcpu, 1, g_pmu_data[my_id].cache_misses);
-            vcpu_writereg(cpu()->vcpu, 2, g_pmu_data[my_id].instuctions);
-            vcpu_writereg(cpu()->vcpu, 3, g_pmu_data[my_id].branch_misses);
-            vcpu_writereg(cpu()->vcpu, 4, g_pmu_data[my_id].timestamp);
+            vcpu_writereg(cpu()->vcpu, 0, g_pmu_data[target_cpu].cpu_cycles);
+            vcpu_writereg(cpu()->vcpu, 1, g_pmu_data[target_cpu].cache_misses);
+            vcpu_writereg(cpu()->vcpu, 2, g_pmu_data[target_cpu].instuctions);
+            vcpu_writereg(cpu()->vcpu, 3, g_pmu_data[target_cpu].branch_misses);
+            vcpu_writereg(cpu()->vcpu, 4, g_pmu_data[target_cpu].timestamp);
             
             
-            ret = g_pmu_data[my_id].cpu_cycles;
+            ret = g_pmu_data[target_cpu].cpu_cycles;
             break;
         default:
             WARNING("Unknown hypercall id %d", id);

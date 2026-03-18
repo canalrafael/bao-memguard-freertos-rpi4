@@ -16,6 +16,7 @@ struct config config =
         .shmemlist = (struct shmem[]){[0] =
                                           {
                                               .size = 0x00010000,
+                                            // .size = 0x00400000,  //para suportar mais dados
                                           }},
 
         .vmlist_size = RUNNING_VMs,
