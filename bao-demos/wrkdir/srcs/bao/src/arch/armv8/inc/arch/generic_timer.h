@@ -22,7 +22,7 @@
 typedef struct {
     uint64_t timestamp;
     uint64_t cpu_cycles;
-    uint64_t instuctions;
+    uint64_t instructions;
     uint64_t branch_misses;
     uint64_t cache_misses;
 } pmu_data_t;

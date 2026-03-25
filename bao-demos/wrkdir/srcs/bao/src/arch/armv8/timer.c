@@ -3,6 +3,7 @@
 #include <arch/generic_timer.h>
 #include <interrupts.h>
 #include <cpu.h>
+#include <arch/neural_network.h>
 
 #define MRS(v, r) __asm__ volatile("mrs %0, " #r : "=r" (v))
 #define MSR(r, v) __asm__ volatile("msr " #r ", %0" : : "r" (v))
@@ -103,7 +104,7 @@ static inline void pmu_collect_data(void) {
     asm volatile("msr pmselr_el0, %0" :: "r" (3));
     ISB();
     MRS(val, pmxevcntr_el0);
-    g_pmu_data[id].instuctions = val;
+    g_pmu_data[id].instructions = val;
 
     //timestamp
     MRS(val, cntpct_el0); 
@@ -128,6 +129,9 @@ void timer_handler(irqid_t irq_id) {
 
     // coleta os dados da PMU
     pmu_collect_data();
+
+    //chama a rede neural passando os dados coletados da pmu
+    bao_run_interference_detection(cpu()->id, &g_pmu_data[cpu()->id]);
 
     // reprograma o proximo disparo
     uint64_t current_cnt;

@@ -62,8 +62,6 @@ int main(void) {
       while(1);
   }
 
-  printf("DEU CERTO!!!!!!!!!!!!!!!!!!!");
-
   xTaskCreate(
     task_monitor,
     "taskMonitor",
@@ -72,17 +70,6 @@ int main(void) {
     OTHER_TASK_PRIORITY,
     NULL
   );
-
-  //fann:
-
-  // xTaskCreate(
-  //   task_fann,
-  //   "taskFANN",
-  //   8192,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
 
   vTaskStartScheduler();
   while (1) {

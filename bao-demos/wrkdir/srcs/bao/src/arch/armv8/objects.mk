@@ -4,6 +4,7 @@
 cpu-objs-y+=cache.o
 cpu-objs-y+=interrupts.o
 cpu-objs-y+=timer.o 	# timer implementado com o generic_timer.h
+cpu-objs-y+=neural_network.o
 cpu-objs-y+=vm.o
 cpu-objs-y+=aborts.o
 cpu-objs-y+=cpu.o
