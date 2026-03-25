@@ -5,8 +5,7 @@
 #include <unistd.h>
 
 #define IPC_BASE_ADDR 0x70000000
-#define IPC_SIZE 0x00400000
-
+#define IPC_SIZE 0x00010000
 typedef struct {
     volatile uint32_t dump_request;
 } IPC_Payload;

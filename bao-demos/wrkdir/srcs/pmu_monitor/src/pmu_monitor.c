@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_SAMPLES 15 //10000 
+#define MAX_SAMPLES 300
 
 static FANN_sample pmu_history[MAX_SAMPLES];
 static uint32_t current_sample_index = 0;
@@ -82,7 +82,8 @@ void bao_get_pmu_data(uint8_t target_cpu, PMU_data *data) {
 void collect_and_process_pmu_sample(uint64_t timer_freq) {
     IPC_Payload* shared_memory = (IPC_Payload*) IPC_BASE_ADDR;
 
-    if (shared_memory->dump_request == 1) {
+    if (shared_memory->dump_request == 1 || current_sample_index >= 75) {
+        
         dump_history_to_serial(); 
         
         asm volatile("dsb sy" ::: "memory");

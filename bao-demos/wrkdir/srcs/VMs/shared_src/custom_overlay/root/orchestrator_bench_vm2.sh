@@ -1,8 +1,6 @@
 #!/bin/sh
 
 trap 'kill -9 $BENCH_PID 2>/dev/null; exit 0' INT
-b_idx=0
-ciclo=1
 
 get_bench() {
     case $1 in
@@ -11,23 +9,23 @@ get_bench() {
     esac
 }
 
-while true; do
+for b_idx in 0 1 2 3 4 5 6; do
     CURR_BENCH=$(get_bench $b_idx)
+    echo "=================================================="
+    echo "[VM2] Iniciando 40 MINUTOS de: $CURR_BENCH"
     
-    /root/benchmark $CURR_BENCH &
-    BENCH_PID=$!
+    for ciclo in $(seq 1 120); do
+        /root/benchmark $CURR_BENCH > /dev/null 2>&1 &
+        BENCH_PID=$!
 
-    # Aguarda 15 segundos para o nosso teste rápido
-    sleep 15
+        sleep 15
 
-    # Mata o benchmark para deixar a placa silenciosa
-    kill -9 $BENCH_PID 2>/dev/null
-    sleep 2
-    
-    # Executa o gatilho que acabamos de compilar!
-    /root/trigger_print
-    
-    b_idx=$(( (b_idx + 1) % 7 ))
-    ciclo=$(( ciclo + 1 ))
-    sleep 5
+        kill -9 $BENCH_PID 2>/dev/null
+        
+        sleep 1
+        
+        /root/trigger_print
+        
+        sleep 2
+    done
 done

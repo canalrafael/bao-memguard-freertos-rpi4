@@ -55,41 +55,44 @@ void _fini(void) {}
 
 int main(void) {
 
-  //cria fila para comunicação PMU -> FANN
-  xPmuQueue = xQueueCreate(100, sizeof(FANN_sample));
-  if(xPmuQueue == NULL) {
-      printf("Erro: fila nao criada\n");
-      while(1);
-  }
+    //cria fila para comunicação PMU -> FANN
+    xPmuQueue = xQueueCreate(100, sizeof(FANN_sample));
+    if(xPmuQueue == NULL) {
+        printf("Erro: fila nao criada\n");
+        while(1);
+    }
+    // Limpa o lixo da memória IPC antes do Linux acordar
+    volatile uint32_t *ipc_flag = (volatile uint32_t *) 0x70000000;
+    *ipc_flag = 0;
 
-  printf("DEU CERTO!!!!!!!!!!!!!!!!!!!");
+    printf("DEU CERTO!!!!!!!!!!!!!!!!!!!\n");
 
-  xTaskCreate(
+    xTaskCreate(
     task_monitor,
     "taskMonitor",
     TASK_STACK_SIZE,
     NULL,
     OTHER_TASK_PRIORITY,
     NULL
-  );
+    );
 
-  //fann:
+    //fann:
 
-  // xTaskCreate(
-  //   task_fann,
-  //   "taskFANN",
-  //   8192,
-  //   NULL,
-  //   OTHER_TASK_PRIORITY,
-  //   NULL
-  // );
+    // xTaskCreate(
+    //   task_fann,
+    //   "taskFANN",
+    //   8192,
+    //   NULL,
+    //   OTHER_TASK_PRIORITY,
+    //   NULL
+    // );
 
-  vTaskStartScheduler();
-  while (1) {
+    vTaskStartScheduler();
+    while (1) {
     //
-  }
-  // printf("\nReturning from main.\n");
-  return 0;
+    }
+    // printf("\nReturning from main.\n");
+    return 0;
 }
 
 /*-----------------------------------------------------------*/

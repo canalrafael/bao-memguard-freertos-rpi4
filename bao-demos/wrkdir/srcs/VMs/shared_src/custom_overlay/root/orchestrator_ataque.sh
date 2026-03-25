@@ -1,23 +1,21 @@
 #!/bin/sh
 
-# Lista dos ataques que compilamos
 ATAQUES="spectre armageddon"
-
 
 while true; do
     for ATAQUE in $ATAQUES; do
+        echo "=================================================="
+        echo "[VM1] Iniciando 40 MINUTOS de Ataque: $ATAQUE"
         
-        
-        /root/$ATAQUE &
-        PID_ATAQUE=$!
+        for ciclo in $(seq 1 120); do
+            /root/$ATAQUE > /dev/null 2>&1 &
+            PID_ATAQUE=$!
 
-        # Aguarda 40 minutos (40 min * 60 seg = 2400 segundos)
-        sleep 15
+            sleep 15
 
-        kill -9 $PID_ATAQUE
-        
-        # Pausa de 5 segundos para o FreeRTOS transferir os dados via IPC com folga
-        sleep 5
-        
+            kill -9 $PID_ATAQUE 2>/dev/null
+            
+            sleep 5
+        done
     done
 done
