@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_SAMPLES 15 //10000 
+#define MAX_SAMPLES 300 // ~20s de dados (3 cores * 5 amostras/s * 20s)
 
 static FANN_sample pmu_history[MAX_SAMPLES];
 static uint32_t current_sample_index = 0;

@@ -38,7 +38,8 @@ BENCH_SOURCES := $(wrkdir_src)/main_benchmark.c \
 CUSTOM_APPS := $(OVERLAY_DIR)/ipc_receiver \
                $(OVERLAY_DIR)/spectre \
                $(OVERLAY_DIR)/armageddon \
-               $(OVERLAY_DIR)/benchmark
+               $(OVERLAY_DIR)/benchmark \
+               $(OVERLAY_DIR)/trigger_print
 
 # --- Regras individuais de compilação ---
 
@@ -57,6 +58,12 @@ $(OVERLAY_DIR)/armageddon: $(ARMAGEDDON_SRC)
 $(OVERLAY_DIR)/benchmark: $(BENCH_SOURCES)
 	@echo ">> Compilando pacote de Benchmarks..."
 	$(CC_ARM) -O2 $^ -o $@ -lm
+
+TRIGGER_PRINT_SRC := $(wrkdir_src)/trigger_print.c
+
+$(OVERLAY_DIR)/trigger_print: $(TRIGGER_PRINT_SRC)
+	@echo ">> Compilando trigger print..."
+	$(CC_ARM) -O2 $< -o $@
 
 # --- Regra do RootFS ---
 $(BUILDROOT_DIR)/output/images/rootfs.cpio: $(CUSTOM_APPS)

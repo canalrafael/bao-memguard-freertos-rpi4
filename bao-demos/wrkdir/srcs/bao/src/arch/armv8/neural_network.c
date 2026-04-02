@@ -76,6 +76,8 @@ static float run_mlp_inference(float *inputs) {
     return fann_sigmoid(out);
 }
 
+
+
 void bao_run_interference_detection(cpuid_t cpu_id, volatile pmu_data_t *pmu) {
     
     //calcula o tempo que passou desde a ultima coleta
@@ -122,6 +124,10 @@ void bao_run_interference_detection(cpuid_t cpu_id, volatile pmu_data_t *pmu) {
 
         //executa a predicao
         float is_attack = run_mlp_inference(flattened_input);
+
+        int frac_part = (int)(is_attack * 10000.0f); 
+        
+        printk("VM %d | NN: %d\n", cpu_id, frac_part);
         
         if (is_attack > 0.85f) { //ataque detectado
         }

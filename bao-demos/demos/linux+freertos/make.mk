@@ -2,7 +2,7 @@ include $(bao_demos)/guests/linux/make.mk
 include $(bao_demos)/guests/freertos/make.mk
 
 linux_image=$(wrkdir_demo_imgs)/linux.bin
-linux_dts=$(bao_demos)/demos/$(DEMO)/devicetrees/$(PLATFORM)/linux.dts
+linux_dts=$(bao_demos)/demos/$(DEMO)/devicetrees/$(PLATFORM)/linux_vm_1.dts
 $(eval $(call build-linux, $(linux_image), $(linux_dts)))
 
 freertos_image:=$(wrkdir_demo_imgs)/freertos.bin

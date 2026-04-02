@@ -2,9 +2,8 @@
 
 input=$1
 
-VM_INDEX='all'  # Initialize VM_INDEX
 VM_NAME_PREFIX="vm_"
-build_all=false # Initialize build_all
+build_all=false
 
 # Check if input is a number from 0 to 3
 if [[ "$input" =~ ^[0-3]$ ]]; then
@@ -21,35 +20,61 @@ else
   exit 1
 fi
 
-# Function placeholder (replace with your actual build function)
+# VM0 is FreeRTOS, VMs 1/2/3 are Linux
+FREERTOS_VMS="0"
+
+is_freertos_vm() {
+  local idx=$1
+  for fvm in $FREERTOS_VMS; do
+    if [ "$fvm" == "$idx" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 build() {
-  echo "Building VM with index: $1"
-  #  Your actual build commands would go here,
-  #  using $1 as the VM index.
-  VM_INDEX=$1 source ./env.bash
-  make -C $BAO_DEMOS_FREERTOS PLATFORM=$PLATFORM $FREERTOS_PARAMS && echo "Copying..." && cp $BAO_DEMOS_FREERTOS/build/$PLATFORM/$VM_NAME_PREFIX$VM_INDEX.bin $BAO_DEMOS_WRKDIR_IMGS
+  local idx=$1
+  VM_INDEX=$idx source ./env.bash
+
+  local VM_DIR="$BAO_DEMOS_WRKDIR_SRC/VMs/${VM_NAME_PREFIX}${idx}"
+  local VM_BUILD_DIR="$VM_DIR/build/$PLATFORM"
+
+  if is_freertos_vm "$idx"; then
+    echo "=== Building FreeRTOS VM $idx ==="
+    make -C "$VM_DIR" PLATFORM="$PLATFORM" $FREERTOS_PARAMS
+  else
+    echo "=== Building Linux VM $idx ==="
+    make -C "$VM_DIR" PLATFORM="$PLATFORM"
+  fi
+
+  # Copy the built binary to the final images directory
+  local BIN_FILE="$VM_BUILD_DIR/${VM_NAME_PREFIX}${idx}.bin"
+  if [ -f "$BIN_FILE" ]; then
+    echo "Copying $BIN_FILE -> $BAO_DEMOS_WRKDIR_IMGS/"
+    cp "$BIN_FILE" "$BAO_DEMOS_WRKDIR_IMGS/"
+  else
+    echo "Error: Expected output not found: $BIN_FILE" >&2
+    echo "  Listing $VM_BUILD_DIR:" >&2
+    ls -la "$VM_BUILD_DIR/" 2>&1 >&2
+    return 1
+  fi
 }
 
 # Build logic
 if "$build_all"; then
   for i in {0..3}; do
-    VM_INDEX="$i" # important: set VM_INDEX inside the loop
-    build "$VM_INDEX" #  Call your build command
+    build "$i"
   done
 elif [ -n "$VM_INDEX" ]; then
-  build "$VM_INDEX" # Call build command with the provided VM_INDEX
+  build "$VM_INDEX"
 else
-  echo "Error:  VM_INDEX is not defined." >&2
+  echo "Error: VM_INDEX is not defined." >&2
   exit 1
 fi
 
+echo ""
 echo "Finished. Results:"
-find $BAO_DEMOS_WRKDIR_IMGS
-
-# echo $CROSS_COMPILE
-# export VM_INDEX=$1
-# source ./env.bash
-# make -C $BAO_DEMOS_FREERTOS PLATFORM=$PLATFORM $FREERTOS_PARAMS
-# echo $CROSS_COMPILE
+ls -lh "$BAO_DEMOS_WRKDIR_IMGS"/${VM_NAME_PREFIX}*.bin 2>/dev/null
 
 exit 0

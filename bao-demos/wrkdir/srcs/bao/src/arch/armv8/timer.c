@@ -118,6 +118,8 @@ static inline void pmu_collect_data(void) {
     pmcr |= (1 << 2) | (1 << 1); 
     
     MSR(pmcr_el0, pmcr);
+
+    pmu_init_registers();
 }
 
 void timer_handler(irqid_t irq_id) {
@@ -131,7 +133,7 @@ void timer_handler(irqid_t irq_id) {
     pmu_collect_data();
 
     //chama a rede neural passando os dados coletados da pmu
-    bao_run_interference_detection(cpu()->id, &g_pmu_data[cpu()->id]);
+    //bao_run_interference_detection(cpu()->id, &g_pmu_data[cpu()->id]);
 
     // reprograma o proximo disparo
     uint64_t current_cnt;

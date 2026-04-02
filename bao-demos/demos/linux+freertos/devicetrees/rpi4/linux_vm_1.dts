@@ -1,62 +1,62 @@
 /dts-v1/;
 
 / {
-	#address-cells = <2>;
-	#size-cells = <2>;
-	interrupt-parent = <&gic>;
+    #address-cells = <2>;
+    #size-cells = <2>;
+    interrupt-parent = <&gic>;
 
-	cpus {
-		#size-cells = <0x0>;
-		#address-cells = <0x1>;
+    cpus {
+        #size-cells = <0x0>;
+        #address-cells = <0x1>;
 
-		cpu@0 {
-			compatible = "arm,armv8";
-			device_type = "cpu";
-			enable-method = "psci";
-			reg = <0x0>;
-		};
+        cpu@0 {
+            compatible = "arm,armv8";
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x0>;
+        };
 
-		cpu@1 {
-			compatible = "arm,armv8";
-			device_type = "cpu";
-			enable-method = "psci";
-			reg = <0x1>;
-		};
+        cpu@1 {
+            compatible = "arm,armv8";
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x1>;
+        };
 
-		cpu@2 {
-			compatible = "arm,armv8";
-			device_type = "cpu";
-			enable-method = "psci";
-			reg = <0x2>;
-		};
+        cpu@2 {
+            compatible = "arm,armv8";
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x2>;
+        };
 
-	};
+    };
 
-	psci {
-		compatible = "arm,psci-0.2";
-		method = "smc";
-	};
+    psci {
+        compatible = "arm,psci-0.2";
+        method = "smc";
+    };
 
-	memory@0 {
+    memory@0 {
         device_type = "memory";
         // Base = 0x0, Tamanho = 0x08000000 (128 MB)
         reg = <0x0 0x0 0x0 0x08000000>;
     };
 
-	reserved-memory {
-		#address-cells = <0x02>;
-		#size-cells = <0x01>;
-		ranges;
+    reserved-memory {
+        #address-cells = <0x02>;
+        #size-cells = <0x01>;
+        ranges;
 
-		linux,cma {
-			compatible = "shared-dma-pool";
-			size = <0x4000000>;
-			reusable;
-			linux,cma-default;
-		};
-	};
+        linux,cma {
+            compatible = "shared-dma-pool";
+            size = <0x4000000>;
+            reusable;
+            linux,cma-default;
+        };
+    };
 
-	gic: interrupt-controller@f9010000 {
+    gic: interrupt-controller@f9010000 {
         compatible = "arm,gic-400";
         #interrupt-cells = <3>;
         interrupt-controller;
@@ -64,45 +64,51 @@
               <0x0 0xf9020000 0x0 0x2000>;
     };
 
-	timer {
-		compatible = "arm,armv8-timer";
-		interrupts = <0x1 0xd 0xf08 0x1 0xe 0xf08 0x1 0xb 0xf08 0x1 0xa 0xf08>;
-	};
+    timer {
+        compatible = "arm,armv8-timer";
+        interrupts = <0x1 0xd 0xf08 0x1 0xe 0xf08 0x1 0xb 0xf08 0x1 0xa 0xf08>;
+    };
 
-	scb@7c000000 {
-		compatible = "simple-bus";
-		#address-cells = <0x02>;
-		#size-cells = < 0x02 >;
-		dma-ranges = < 0x00 0x00 0x00 0x00 0x04 0x00 >;
-		ranges = < 0x00 0x7c000000 0x00 0xfc000000 0x00 0x3800000 0x00 0x40000000 0x00 0xff800000 0x00 0x800000 0x06 0x00 0x06 0x00 0x00 0x40000000 0x00 0x00 0x00 0x00 0x00 0xfc000000 >;
+    scb@7c000000 {
+        compatible = "simple-bus";
+        #address-cells = <0x02>;
+        #size-cells = < 0x02 >;
+        dma-ranges = < 0x00 0x00 0x00 0x00 0x04 0x00 >;
+        ranges = < 0x00 0x7c000000 0x00 0xfc000000 0x00 0x3800000 0x00 0x40000000 0x00 0xff800000 0x00 0x800000 0x06 0x00 0x06 0x00 0x00 0x40000000 0x00 0x00 0x00 0x00 0x00 0xfc000000 >;
 
-		genet: ethernet@7d580000 {
-			local-mac-address = [dc a6 32 a3 9c 57];
-			compatible = "brcm,bcm2711-genet-v5", "brcm,genet-v5";
-			reg = < 0x00 0x7d580000 0x00 0x10000 >;
-			#address-cells = <0x1>;
-			#size-cells = <0x1>;
-			interrupts = <0 157 4>,
-						<0 158 4>;
-			status = "disabled";
+        genet: ethernet@7d580000 {
+            local-mac-address = [dc a6 32 a3 9c 57];
+            compatible = "brcm,bcm2711-genet-v5", "brcm,genet-v5";
+            reg = < 0x00 0x7d580000 0x00 0x10000 >;
+            #address-cells = <0x1>;
+            #size-cells = <0x1>;
+            interrupts = <0 157 4>,
+                        <0 158 4>;
+            status = "disabled";
 
-			phy-handle = <&phy1>;
-			phy-mode = "rgmii-rxid";
+            phy-handle = <&phy1>;
+            phy-mode = "rgmii-rxid";
 
-			genet_mdio: mdio@e14 {
-				compatible = "brcm,genet-mdio-v5";
-				reg = <0xe14 0x8>;
-				reg-names = "mdio";
-				#address-cells = <0x0>;
-				#size-cells = <0x1>;
+            genet_mdio: mdio@e14 {
+                compatible = "brcm,genet-mdio-v5";
+                reg = <0xe14 0x8>;
+                reg-names = "mdio";
+                #address-cells = <0x0>;
+                #size-cells = <0x1>;
 
-				phy1: ethernet-phy@1 {
-					reg = <0x01>;
-					led-modes = < 0x00 0x08 >;
-				};
-			};
-		};
-	};
+                phy1: ethernet-phy@1 {
+                    reg = <0x01>;
+                    led-modes = < 0x00 0x08 >;
+                };
+            };
+        };
+    };
+
+    serial@fe201800 {
+        compatible = "arm,pl011", "arm,primecell";
+        reg = <0x0 0xfe201800 0x0 0x1000>;
+        interrupts = <0 122 4>;
+    };
 
     bao-ipc@70000000 {
         compatible = "bao,ipcshmem";
@@ -111,34 +117,33 @@
         write-channel = <0x200000 0x200000>;
         interrupts = <0 52 1>;
         id = <1>;
-		status = "disabled";
+        status = "disabled";
     };
 
-	aliases {
-		ethernet0 = &genet;
-	};
-
-	chosen {
-        bootargs = "earlycon clk_ignore_unused ip=192.168.2.4 carrier_timeout=0 rw mitigations=off vm_role=ataque";
+    aliases {
+        ethernet0 = &genet;
+        serial1 = "/serial@fe201800";
     };
 
-	pmu {
-		compatible = "arm,armv8-pmuv3";
-	    interrupt-parent = <0x4>;
-	    interrupts = <0 32 4>,
-    				 <0 36 4>,
- 					 <0 78 4>,
-					 <0 263 4>,
-					 <0 101 4>,
-					 <0 174 4>,
-					 <0 180 4>,
-					 <0 187 4>,
-					 <0 48 4>,
-	                 <0 49 4>,
-	                 <0 50 4>,
-	                 <0 51 4>;
-	};
+    chosen {
+        bootargs = "console=ttyAMA1,115200 earlycon=pl011,0xfe201800 earlycon clk_ignore_unused ip=192.168.2.4 carrier_timeout=0 rw mitigations=off vm_role=ataque";
+    };
 
-	
+    pmu {
+        compatible = "arm,armv8-pmuv3";
+        interrupt-parent = <0x4>;
+        interrupts = <0 32 4>,
+                     <0 36 4>,
+                      <0 78 4>,
+                     <0 263 4>,
+                     <0 101 4>,
+                     <0 174 4>,
+                     <0 180 4>,
+                     <0 187 4>,
+                     <0 48 4>,
+                     <0 49 4>,
+                     <0 50 4>,
+                     <0 51 4>;
+    };
 
 };

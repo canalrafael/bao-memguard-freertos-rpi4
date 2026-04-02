@@ -2,4 +2,6 @@ enable_uart=1
 arm_64bit=1
 enable_gic=1
 armstub=bl31.bin
-kernel=u-boot.bin
+kernel=bao.bin
+kernel_address=0x200000
+dtoverlay=uart4

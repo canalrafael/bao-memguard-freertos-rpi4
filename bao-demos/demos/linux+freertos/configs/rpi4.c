@@ -59,7 +59,7 @@ struct config config =
                                  .dev_num = 2,
                                  .devs =
                                      (struct vm_dev_region[]){
-                                         {/* UART1 */
+                                          {/* UART1 - mini-UART (GPIO 14/15) */
                                           .pa = 0xfe215000,
                                           .va = 0xff000000,
                                           .size = 0x1000,
@@ -117,12 +117,12 @@ struct config config =
                                  .dev_num = 2,
                                  .devs =
                                      (struct vm_dev_region[]){
-                                         {/* UART1 */
-                                          .pa = 0xfe215000,
-                                          .va = 0xff000000,
+                                         {/* UART4 - PL011 para Linux (GPIO 8/9) */
+                                          .pa = 0xfe201800,
+                                          .va = 0xfe201800,
                                           .size = 0x1000,
                                           .interrupt_num = 1,
-                                          .interrupts = (irqid_t[]){126}},
+                                          .interrupts = (irqid_t[]){154}},
                                          {/* Arch timer interrupt */
                                           .interrupt_num = 1,
                                           .interrupts = (irqid_t[]){27}},

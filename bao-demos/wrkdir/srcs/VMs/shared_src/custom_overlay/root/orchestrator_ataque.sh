@@ -11,12 +11,18 @@ while true; do
         /root/$ATAQUE &
         PID_ATAQUE=$!
 
-        # Aguarda 40 minutos (40 min * 60 seg = 2400 segundos)
+        # Aguarda 15 segundos de execucao do ataque
         sleep 15
 
         kill -9 $PID_ATAQUE
         
-        # Pausa de 5 segundos para o FreeRTOS transferir os dados via IPC com folga
+        # Aguarda 2 segundos antes de pedir o dump
+        sleep 2
+
+        # Avisa o FreeRTOS para printar os dados coletados
+        /root/trigger_print
+
+        # Pausa de 5 segundos para o FreeRTOS transferir os dados via serial
         sleep 5
         
     done
