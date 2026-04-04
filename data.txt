@@ -394587,3 +394587,126 @@ VM 3 | NN: 9987
 VM 3 | NN: 9987
 VM 3 | NN: 9987
 VM 3 | NN: 9987
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+Fila criada com sucesso
+TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+Fila criada com sucesso
+TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+Fila criada com sucesso
+TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+Fila criada com sucesso
+TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+Fila criada com sucesso
+TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+Fila criada com sucesso
+TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+NOTICE:  BL31: v2.9(release):8a3945e
+NOTICE:  BL31: Built : 17:27:52, May  1 2024
+
+
+U-Boot 2022.10 (May 01 2024 - 17:26:49 -0300)
+
+DRAM:  7.1 GiB
+RPI 4 Model B (0xd03115)
+Core:  203 devices, 16 uclasses, devicetree: board
+MMC:   mmcnr@7e300000: 1, emmc2@7e340000: 0
+Loading Environment from FAT... ** No partition table - mmc 0 **
+In:    serial
+Out:   serial
+Err:   serial
+Net:   eth0: ethernet@7d580000
+PCIe BRCM: link up, 5.0 Gbps x1 (SSC)
+starting USB...
+Bus xhci_pci: Register 5000420 NbrPorts 5
+Starting the controller
+USB XHCI 1.00
+scanning bus xhci_pci for devices... 2 USB Device(s) found
+       scanning usb for storage devices... 0 Storage Device(s) found
+Hit any key to stop autoboot:  2  1  0 
+switch to partitions #0, OK
+mmc0 is current device
+** No partition table - mmc 0 **
+Couldn't find partition mmc 0:1
+Card did not respond to voltage select! : -110
+MMC Device 2 not found
+no mmc device at slot 2
+
+Device 0: unknown device
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+missing environment variable: pxeuuid
+Retrieving file: pxelinux.cfg/01-d8-3a-dd-30-e7-91
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Retrieving file: pxelinux.cfg/00000000
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Retrieving file: pxelinux.cfg/0000000
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Retrieving file: pxelinux.cfg/000000
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Retrieving file: pxelinux.cfg/00000
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Retrieving file: pxelinux.cfg/0000
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Retrieving file: pxelinux.cfg/000
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Retrieving file: pxelinux.cfg/00
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Retrieving file: pxelinux.cfg/0
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Retrieving file: pxelinux.cfg/default-arm-bcm283x-rpi
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Retrieving file: pxelinux.cfg/default-arm-bcm283x
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Retrieving file: pxelinux.cfg/default-arm
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Retrieving file: pxelinux.cfg/default
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+Config file not found
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+ethernet@7d580000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
+bcmgenet: PHY startup failed: -110
+U-Boot> fatload mmc 0 0x200000 bao.bin; go 0x200000
+51034624 bytes read in 2869 ms (17 MiB/s)
+## Starting application at 0x00200000 ...
+Fila criada com sucesso
+TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL
+BAO ERROR: no emulation handler for abort(0xfe201818 at 0x888c688)

@@ -62,7 +62,7 @@ $(BUILDROOT_DIR)/output/images/rootfs.cpio: $(CUSTOM_APPS)
 
 all: $(CUSTOM_APPS) $(BUILDROOT_DIR)/output/images/rootfs.cpio $(TARGET)
 
-VM3_DTS := $(BAO_DEMOS)/demos/linux+freertos/devicetrees/$(PLATFORM)/linux_vm_3.dts
+VM3_DTS := $(BAO_DEMOS)/demos/linux+freertos/devicetrees/$(PLATFORM)/linux.dts
 
 $(eval $(call build-linux, $(TARGET), $(VM3_DTS)))
 

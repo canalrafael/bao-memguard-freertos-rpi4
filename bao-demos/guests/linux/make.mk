@@ -32,6 +32,7 @@ lloader_dir:=$(bao_demos)/guests/linux/lloader
 
 define build-linux
 $(wrkdir_demo_imgs)/$(basename $(notdir $2)).dtb: $(strip $2)
+	mkdir -p $$(dir $$@)
 	dtc $$< > $$@
 $(strip $1): $(buildroot_image) $(wrkdir_demo_imgs)/$(basename $(notdir $2)).dtb
 	$(MAKE) -C $(lloader_dir) ARCH=$(ARCH) IMAGE=$(buildroot_image)\

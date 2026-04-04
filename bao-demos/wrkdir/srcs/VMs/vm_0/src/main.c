@@ -61,7 +61,7 @@ int main(void) {
       printf("Erro: fila nao criada\n");
       while(1);
   }
-
+  printf("Fila criada com sucesso\n");
   xTaskCreate(
     task_monitor,
     "taskMonitor",
