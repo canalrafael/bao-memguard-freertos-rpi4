@@ -26,28 +26,30 @@ CUSTOM_APPS := $(OVERLAY_DIR)/spectre \
                $(OVERLAY_DIR)/zombieload
 
 # --- Regras de compilação dos ataques ---
+# Os ataques precisam do cross-compiler do Buildroot, que só existe após o build completo
 
-$(OVERLAY_DIR)/spectre: $(SPECTRE_SRC)
+$(OVERLAY_DIR)/spectre: $(SPECTRE_SRC) | $(buildroot_image)
 	@echo ">> Compilando Ataque Spectre..."
 	$(CC_ARM) -O2 $< -o $@
 
-$(OVERLAY_DIR)/armageddon: $(ARMAGEDDON_SRC)
+$(OVERLAY_DIR)/armageddon: $(ARMAGEDDON_SRC) | $(buildroot_image)
 	@echo ">> Compilando Ataque Armageddon..."
 	$(CC_ARM) -O2 $< -o $@
 
-$(OVERLAY_DIR)/meltdown: $(MELTDOWN_SRC)
+$(OVERLAY_DIR)/meltdown: $(MELTDOWN_SRC) | $(buildroot_image)
 	@echo ">> Compilando Ataque Meltdown..."
 	$(CC_ARM) -O2 $< -o $@
 
-$(OVERLAY_DIR)/zombieload: $(ZOMBIELOAD_SRC)
+$(OVERLAY_DIR)/zombieload: $(ZOMBIELOAD_SRC) | $(buildroot_image)
 	@echo ">> Compilando Ataque ZombieLoad..."
 	$(CC_ARM) -O2 $< -o $@
 
 # --- Regra do RootFS ---
+# Reempacota o rootfs incluindo os binários de ataque no overlay
 
-$(BUILDROOT_DIR)/output/images/rootfs.cpio: $(CUSTOM_APPS)
+$(BUILDROOT_DIR)/output/images/rootfs.cpio: $(CUSTOM_APPS) | $(buildroot_src)
 	@echo ">> Repacotando o sistema de arquivos do Linux com os ataques..."
-	$(MAKE) -C $(BUILDROOT_DIR)
+	$(MAKE) -C $(BUILDROOT_DIR) BR2_ROOTFS_OVERLAY=$(wrkdir_src)/custom_overlay
 
 all: $(CUSTOM_APPS) $(BUILDROOT_DIR)/output/images/rootfs.cpio $(TARGET)
 
