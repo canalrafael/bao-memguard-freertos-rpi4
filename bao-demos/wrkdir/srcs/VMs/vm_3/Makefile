@@ -6,7 +6,7 @@ ROOT_DIR:=$(realpath .)
 wrkdir_demo_imgs := $(ROOT_DIR)/build/$(PLATFORM)
 TARGET := $(wrkdir_demo_imgs)/$(NAME).bin
 
-wrkdir_src := $(realpath $(ROOT_DIR)/../shared_src)
+wrkdir_src := $(ROOT_DIR)
 bao_demos ?= $(BAO_DEMOS)
 
 include $(BAO_DEMOS)/guests/linux/make.mk
@@ -17,29 +17,15 @@ OVERLAY_DIR := $(wrkdir_src)/custom_overlay/root
 
 SPECTRE_SRC := $(wrkdir_src)/attacks/spectre/src/spectre_attack.c
 ARMAGEDDON_SRC := $(wrkdir_src)/attacks/armageddon/src/armageddon.c
+MELTDOWN_SRC := $(wrkdir_src)/attacks/meltdown/src/meltdown.c
+ZOMBIELOAD_SRC := $(wrkdir_src)/attacks/zombieload/src/zombieload.c
 
-IPC_SRC := $(wrkdir_src)/ipc_receiver.c
-
-BENCH_SOURCES := $(wrkdir_src)/main_benchmark.c \
-                 $(wrkdir_src)/benchmarks/wrappers/src/benchmarks_wrappers.c \
-                 $(wrkdir_src)/benchmarks/bandwidth/src/bandwidth.c \
-                 $(wrkdir_src)/benchmarks/dijkstra/src/dijkstra.c \
-                 $(wildcard $(wrkdir_src)/benchmarks/disparity/src/*.c) \
-                 $(wildcard $(wrkdir_src)/benchmarks/fft/src/*.c) \
-                 $(wrkdir_src)/benchmarks/qsort/src/qsort.c \
-                 $(wrkdir_src)/benchmarks/sha/src/sha.c \
-                 $(wrkdir_src)/benchmarks/sorting/src/sorting.c
-
-CUSTOM_APPS := $(OVERLAY_DIR)/ipc_receiver \
-               $(OVERLAY_DIR)/spectre \
+CUSTOM_APPS := $(OVERLAY_DIR)/spectre \
                $(OVERLAY_DIR)/armageddon \
-               $(OVERLAY_DIR)/benchmark
+               $(OVERLAY_DIR)/meltdown \
+               $(OVERLAY_DIR)/zombieload
 
-# --- Regras individuais de compilação ---
-
-$(OVERLAY_DIR)/ipc_receiver: $(IPC_SRC)
-	@echo ">> Compilando Receptor IPC..."
-	$(CC_ARM) -O2 $< -o $@
+# --- Regras de compilação dos ataques ---
 
 $(OVERLAY_DIR)/spectre: $(SPECTRE_SRC)
 	@echo ">> Compilando Ataque Spectre..."
@@ -49,15 +35,18 @@ $(OVERLAY_DIR)/armageddon: $(ARMAGEDDON_SRC)
 	@echo ">> Compilando Ataque Armageddon..."
 	$(CC_ARM) -O2 $< -o $@
 
-$(OVERLAY_DIR)/benchmark: $(BENCH_SOURCES)
-	@echo ">> Compilando pacote de Benchmarks..."
-	# A flag -lm no final é vital para importar a biblioteca math.h usada pelo FFT
-	$(CC_ARM) -O2 $^ -o $@ -lm
+$(OVERLAY_DIR)/meltdown: $(MELTDOWN_SRC)
+	@echo ">> Compilando Ataque Meltdown..."
+	$(CC_ARM) -O2 $< -o $@
+
+$(OVERLAY_DIR)/zombieload: $(ZOMBIELOAD_SRC)
+	@echo ">> Compilando Ataque ZombieLoad..."
+	$(CC_ARM) -O2 $< -o $@
 
 # --- Regra do RootFS ---
 
 $(BUILDROOT_DIR)/output/images/rootfs.cpio: $(CUSTOM_APPS)
-	@echo ">> Repacotando o sistema de arquivos do Linux com os novos executaveis..."
+	@echo ">> Repacotando o sistema de arquivos do Linux com os ataques..."
 	$(MAKE) -C $(BUILDROOT_DIR)
 
 all: $(CUSTOM_APPS) $(BUILDROOT_DIR)/output/images/rootfs.cpio $(TARGET)

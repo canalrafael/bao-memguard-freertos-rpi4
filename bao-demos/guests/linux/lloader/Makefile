@@ -30,6 +30,6 @@ clean:
 $(TARGET).bin: $(TARGET).elf
 	$(CROSS_COMPILE)objcopy -S -O binary $(TARGET).elf $(TARGET).bin
 
-$(TARGET).elf: $(ARCH).S $(IMAGE) $(DTB) loader_$(ARCH).ld
+$(TARGET).elf: $(ARCH).S $(IMAGE) $(INITRD) $(DTB) loader_$(ARCH).ld
 	$(CROSS_COMPILE)gcc -Wl,-build-id=none -nostdlib -T loader_$(ARCH).ld\
-		-o $(TARGET).elf $(OPTIONS) $(ARCH).S -I. -D IMAGE=$(IMAGE) -D DTB=$(DTB)
+		-o $(TARGET).elf $(OPTIONS) $(ARCH).S -I. -D IMAGE=$(IMAGE) -D DTB=$(DTB) -D INITRD=$(INITRD)

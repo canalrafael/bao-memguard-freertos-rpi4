@@ -39,14 +39,14 @@ struct config config =
 #else
                     .colors = 0b0,
 #endif
-                    .cpu_affinity = 0b1,
+                    .cpu_affinity = 0b1000,
 
                     .platform = {.cpu_num = 1,
 
                                  .region_num = 1,
                                  .regions =
                                      (struct vm_mem_region[]){
-                                         {.base = 0x0, .size = 0x8000000}},
+                                         {.base = 0x0, .size = 0x4000000}},
 
                                  .ipc_num = 1,
                                  .ipcs = (struct ipc[]){{.base = 0x70000000,
@@ -104,7 +104,7 @@ struct config config =
                                  .region_num = 1,
                                  .regions =
                                      (struct vm_mem_region[]){
-                                         {.base = 0x0, .size = 0x8000000}},
+                                         {.base = 0x0, .size = 0x4000000}},
 
                                  .ipc_num = 1,
                                  .ipcs = (struct ipc[]){{.base = 0x70000000,
@@ -161,7 +161,7 @@ struct config config =
                                  .region_num = 1,
                                  .regions =
                                      (struct vm_mem_region[]){
-                                         {.base = 0x0, .size = 0x8000000}},
+                                         {.base = 0x0, .size = 0x4000000}},
 
                                  .ipc_num = 1,
                                  .ipcs = (struct ipc[]){{.base = 0x70000000,
@@ -211,14 +211,14 @@ struct config config =
 #else
                     .colors = 0b0,
 #endif
-                    .cpu_affinity = 0b1000,
+                    .cpu_affinity = 0b1,
 
                     .platform = {.cpu_num = 1,
 
                                  .region_num = 1,
                                  .regions =
                                      (struct vm_mem_region[]){
-                                         {.base = 0x0, .size = 0x8000000}},
+                                         {.base = 0x0, .size = 0x10000000}},
 
                                  .ipc_num = 1,
                                  .ipcs = (struct ipc[]){{.base = 0x70000000,
@@ -228,15 +228,23 @@ struct config config =
                                                          .interrupts =
                                                              (irqid_t[]){52}}},
 
-                                 .dev_num = 2,
+                                 .dev_num = 4,
                                  .devs =
                                      (struct vm_dev_region[]){
-                                         {/* UART4 para o linux (GPIO 8/9) */
-                                          .pa = 0xfe201800,
-                                          .va = 0xfe201800,
-                                          .size = 0x1000,
+                                         {/* GPIO para Pin Muxing. Aligned to 4KB! */
+                                          .pa = 0xfe200000,
+                                          .va = 0xfe200000,
+                                          .size = 0x1000},
+                                         {/* UART4 para o linux (GPIO 8/9). Aligned to 4KB! */
+                                          .pa = 0xfe201000,
+                                          .va = 0xfe201000,
+                                          .size = 0x2000,
                                           .interrupt_num = 1,
                                           .interrupts = (irqid_t[]){128}},
+                                         {/* UART1 (FreeRTOS) para DEBUG do Linux. Aligned to 4KB! */
+                                          .pa = 0xfe215000,
+                                          .va = 0xfe215000,
+                                          .size = 0x1000},
                                          {/* Arch timer interrupt */
                                           .interrupt_num = 1,
                                           .interrupts = (irqid_t[]){27}},

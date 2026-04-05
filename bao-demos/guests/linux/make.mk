@@ -23,6 +23,8 @@ buildroot_image:=$(buildroot_src)/output/images/Image-$(PLATFORM)
 export LINUX_OVERRIDE_SRCDIR=$(linux_src) 
 export BAO_DEMOS_LINUX_CFG_FRAG=$(linux_cfg_frag)
 
+buildroot_initrd:=$(buildroot_src)/output/images/rootfs.cpio.gz
+
 linux $(buildroot_image): $(linux_patches) $(linux_cfg_frag) $(buildroot_defcfg) | $(linux_src) $(buildroot_src) 
 	$(MAKE) -C $(buildroot_src) defconfig BR2_DEFCONFIG=$(buildroot_defcfg)
 	$(MAKE) -C $(buildroot_src) linux-reconfigure all
@@ -31,10 +33,13 @@ linux $(buildroot_image): $(linux_patches) $(linux_cfg_frag) $(buildroot_defcfg)
 lloader_dir:=$(bao_demos)/guests/linux/lloader
 
 define build-linux
-$(wrkdir_demo_imgs)/$(basename $(notdir $2)).dtb: $(strip $2)
+$(wrkdir_demo_imgs)/$(basename $(notdir $2)).dtb: $(strip $2) $(buildroot_initrd)
 	mkdir -p $$(dir $$@)
-	dtc $$< > $$@
-$(strip $1): $(buildroot_image) $(wrkdir_demo_imgs)/$(basename $(notdir $2)).dtb
+	cp $$< $$@.tmp.dts
+	INITRD_END=$$$$(python3 -c "print(hex(0x4000000 + $$$$(stat -c %s $(buildroot_initrd))))"); \
+	sed -i "s|linux,initrd-end.*|linux,initrd-end   = <0x0 $$$$INITRD_END>; /* SED_PLACEHOLDER */|g" $$@.tmp.dts
+	dtc $$@.tmp.dts > $$@
+$(strip $1): $(buildroot_image) $(wrkdir_demo_imgs)/$(basename $(notdir $2)).dtb $(buildroot_initrd) $(lloader_dir)/aarch64.S $(lloader_dir)/loader_aarch64.ld $(lloader_dir)/Makefile
 	$(MAKE) -C $(lloader_dir) ARCH=$(ARCH) IMAGE=$(buildroot_image)\
-		DTB=$(wrkdir_demo_imgs)/$(basename $(notdir $2)).dtb TARGET=$$(basename $$@)
+		DTB=$(wrkdir_demo_imgs)/$(basename $(notdir $2)).dtb INITRD=$(buildroot_initrd) TARGET=$$(basename $$@)
 endef

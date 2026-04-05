@@ -29,5 +29,9 @@ fi
 echo "⚙️  Copying '$SOURCE_FILE' to '$DESTINATION_DIR'..."
 cp -v "$SOURCE_FILE" "$DESTINATION_DIR"
 
-# 4. If the script reaches this point, the copy was successful.
-echo "✅ Finished."
+# 4. Flush file system buffers to the SD card to prevent corruption.
+echo "🔄 Sincronizando dados com o Cartão SD..."
+sync
+
+# 5. If the script reaches this point, the copy was successful.
+echo "✅ Finished. Safe to eject!"

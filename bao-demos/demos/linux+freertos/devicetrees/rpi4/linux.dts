@@ -49,8 +49,8 @@
         clock-frequency = <126000000>;
     };
 
-    memory@40000000 {
-        reg = <0x0 0x40000000 0x0 0x40000000>;
+    memory@0 {
+        reg = <0x0 0x0 0x0 0x10000000>;
         device_type = "memory";
     };
 
@@ -61,7 +61,7 @@
 
         linux,cma {
             compatible = "shared-dma-pool";
-            size = <0x4000000>;
+            size = <0x1000000>;
             reusable;
             linux,cma-default;
         };
@@ -85,7 +85,7 @@
         #address-cells = <0x02>;
         #size-cells = < 0x02 >;
         dma-ranges = < 0x00 0x00 0x00 0x00 0x04 0x00 >;
-        ranges = < 0x00 0x7c000000 0x00 0xfc000000 0x00 0x3800000 0x00 0x40000000 0x00 0xff800000 0x00 0x800000 0x06 0x00 0x06 0x00 0x00 0x40000000 0x00 0x00 0x00 0x00 0x00 0xfc000000 >;
+        ranges;
 
         genet: ethernet@7d580000 {
             local-mac-address = [dc a6 32 a3 9c 57];
@@ -114,14 +114,24 @@
             };
         };
 
-        uart4:serial@fe201800 {
-        compatible = "arm,pl011", "arm,primecell";
-        reg = <0x0 0xfe201800 0x0 0x1000>;
-        interrupts = <0 128 4>;
-        clocks = <&uart4_clk>, <&apb_pclk>;
-        clock-names = "uartclk", "apb_pclk";
-        status = "okay";
+        uart1:serial@fe215040 {
+            compatible = "ns16550a";
+            reg = <0x0 0xfe215040 0x0 0x40>;
+            reg-shift = <2>;
+            reg-io-width = <4>;
+            clock-frequency = <1000000000>;
+            current-speed = <115200>;
+            no-loopback-test;
+            status = "okay";
         };
+    };
+
+    uart4:serial@fe201800 {
+        compatible = "arm,sbsa-uart";
+        reg = <0x0 0xfe201800 0x0 0x1000>;
+        interrupts = <0 96 4>;
+        current-speed = <115200>;
+        status = "okay";
     };
 
     bao-ipc@70000000 {
@@ -136,16 +146,19 @@
 
     aliases {
         ethernet0 = &genet;
+        serial0 = &uart1;
         serial1 = &uart4;
     };
 
     chosen {
-        bootargs = "console=ttyAMA1,115200 earlycon=pl011,0xfe201800 earlycon clk_ignore_unused ip=192.168.2.4 carrier_timeout=0";
+        stdout-path = "serial1:115200n8";
+        bootargs = "console=ttyAMA1,115200 earlycon=pl011,mmio32,0xfe201800 clk_ignore_unused fw_devlink=permissive ip=192.168.2.4 carrier_timeout=0";
+        linux,initrd-start = <0x0 0x04000000>;
+        linux,initrd-end   = <0x0 0x06000000>; /* SED_PLACEHOLDER */
     };
 
     pmu {
         compatible = "arm,armv8-pmuv3";
-        interrupt-parent = <0x4>;
         interrupts = <0 32 4>,
                      <0 36 4>,
                       <0 78 4>,

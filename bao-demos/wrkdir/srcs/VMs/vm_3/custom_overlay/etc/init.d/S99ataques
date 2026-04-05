@@ -1,0 +1,41 @@
+#!/bin/sh
+# /etc/init.d/S99ataques
+
+ATTACK_DURATION=2  # segundos que cada ataque roda
+
+echo "======================================"
+echo "    INICIALIZANDO ATAQUES NA VM3      "
+echo "======================================"
+
+while true; do
+  echo ">> Rodando Spectre (${ATTACK_DURATION}s)..."
+  /root/spectre &
+  ATTACK_PID=$!
+  sleep $ATTACK_DURATION
+  kill $ATTACK_PID 2>/dev/null
+  wait $ATTACK_PID 2>/dev/null
+
+  echo ">> Rodando Armageddon (${ATTACK_DURATION}s)..."
+  /root/armageddon &
+  ATTACK_PID=$!
+  sleep $ATTACK_DURATION
+  kill $ATTACK_PID 2>/dev/null
+  wait $ATTACK_PID 2>/dev/null
+
+  echo ">> Rodando Meltdown (${ATTACK_DURATION}s)..."
+  /root/meltdown &
+  ATTACK_PID=$!
+  sleep $ATTACK_DURATION
+  kill $ATTACK_PID 2>/dev/null
+  wait $ATTACK_PID 2>/dev/null
+
+  echo ">> Rodando ZombieLoad (${ATTACK_DURATION}s)..."
+  /root/zombieload &
+  ATTACK_PID=$!
+  sleep $ATTACK_DURATION
+  kill $ATTACK_PID 2>/dev/null
+  wait $ATTACK_PID 2>/dev/null
+  
+  echo ">> Ciclo completo. Reiniciando ataques..."
+  sleep 1
+done
