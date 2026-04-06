@@ -1,0 +1,7 @@
+[submodule "bao-demos/wrkdir/srcs/VMs/vm_3/buildroot-aarch64-v6.1"]
+	path = bao-demos/wrkdir/srcs/VMs/vm_3/buildroot-aarch64-v6.1
+	url = https://github.com/buildroot/buildroot.git
+
+[submodule "bao-demos/wrkdir/srcs/VMs/vm_3/linux-v6.1"]
+	path = bao-demos/wrkdir/srcs/VMs/vm_3/linux-v6.1
+	url = https://github.com/torvalds/linux.git
