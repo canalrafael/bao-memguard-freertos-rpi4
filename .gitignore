@@ -3,6 +3,10 @@ bao-demos/wrkdir/srcs/bao/bin/rpi4/
 bao-demos/wrkdir/imgs/
 bao-demos/**/bin/
 
+# Cloned automatically by the build system (make.mk)
+bao-demos/wrkdir/srcs/VMs/vm_3/linux-v6.1/
+bao-demos/wrkdir/srcs/VMs/vm_3/buildroot-aarch64-v6.1/
+
 benchmarks/bin/bao-*.bin
 benchmarks/logs/bao-*.log
 benchmarks/logs/cleaned_logs/bao-*.csv
