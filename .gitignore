@@ -1,35 +1,16 @@
-# Build artifacts
-*.o
-*.o.d
-*.ld.d
+bao-demos/wrkdir/srcs/bao/bin/rpi4/
 
-# Binary outputs
 bao-demos/wrkdir/imgs/
 bao-demos/**/bin/
 
-# Toolchain (download via scripts/setup_toolchain.sh)
-etc/arm-gnu-toolchain/
-
-# Third-party build directories
-bao-demos/wrkdir/srcs/u-boot/
-bao-demos/wrkdir/srcs/arm-trusted-firmware/
-
-# Build output directories
-**/build/
-
-# Benchmarks outputs
 benchmarks/bin/bao-*.bin
 benchmarks/logs/bao-*.log
 benchmarks/logs/cleaned_logs/bao-*.csv
 
-# Editor/IDE
 **/.cache/
+**/build/
 **/GPATH
 **/GRTAGS
 **/GTAGS
 
-# Log and data files
 data
-log_erro.txt
-data.txt
-data_linux.txt

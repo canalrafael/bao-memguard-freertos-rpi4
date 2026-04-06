@@ -7,7 +7,7 @@ sd_card_partition=/dev/sda
 sd_card_path=/media/$USER/BOOT
 
 # sd_card_path=/home/gabriel/bolsa-giovani/teste/boot
-export EDITOR="${EDITOR:-vim}"
+export EDITOR="nvim"
 
 if [ ! -d "$bao_folder" ]; then
   echo "'$bao_folder' not found. Are you in the correct folder?"
