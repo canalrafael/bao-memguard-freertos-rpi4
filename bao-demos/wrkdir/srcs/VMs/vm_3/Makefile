@@ -11,9 +11,10 @@ bao_demos ?= $(BAO_DEMOS)
 
 include $(BAO_DEMOS)/guests/linux/make.mk
 
-BUILDROOT_DIR := $(wrkdir_src)/buildroot-aarch64-v6.1
+BUILDROOT_DIR := $(buildroot_src)
 CC_ARM := $(BUILDROOT_DIR)/output/host/bin/aarch64-buildroot-linux-uclibc-gcc
-OVERLAY_DIR := $(wrkdir_src)/custom_overlay/root
+CUSTOM_OVERLAY := $(wrkdir_src)/custom_overlay
+OVERLAY_DIR := $(CUSTOM_OVERLAY)/root
 
 SPECTRE_SRC := $(wrkdir_src)/attacks/spectre/src/spectre_attack.c
 ARMAGEDDON_SRC := $(wrkdir_src)/attacks/armageddon/src/armageddon.c
@@ -47,7 +48,7 @@ $(OVERLAY_DIR)/zombieload: $(ZOMBIELOAD_SRC)
 
 $(BUILDROOT_DIR)/output/images/rootfs.cpio: $(CUSTOM_APPS)
 	@echo ">> Repacotando o sistema de arquivos do Linux com os ataques..."
-	$(MAKE) -C $(BUILDROOT_DIR)
+	$(MAKE) -C $(BUILDROOT_DIR) BR2_ROOTFS_OVERLAY="$(CUSTOM_OVERLAY)"
 
 all: $(CUSTOM_APPS) $(BUILDROOT_DIR)/output/images/rootfs.cpio $(TARGET)
 
