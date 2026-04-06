@@ -6,16 +6,34 @@
 
 #define HC_SEC_MONITOR 19
 #define SMCC64_FID_VND_HYP_SRVC 0x86000000 | 0x40000000
-// #define HC_REGULATOR_GET_RAW_PMU_VALUES 15
-
-// IDs de Eventos para Configuração Inicial (ARMv8)
-#define ARMV8_EVENT_BR_MIS_PRED         0x10
-#define ARMV8_EVENT_L1D_CACHE_REFILL    0x03
-#define ARMV8_EVENT_INST_RETIRED        0x08
-#define ARMV8_EVENT_CPU_CYCLES          0x11
 
 #define OTHER_TASK_PRIORITY 1
-#define TASK_STACK_SIZE 1024
+#define TASK_STACK_SIZE 4096
+
+// IPC shared memory (Canal 1: VM0 <-> VM1)
+#define IPC_BASE_ADDR 0x70000000
+
+typedef struct {
+    volatile uint32_t signal_ready;   // VM1 -> VM0
+    volatile uint32_t resume;         // VM0 -> VM1
+    volatile uint32_t current_label;  // VM1 -> VM0: benchmark ID
+} IPC_Channel;
+
+// Benchmark labels
+#define LABEL_NONE       0
+#define LABEL_BANDWIDTH  1
+#define LABEL_DISPARITY  2
+#define LABEL_FFT        3
+#define LABEL_QSORT      4
+#define LABEL_DIJKSTRA   5
+#define LABEL_SHA        6
+#define LABEL_SORTING    7
+
+#define NUM_BENCHMARKS   7
+
+// Timing
+#define BENCHMARK_DURATION_MS  (10 * 60 * 1000)  // 10 minutes
+#define SYNC_INTERVAL_MS       (15 * 1000)        // 15 seconds
 
 typedef struct {
   unsigned long timestamp;
@@ -30,19 +48,15 @@ typedef struct {
     float output;
 } FANN_sample;
 
-//Fila para comunicação entre task de monitoramento e task FANN
 extern QueueHandle_t xPmuQueue;
-//Variável global para controle de ataque
 extern volatile float g_label_atual;
 
-// Função auxiliar para ler o contador do timer do ARM
 static inline uint64_t get_hardware_timer_count(void) {
     uint64_t val;
     asm volatile("isb \n mrs %0, cntvct_el0" : "=r" (val));
     return val;
 }
 
-// Função auxiliar para ler a frequência do timer do ARM
 static inline uint64_t get_hardware_timer_freq(void) {
     uint64_t freq;
     asm volatile("mrs %0, cntfrq_el0" : "=r" (freq));

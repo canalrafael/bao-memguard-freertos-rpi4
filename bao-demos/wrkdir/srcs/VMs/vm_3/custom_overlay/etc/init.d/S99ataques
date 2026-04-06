@@ -1,41 +1,102 @@
 #!/bin/sh
 # /etc/init.d/S99ataques
 
-ATTACK_DURATION=2  # segundos que cada ataque roda
+# Configurações
+LOGFILE="/tmp/ataques.log"
+ATTACK_DURATION=600   # 10 minutos (600s)
+SYNC_INTERVAL=15      # 15s
 
-echo "======================================"
-echo "    INICIALIZANDO ATAQUES NA VM3      "
-echo "======================================"
+# Labels dos ataques
+L_SPECTRE=1
+L_ARMAGEDDON=2
+L_MELTDOWN=3
 
-while true; do
-  echo ">> Rodando Spectre (${ATTACK_DURATION}s)..."
-  /root/spectre &
-  ATTACK_PID=$!
-  sleep $ATTACK_DURATION
-  kill $ATTACK_PID 2>/dev/null
-  wait $ATTACK_PID 2>/dev/null
+# Arquivo de pid
+PIDFILE="/var/run/ataques.pid"
 
-  echo ">> Rodando Armageddon (${ATTACK_DURATION}s)..."
-  /root/armageddon &
-  ATTACK_PID=$!
-  sleep $ATTACK_DURATION
-  kill $ATTACK_PID 2>/dev/null
-  wait $ATTACK_PID 2>/dev/null
+run_attacks() {
+    echo "[VM3] Iniciando orquestrador de ataques (sincronizado)..." | tee $LOGFILE > /dev/console
 
-  echo ">> Rodando Meltdown (${ATTACK_DURATION}s)..."
-  /root/meltdown &
-  ATTACK_PID=$!
-  sleep $ATTACK_DURATION
-  kill $ATTACK_PID 2>/dev/null
-  wait $ATTACK_PID 2>/dev/null
+    while true; do
+        # --- SPECTRE ---
+        run_attack_for "/root/spectre" "Spectre" $L_SPECTRE
+        
+        # --- ARMAGEDDON ---
+        run_attack_for "/root/armageddon" "Armageddon" $L_ARMAGEDDON
+        
+        # --- MELTDOWN ---
+        run_attack_for "/root/meltdown" "Meltdown" $L_MELTDOWN
+    done
+}
 
-  echo ">> Rodando ZombieLoad (${ATTACK_DURATION}s)..."
-  /root/zombieload &
-  ATTACK_PID=$!
-  sleep $ATTACK_DURATION
-  kill $ATTACK_PID 2>/dev/null
-  wait $ATTACK_PID 2>/dev/null
-  
-  echo ">> Ciclo completo. Reiniciando ataques..."
-  sleep 1
-done
+run_attack_for() {
+    BIN_PATH=$1
+    NAME=$2
+    LABEL=$3
+
+    echo "[VM3] >> Rodando $NAME por $(($ATTACK_DURATION / 60)) minutos..." | tee -a $LOGFILE > /dev/console
+    
+    # Inicia o ataque em background
+    $BIN_PATH &
+    ATTACK_PID=$!
+
+    # Conta o tempo total já gasto no ataque
+    TIME_ELAPSED=0
+
+    # Enquanto nao atingir o tempo total do ataque, fazemos intervalos de SYNC_INTERVAL
+    while [ $TIME_ELAPSED -lt $ATTACK_DURATION ]; do
+        sleep $SYNC_INTERVAL
+        
+        # Pausa o ataque
+        kill -STOP $ATTACK_PID 2>/dev/null
+
+        # Sincroniza via ipc_sync: envia label, sinaliza VM0, espera VM0 liberar e reseta
+        /root/ipc_sync $LABEL
+
+        # Retoma o ataque
+        kill -CONT $ATTACK_PID 2>/dev/null
+        
+        TIME_ELAPSED=$(($TIME_ELAPSED + $SYNC_INTERVAL))
+    done
+
+    # Terminou o tempo do ataque, mata ele
+    kill -9 $ATTACK_PID 2>/dev/null
+    wait $ATTACK_PID 2>/dev/null
+}
+
+case "$1" in
+  start)
+        echo "Starting ataques script"
+        if [ -f $PIDFILE ]; then
+            echo "Already running."
+            exit 1
+        fi
+        # Verifica se DEV mem ta acessivel
+        if [ ! -c /dev/mem ]; then
+            echo "AVISO: /dev/mem não encontrado! IPC falhará." | tee -a $LOGFILE > /dev/console
+        fi
+        # Executa a função em background para não travar o boot
+        run_attacks &
+        echo $! > $PIDFILE
+        ;;
+  stop)
+        echo "Stopping ataques script"
+        if [ -f $PIDFILE ]; then
+            PID=$(cat $PIDFILE)
+            kill $PID
+            rm -f $PIDFILE
+            # mata os binarios tambem
+            killall spectre armageddon meltdown 2>/dev/null
+        else
+            echo "Not running"
+        fi
+        ;;
+  restart|reload)
+        $0 stop
+        $0 start
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+exit 0

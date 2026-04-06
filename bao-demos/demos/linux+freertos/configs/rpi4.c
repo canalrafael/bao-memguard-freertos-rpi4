@@ -12,12 +12,12 @@ struct config config =
     {
         CONFIG_HEADER
 
-            .shmemlist_size = 1,
-        .shmemlist = (struct shmem[]){[0] =
-                                          {
-                                              .size = 0x00010000,
-                                            // .size = 0x00400000,  //para suportar mais dados
-                                          }},
+            .shmemlist_size = 3,
+        .shmemlist = (struct shmem[]){
+            [0] = { .size = 0x00010000 },  // Canal 1: VM0 <-> VM1
+            [1] = { .size = 0x00010000 },  // Canal 2: VM0 <-> VM2
+            [2] = { .size = 0x00010000 },  // Canal 3: VM0 <-> VM3
+        },
 
         .vmlist_size = RUNNING_VMs,
         .vmlist =
@@ -39,7 +39,7 @@ struct config config =
 #else
                     .colors = 0b0,
 #endif
-                    .cpu_affinity = 0b1000,
+                    .cpu_affinity = 0b1,
 
                     .platform = {.cpu_num = 1,
 
@@ -48,13 +48,15 @@ struct config config =
                                      (struct vm_mem_region[]){
                                          {.base = 0x0, .size = 0x4000000}},
 
-                                 .ipc_num = 1,
-                                 .ipcs = (struct ipc[]){{.base = 0x70000000,
-                                                         .size = 0x00010000,
-                                                         .shmem_id = 0,
-                                                         .interrupt_num = 1,
-                                                         .interrupts =
-                                                             (irqid_t[]){52}}},
+                                 .ipc_num = 3,
+                                 .ipcs = (struct ipc[]){
+                                     {.base = 0x70000000, .size = 0x00010000, .shmem_id = 0,
+                                      .interrupt_num = 1, .interrupts = (irqid_t[]){52}},
+                                     {.base = 0x70010000, .size = 0x00010000, .shmem_id = 1,
+                                      .interrupt_num = 1, .interrupts = (irqid_t[]){53}},
+                                     {.base = 0x70020000, .size = 0x00010000, .shmem_id = 2,
+                                      .interrupt_num = 1, .interrupts = (irqid_t[]){54}},
+                                 },
 
                                  .dev_num = 2,
                                  .devs =
@@ -166,7 +168,7 @@ struct config config =
                                  .ipc_num = 1,
                                  .ipcs = (struct ipc[]){{.base = 0x70000000,
                                                          .size = 0x00010000,
-                                                         .shmem_id = 0,
+                                                         .shmem_id = 1,
                                                          .interrupt_num = 1,
                                                          .interrupts =
                                                              (irqid_t[]){52}}},
@@ -211,7 +213,7 @@ struct config config =
 #else
                     .colors = 0b0,
 #endif
-                    .cpu_affinity = 0b1,
+                    .cpu_affinity = 0b1000,
 
                     .platform = {.cpu_num = 1,
 
@@ -223,7 +225,7 @@ struct config config =
                                  .ipc_num = 1,
                                  .ipcs = (struct ipc[]){{.base = 0x70000000,
                                                          .size = 0x00010000,
-                                                         .shmem_id = 0,
+                                                         .shmem_id = 2,
                                                          .interrupt_num = 1,
                                                          .interrupts =
                                                              (irqid_t[]){52}}},

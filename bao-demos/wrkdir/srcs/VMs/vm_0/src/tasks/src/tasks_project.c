@@ -23,10 +23,14 @@ void task_monitor(void *arg) {
     printf("TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL\n");
     fflush(stdout);
 
+    // Inicializar IPC shared memory com zeros para evitar lixo nos labels
+    ipc_init_channels();
+
     uint64_t timer_freq;
     asm volatile("mrs %0, cntfrq_el0" : "=r"(timer_freq));
 
-    init_pmu_registers();
+    // PMU registers são inicializados pelo hypervisor (timer_arch_init)
+    // NÃO chamar init_pmu_registers() aqui — conflita com a config do EL2
 
     while(1) {
         vTaskDelayUntil(&xLastWakeTime, xPeriod);

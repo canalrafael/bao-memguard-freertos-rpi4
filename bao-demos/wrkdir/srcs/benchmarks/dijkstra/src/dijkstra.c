@@ -8,108 +8,105 @@ int AdjMatrix[NUM_NODES][NUM_NODES];
 
 void print_path(NODE *rgnNodes, int chNode) {
 
-    if (rgnNodes[chNode].iPrev != NONE)
-        print_path(rgnNodes, rgnNodes[chNode].iPrev);
+  if (rgnNodes[chNode].iPrev != NONE)
+    print_path(rgnNodes, rgnNodes[chNode].iPrev);
 
-    printf(" %d", chNode);
+  printf(" %d", chNode);
 }
 
 void enqueue(int iNode, int iDist, int iPrev) {
 
-    QITEM *qNew = (QITEM *) malloc(sizeof(QITEM));
-    QITEM *qLast = qHead;
+  QITEM *qNew = (QITEM *)malloc(sizeof(QITEM));
+  QITEM *qLast = qHead;
 
-    if (!qNew) {
-        fprintf(stderr,"Out of memory\n");
-        exit(1);
-    }
+  if (!qNew) {
+    fprintf(stderr, "Out of memory\n");
+    exit(1);
+  }
 
-    qNew->iNode = iNode;
-    qNew->iDist = iDist;
-    qNew->iPrev = iPrev;
-    qNew->qNext = NULL;
+  qNew->iNode = iNode;
+  qNew->iDist = iDist;
+  qNew->iPrev = iPrev;
+  qNew->qNext = NULL;
 
-    if (!qLast) {
-        qHead = qNew;
-    } else {
-        while (qLast->qNext)
-            qLast = qLast->qNext;
+  if (!qLast) {
+    qHead = qNew;
+  } else {
+    while (qLast->qNext)
+      qLast = qLast->qNext;
 
-        qLast->qNext = qNew;
-    }
+    qLast->qNext = qNew;
+  }
 
-    g_qCount++;
+  g_qCount++;
 }
 
 void dequeue(int *piNode, int *piDist, int *piPrev) {
 
-    QITEM *qKill = qHead;
+  QITEM *qKill = qHead;
 
-    if (qHead) {
+  if (qHead) {
 
-        *piNode = qHead->iNode;
-        *piDist = qHead->iDist;
-        *piPrev = qHead->iPrev;
+    *piNode = qHead->iNode;
+    *piDist = qHead->iDist;
+    *piPrev = qHead->iPrev;
 
-        qHead = qHead->qNext;
+    qHead = qHead->qNext;
 
-        free(qKill);
-        g_qCount--;
-    }
+    free(qKill);
+    g_qCount--;
+  }
 }
 
-int qcount(void) {
-    return g_qCount;
-}
+int qcount(void) { return g_qCount; }
 
 int dijkstra(int chStart, int chEnd) {
 
-    int ch, i;
-    int iNode, iDist, iPrev, iCost;
+  int ch, i;
+  int iNode, iDist, iPrev, iCost;
 
-    for (ch = 0; ch < NUM_NODES; ch++) {
-        rgnNodes[ch].iDist = NONE;
-        rgnNodes[ch].iPrev = NONE;
-    }
+  for (ch = 0; ch < NUM_NODES; ch++) {
+    rgnNodes[ch].iDist = NONE;
+    rgnNodes[ch].iPrev = NONE;
+  }
 
-    if (chStart == chEnd) {
+  if (chStart == chEnd) {
 
-        printf("Shortest path is 0. Stay where you are.\n");
+    printf("Shortest path is 0. Stay where you are.\n");
 
-    } else {
+  } else {
 
-        rgnNodes[chStart].iDist = 0;
-        rgnNodes[chStart].iPrev = NONE;
+    rgnNodes[chStart].iDist = 0;
+    rgnNodes[chStart].iPrev = NONE;
 
-        enqueue(chStart, 0, NONE);
+    enqueue(chStart, 0, NONE);
 
-        while (qcount() > 0) {
+    while (qcount() > 0) {
 
-            dequeue(&iNode, &iDist, &iPrev);
+      dequeue(&iNode, &iDist, &iPrev);
 
-            for (i = 0; i < NUM_NODES; i++) {
+      for (i = 0; i < NUM_NODES; i++) {
 
-                if ((iCost = AdjMatrix[iNode][i]) != NONE) {
+        if ((iCost = AdjMatrix[iNode][i]) != NONE) {
 
-                    if (rgnNodes[i].iDist == NONE ||
-                        rgnNodes[i].iDist > iCost + iDist) {
+          if (rgnNodes[i].iDist == NONE || rgnNodes[i].iDist > iCost + iDist) {
 
-                        rgnNodes[i].iDist = iDist + iCost;
-                        rgnNodes[i].iPrev = iNode;
+            rgnNodes[i].iDist = iDist + iCost;
+            rgnNodes[i].iPrev = iNode;
 
-                        enqueue(i, iDist + iCost, iNode);
-                    }
-                }
-            }
+            enqueue(i, iDist + iCost, iNode);
+          }
         }
-
-        printf("Shortest path cost: %d\n", rgnNodes[chEnd].iDist);
-        printf("Path: ");
-        print_path(rgnNodes, chEnd);
-        printf("\n");
+      }
     }
 
-    return 0;
+    // printf("Shortest path cost: %d\n", rgnNodes[chEnd].iDist);
+    // printf("Path: ");
+    // print_path(rgnNodes, chEnd);
+    // printf("\n");
+  }
+
+  return 0;
 }
 
 // int main(int argc, char *argv[]) {

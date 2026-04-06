@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if grep -q "vm_role=ataque" /proc/cmdline; then
+    nohup /root/orchestrator_ataque.sh > /root/log_ataque.txt 2>&1 &
+    
+elif grep -q "vm_role=bench2" /proc/cmdline; then
+    nohup /root/orchestrator_bench_vm2.sh > /root/log_bench2.txt 2>&1 &
+
+elif grep -q "vm_role=bench3" /proc/cmdline; then
+    nohup /root/orchestrator_bench_vm3.sh > /root/log_bench3.txt 2>&1 &
+fi

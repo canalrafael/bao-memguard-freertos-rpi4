@@ -148,8 +148,8 @@ INC_DIRS+=$(INC_SHA)
 
 #TASKS
 
-INC_TASKS=$(BAO_DEMOS_WRKDIR_SRC)/VMs/vm_0/src/tasks/inc
-SRC_TASKS=$(BAO_DEMOS_WRKDIR_SRC)/VMs/vm_0/src/tasks/src
+INC_TASKS=$(ROOT_DIR)/src/tasks/inc
+SRC_TASKS=$(ROOT_DIR)/src/tasks/src
 INC_DIRS += $(INC_TASKS)
 C_SRC+=$(wildcard $(SRC_TASKS)/*.c)
 

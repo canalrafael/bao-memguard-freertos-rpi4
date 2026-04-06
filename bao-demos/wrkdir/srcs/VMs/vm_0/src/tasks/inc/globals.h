@@ -29,6 +29,7 @@ typedef struct {
     PMU_data data;
     float output;
     uint64_t core_id;
+    uint32_t label;  // attack/benchmark ID running on this core
 } FANN_sample;
 
 //Fila para comunicação entre task de monitoramento e task FANN
