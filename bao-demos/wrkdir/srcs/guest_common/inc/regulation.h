@@ -93,10 +93,41 @@
 
 #define PERIOD_QNT 10
 
+// ===== SELEÇÃO DE CENÁRIO DE COLETA =====
+// Cenário 1: Apenas benchmarks em 1 core (label 0)
+// Cenário 2: Apenas ataques em 1 core (label 1)
+// Cenário 3: Benchmarks + Ataques em 2 cores (bench=label 2, ataque=label 3)
+// =========================================
+#define SCENARIO 1 // <-- ALTERAR AQUI PARA MUDAR O CENÁRIO
+
+#if SCENARIO == 1
+// Solo benchmarks: VM0 (monitor) + VM1 (benchmarks)
 #define EXEC_VM_0 1
 #define EXEC_VM_1 1
-#define EXEC_VM_2 1
+#define EXEC_VM_2 0
+#define EXEC_VM_3 0
+#define SCENARIO_LABEL_BENCH 0
+#define ACTIVE_IPC_CHANNELS 1 // só VM1
+#elif SCENARIO == 2
+// Solo ataques: VM0 (monitor) + VM3 (ataques Linux)
+#define EXEC_VM_0 1
+#define EXEC_VM_1 0
+#define EXEC_VM_2 0
 #define EXEC_VM_3 1
+#define SCENARIO_LABEL_ATTACK 1
+#define ACTIVE_IPC_CHANNELS 1 // só VM3
+#elif SCENARIO == 3
+// Benchmarks + ataques: VM0 + VM1 + VM3
+#define EXEC_VM_0 1
+#define EXEC_VM_1 1
+#define EXEC_VM_2 0
+#define EXEC_VM_3 1
+#define SCENARIO_LABEL_BENCH 2
+#define SCENARIO_LABEL_ATTACK 3
+#define ACTIVE_IPC_CHANNELS 2 // VM1 + VM3
+#else
+#error "SCENARIO deve ser 1, 2 ou 3"
+#endif
 
 #define VM_QNT 4
 #define TASK_QUANTITY 2

@@ -11,6 +11,7 @@ def clean_csv(input_file, output_file):
         
         header = next(reader)
         
+        # Colunas finais: removemos CORE_ID e mantemos o LABEL original do cenário
         expected_columns = ["TIMESTAMP", "CPU_CYCLES", "INSTRUCTIONS", "CACHE_MISSES", "BRANCH_MISSES", "LABEL"]
         writer.writerow(expected_columns)
         
@@ -22,28 +23,34 @@ def clean_csv(input_file, output_file):
             return
             
         count = 0
+        label_counts = {}
+        
         for row in reader:
             if not row:
                 continue
-                
-            core_id = row[core_id_idx].strip()
             
-            if core_id == '3':
-                row[col_indices["LABEL"]] = '1'
-            else:
-                row[col_indices["LABEL"]] = '0'
-                
+            # Manter o label original que veio do pmu_monitor (definido pelo SCENARIO)
+            # Cenário 1: label 0 = benchmark
+            # Cenário 2: label 1 = ataque
+            # Cenário 3: label 2 = benchmark, label 3 = ataque
             new_row = [row[col_indices[col]] for col in expected_columns]
             writer.writerow(new_row)
             count += 1
             
-    print(f"Concluído! {count} linhas processadas.")
+            # Contagem de labels para diagnóstico
+            label = row[col_indices["LABEL"]].strip()
+            label_counts[label] = label_counts.get(label, 0) + 1
+            
+    print(f"\nConcluído! {count} linhas processadas.")
+    print(f"\nDistribuição de labels:")
+    for label, cnt in sorted(label_counts.items()):
+        print(f"  Label {label}: {cnt} amostras")
 
 if __name__ == '__main__':
     script_dir = os.path.dirname(os.path.abspath(__file__))
     
-    input_path = os.path.join(script_dir, 'data_final.csv')
-    output_path = os.path.join(script_dir, 'data_final_clean.csv')
+    input_path = os.path.join(script_dir, 'data_final2.csv')
+    output_path = os.path.join(script_dir, 'data_final_clean2.csv')
     
     if len(sys.argv) > 1:
         input_path = sys.argv[1]

@@ -2,21 +2,32 @@
 #include <config.h>
 
 VM_IMAGE(vm_0_img, XSTR(BAO_DEMOS_WRKDIR_IMGS/vm_0.bin));
+#if EXEC_VM_1
 VM_IMAGE(vm_1_img, XSTR(BAO_DEMOS_WRKDIR_IMGS/vm_1.bin));
+#endif
+#if EXEC_VM_2
 VM_IMAGE(vm_2_img, XSTR(BAO_DEMOS_WRKDIR_IMGS/vm_2.bin));
+#endif
+#if EXEC_VM_3
 VM_IMAGE(vm_3_img, XSTR(BAO_DEMOS_WRKDIR_IMGS/vm_3.bin));
+#endif
 
-// hey there
+// Cenário ativo: SCENARIO (definido em regulation.h)
 
 struct config config =
     {
         CONFIG_HEADER
 
-            .shmemlist_size = 3,
+            .shmemlist_size = ACTIVE_IPC_CHANNELS,
         .shmemlist = (struct shmem[]){
-            [0] = { .size = 0x00010000 },  // Canal 1: VM0 <-> VM1
-            [1] = { .size = 0x00010000 },  // Canal 2: VM0 <-> VM2
-            [2] = { .size = 0x00010000 },  // Canal 3: VM0 <-> VM3
+#if EXEC_VM_1
+            [0] = { .size = 0x00010000 },  // Canal: VM0 <-> VM1
+#endif
+#if EXEC_VM_3 && EXEC_VM_1
+            [1] = { .size = 0x00010000 },  // Canal: VM0 <-> VM3 (cenário 3)
+#elif EXEC_VM_3
+            [0] = { .size = 0x00010000 },  // Canal: VM0 <-> VM3 (cenário 2)
+#endif
         },
 
         .vmlist_size = RUNNING_VMs,
@@ -48,14 +59,19 @@ struct config config =
                                      (struct vm_mem_region[]){
                                          {.base = 0x0, .size = 0x4000000}},
 
-                                 .ipc_num = 3,
+                                 .ipc_num = ACTIVE_IPC_CHANNELS,
                                  .ipcs = (struct ipc[]){
+#if EXEC_VM_1
                                      {.base = 0x70000000, .size = 0x00010000, .shmem_id = 0,
                                       .interrupt_num = 1, .interrupts = (irqid_t[]){52}},
-                                     {.base = 0x70010000, .size = 0x00010000, .shmem_id = 1,
+#endif
+#if EXEC_VM_3 && EXEC_VM_1
+                                     {.base = 0x70020000, .size = 0x00010000, .shmem_id = 1,
                                       .interrupt_num = 1, .interrupts = (irqid_t[]){53}},
-                                     {.base = 0x70020000, .size = 0x00010000, .shmem_id = 2,
-                                      .interrupt_num = 1, .interrupts = (irqid_t[]){54}},
+#elif EXEC_VM_3
+                                     {.base = 0x70020000, .size = 0x00010000, .shmem_id = 0,
+                                      .interrupt_num = 1, .interrupts = (irqid_t[]){52}},
+#endif
                                  },
 
                                  .dev_num = 2,
@@ -225,7 +241,11 @@ struct config config =
                                  .ipc_num = 1,
                                  .ipcs = (struct ipc[]){{.base = 0x70000000,
                                                          .size = 0x00010000,
-                                                         .shmem_id = 2,
+#if EXEC_VM_1
+                                                         .shmem_id = 1,  // cenário 3: VM3 usa canal 1
+#else
+                                                         .shmem_id = 0,  // cenário 2: VM3 usa canal 0
+#endif
                                                          .interrupt_num = 1,
                                                          .interrupts =
                                                              (irqid_t[]){52}}},

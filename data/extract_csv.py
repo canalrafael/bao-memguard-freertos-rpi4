@@ -39,8 +39,8 @@ def generate_giant_csv(input_file, output_file):
 
 if __name__ == '__main__':
     # Usaremos o txt que já foi consertado pelos labels no passo anterior
-    input_path = 'data/data_fixed.txt'
-    output_path = 'data/data_final.csv'
+    input_path = 'data/data_fixed2.txt'
+    output_path = 'data/data_final2.csv'
     
     if len(sys.argv) > 1:
         input_path = sys.argv[1]

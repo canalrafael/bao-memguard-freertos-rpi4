@@ -57,8 +57,8 @@ def fix_labels(input_file, output_file):
     print("Sucesso! Os labels foram corrigidos com base no deslocamento.")
 
 if __name__ == '__main__':
-    input_path = 'data/data.txt'
-    output_path = 'data/data_fixed.txt'
+    input_path = 'data/data2.txt'
+    output_path = 'data/data_fixed2.txt'
     
     if len(sys.argv) > 1:
         input_path = sys.argv[1]

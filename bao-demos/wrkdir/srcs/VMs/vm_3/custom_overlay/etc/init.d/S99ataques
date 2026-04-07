@@ -1,40 +1,46 @@
 #!/bin/sh
 # /etc/init.d/S99ataques
+#
+# Cenário de coleta:
+#   - Se rodando sozinho (cenário 2): label = 1
+#   - Se rodando junto com benchmarks (cenário 3): label = 3
+#
+# O label é passado como argumento para ipc_sync.
+# Para trocar o cenário, altere L_ATTACK abaixo.
 
 # Configurações
 LOGFILE="/tmp/ataques.log"
 ATTACK_DURATION=600   # 10 minutos (600s)
 SYNC_INTERVAL=15      # 15s
 
-# Labels dos ataques
-L_SPECTRE=1
-L_ARMAGEDDON=2
-L_MELTDOWN=3
+# Label único para TODOS os ataques
+# Cenário 2 (solo ataques): usar 1
+# Cenário 3 (bench + ataques): usar 3
+L_ATTACK=3
 
 # Arquivo de pid
 PIDFILE="/var/run/ataques.pid"
 
 run_attacks() {
-    echo "[VM3] Iniciando orquestrador de ataques (sincronizado)..." | tee $LOGFILE > /dev/console
+    echo "[VM3] Iniciando orquestrador de ataques (label=$L_ATTACK)..." | tee $LOGFILE > /dev/console
 
     while true; do
         # --- SPECTRE ---
-        run_attack_for "/root/spectre" "Spectre" $L_SPECTRE
+        run_attack_for "/root/spectre" "Spectre"
         
         # --- ARMAGEDDON ---
-        run_attack_for "/root/armageddon" "Armageddon" $L_ARMAGEDDON
+        run_attack_for "/root/armageddon" "Armageddon"
         
         # --- MELTDOWN ---
-        run_attack_for "/root/meltdown" "Meltdown" $L_MELTDOWN
+        run_attack_for "/root/meltdown" "Meltdown"
     done
 }
 
 run_attack_for() {
     BIN_PATH=$1
     NAME=$2
-    LABEL=$3
 
-    echo "[VM3] >> Rodando $NAME por $(($ATTACK_DURATION / 60)) minutos..." | tee -a $LOGFILE > /dev/console
+    echo "[VM3] >> Rodando $NAME por $(($ATTACK_DURATION / 60)) minutos (label=$L_ATTACK)..." | tee -a $LOGFILE > /dev/console
     
     # Inicia o ataque em background
     $BIN_PATH &
@@ -50,8 +56,8 @@ run_attack_for() {
         # Pausa o ataque
         kill -STOP $ATTACK_PID 2>/dev/null
 
-        # Sincroniza via ipc_sync: envia label, sinaliza VM0, espera VM0 liberar e reseta
-        /root/ipc_sync $LABEL
+        # Sincroniza via ipc_sync: envia label ÚNICO, sinaliza VM0, espera VM0 liberar
+        /root/ipc_sync $L_ATTACK
 
         # Retoma o ataque
         kill -CONT $ATTACK_PID 2>/dev/null

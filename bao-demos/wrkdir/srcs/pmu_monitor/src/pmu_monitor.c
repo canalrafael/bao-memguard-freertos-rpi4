@@ -1,7 +1,9 @@
 #include "../inc/pmu_monitor.h"
 #include "../../VMs/vm_0/src/tasks/inc/globals.h"
 #include <stdio.h>
-#include <string.h>
+
+// Inclui regulation.h para ter acesso a SCENARIO, EXEC_VM_x, labels
+#include "regulation.h"
 
 #define MAX_SAMPLES 512
 
@@ -9,7 +11,7 @@ static FANN_sample pmu_history[MAX_SAMPLES];
 static uint32_t current_sample_index = 0;
 
 //==============================================================================
-// IPC — 3 canais isolados (VM0 acessa todos)
+// IPC — canais isolados (VM0 acessa os ativos conforme o cenário)
 //==============================================================================
 #define IPC_VM1_ADDR 0x70000000   // Canal 1: VM0 <-> VM1
 #define IPC_VM2_ADDR 0x70010000   // Canal 2: VM0 <-> VM2
@@ -22,13 +24,8 @@ typedef struct {
 } IPC_Channel;
 
 // Labels armazenados localmente pela VM0
-static uint32_t label_vm1 = 0;
-static uint32_t label_vm2 = 0;
-static uint32_t label_vm3 = 0;
-
-// Labels válidos são números pequenos (IDs de ataques/benchmarks).
-// Valores grandes são lixo de memória não-inicializada.
-#define MAX_VALID_LABEL 100
+// Labels são definidos em tempo de compilação por SCENARIO_LABEL_BENCH / SCENARIO_LABEL_ATTACK
+// (ver regulation.h)
 
 // Helpers de cache para manter coerência com o Linux que usa Uncached Memory
 static inline void cache_clean_invalidate(volatile void* addr) {
@@ -38,25 +35,21 @@ static inline void cache_clean_invalidate(volatile void* addr) {
 
 // Inicializa as regiões IPC com zeros (chamada uma vez na startup)
 void ipc_init_channels(void) {
+#if EXEC_VM_1
     IPC_Channel* ch_vm1 = (IPC_Channel*) IPC_VM1_ADDR;
-    IPC_Channel* ch_vm2 = (IPC_Channel*) IPC_VM2_ADDR;
-    IPC_Channel* ch_vm3 = (IPC_Channel*) IPC_VM3_ADDR;
-
     ch_vm1->signal_ready = 0;
     ch_vm1->resume = 0;
     ch_vm1->current_label = 0;
+    cache_clean_invalidate((void*)ch_vm1);
+#endif
 
-    ch_vm2->signal_ready = 0;
-    ch_vm2->resume = 0;
-    ch_vm2->current_label = 0;
-
+#if EXEC_VM_3
+    IPC_Channel* ch_vm3 = (IPC_Channel*) IPC_VM3_ADDR;
     ch_vm3->signal_ready = 0;
     ch_vm3->resume = 0;
     ch_vm3->current_label = 0;
-
-    cache_clean_invalidate((void*)ch_vm1);
-    cache_clean_invalidate((void*)ch_vm2);
     cache_clean_invalidate((void*)ch_vm3);
+#endif
 }
 
 void dump_history_to_serial(void) {
@@ -154,83 +147,87 @@ void bao_get_pmu_data(uint8_t target_cpu, PMU_data *data) {
 }
 
 void collect_and_process_pmu_sample(uint64_t timer_freq) {
+#if EXEC_VM_1
     IPC_Channel* ch_vm1 = (IPC_Channel*) IPC_VM1_ADDR;
-    IPC_Channel* ch_vm2 = (IPC_Channel*) IPC_VM2_ADDR;
+#endif
+#if EXEC_VM_3
     IPC_Channel* ch_vm3 = (IPC_Channel*) IPC_VM3_ADDR;
+#endif
 
-    // Forçar a leitura descarregando/invalidando a linha de cache para o endereço de struct
-    // (cada VM tem 64KB de canal, a estrutua cabe numa linha de 64-bytes tranquilo)
+    // Forçar a leitura descarregando/invalidando a linha de cache
+#if EXEC_VM_1
     cache_clean_invalidate((void*)ch_vm1);
-    cache_clean_invalidate((void*)ch_vm2);
+#endif
+#if EXEC_VM_3
     cache_clean_invalidate((void*)ch_vm3);
+#endif
 
-    // Ler labels atuais dos canais IPC
-    // Só atualiza se o valor for válido (não é lixo de memória)
-    uint32_t tmp;
-    tmp = ch_vm1->current_label;
-    if (tmp <= MAX_VALID_LABEL) label_vm1 = tmp;
-    tmp = ch_vm2->current_label;
-    if (tmp <= MAX_VALID_LABEL) label_vm2 = tmp;
-    tmp = ch_vm3->current_label;
-    if (tmp <= MAX_VALID_LABEL) label_vm3 = tmp;
+    // Labels dos cenários são definidos em tempo de compilação
+    // (SCENARIO_LABEL_BENCH / SCENARIO_LABEL_ATTACK em regulation.h)
 
-    // Verificar barreira: todas as 3 VMs sinalizaram?
-    if (ch_vm1->signal_ready == 1 &&
-        ch_vm2->signal_ready == 1 &&
-        ch_vm3->signal_ready == 1) {
+    // Verificar barreira: TODAS as VMs ativas sinalizaram?
+    int all_ready = 1;
+#if EXEC_VM_1
+    if (ch_vm1->signal_ready != 1) all_ready = 0;
+#endif
+#if EXEC_VM_3
+    if (ch_vm3->signal_ready != 1) all_ready = 0;
+#endif
 
+    if (all_ready) {
         // Fazer print dos dados coletados
         dump_history_to_serial();
 
-        // Resetar sinais
+        // Resetar sinais e sinalizar resume para VMs ativas
+#if EXEC_VM_1
         ch_vm1->signal_ready = 0;
-        ch_vm2->signal_ready = 0;
-        ch_vm3->signal_ready = 0;
-
-        // Sinalizar resume para todas
         ch_vm1->resume = 1;
-        ch_vm2->resume = 1;
-        ch_vm3->resume = 1;
-        
-        // Forçar a escrita em RAM para que o Linux (VM3) uncached enxergue instantaneamente
         cache_clean_invalidate((void*)ch_vm1);
-        cache_clean_invalidate((void*)ch_vm2);
+#endif
+#if EXEC_VM_3
+        ch_vm3->signal_ready = 0;
+        ch_vm3->resume = 1;
         cache_clean_invalidate((void*)ch_vm3);
+#endif
 
         return;
     }
 
     // Coleta normal de PMU — armazenar em historico
+    // Apenas coleta dos cores que têm VMs ativas
     if (current_sample_index < MAX_SAMPLES) {
         // Mapeamento core físico → VM (conforme cpu_affinity no rpi4.c):
         //   Core 0 físico = VM0 (cpu_affinity=0b1)   → monitor (não coleta)
-        //   Core 1 físico = VM1 (cpu_affinity=0b10)  → ataques
-        //   Core 2 físico = VM2 (cpu_affinity=0b100) → benchmarks
-        //   Core 3 físico = VM3 (cpu_affinity=0b1000)→ Linux (benchmarks/ataques)
-        for (uint8_t core = 1; core <= 3; core++) {
-            if (current_sample_index >= MAX_SAMPLES) break;
+        //   Core 1 físico = VM1 (cpu_affinity=0b10)  → benchmarks
+        //   Core 3 físico = VM3 (cpu_affinity=0b1000) → Linux (ataques)
 
+#if EXEC_VM_1
+        // Coleta core 1 (VM1 = benchmarks)
+        if (current_sample_index < MAX_SAMPLES) {
             FANN_sample sample;
-            sample.core_id = core;
-            
-            bao_get_pmu_data(core, &sample.data);
-            
-            // Atribuir label correto de acordo com o core físico
-            if (core == 1) {
-                sample.label = label_vm1;  // VM1 = ataques
-            } else if (core == 2) {
-                sample.label = label_vm2;  // VM2 = benchmarks
-            } else {
-                sample.label = label_vm3;  // VM3 = Linux
-            }
-            
+            sample.core_id = 1;
+            bao_get_pmu_data(1, &sample.data);
+            sample.label = SCENARIO_LABEL_BENCH;  // label do cenário
             sample.output = g_label_atual;
-            
             pmu_history[current_sample_index] = sample;
             current_sample_index++;
-            
             xQueueSend(xPmuQueue, &sample, 0);
         }
+#endif
+
+#if EXEC_VM_3
+        // Coleta core 3 (VM3 = ataques Linux)
+        if (current_sample_index < MAX_SAMPLES) {
+            FANN_sample sample;
+            sample.core_id = 3;
+            bao_get_pmu_data(3, &sample.data);
+            sample.label = SCENARIO_LABEL_ATTACK;  // label do cenário
+            sample.output = g_label_atual;
+            pmu_history[current_sample_index] = sample;
+            current_sample_index++;
+            xQueueSend(xPmuQueue, &sample, 0);
+        }
+#endif
     }
 }
 
