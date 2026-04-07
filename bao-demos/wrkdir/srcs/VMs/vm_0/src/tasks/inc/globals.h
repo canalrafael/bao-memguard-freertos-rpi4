@@ -23,6 +23,7 @@ typedef struct {
   unsigned long cache_misses;
   unsigned long instructions;
   unsigned long cpu_cycles;
+  unsigned long l2_cache_access;
 } PMU_data;
 
 typedef struct {

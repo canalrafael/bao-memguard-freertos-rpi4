@@ -71,7 +71,7 @@ void dump_history_to_serial(void) {
 
     printf("==================================================\n");
     printf("START_OF_CSV_DATA\n");
-    printf("CORE_ID,TIMESTAMP,CPU_CYCLES,INSTRUCTIONS,CACHE_MISSES,BRANCH_MISSES,LABEL\n");
+    printf("CORE_ID,TIMESTAMP,CPU_CYCLES,INSTRUCTIONS,CACHE_MISSES,BRANCH_MISSES,L2_CACHE_ACCESS,LABEL\n");
 
     for (uint32_t i = 0; i < current_sample_index; i++) {
         // Converter timestamp (ticks) para tempo real
@@ -90,7 +90,7 @@ void dump_history_to_serial(void) {
         uint32_t mm = (uint32_t)((day_secs % 3600) / 60);
         uint32_t ss = (uint32_t)(day_secs % 60);
 
-        printf("%lu,%02lu:%02lu:%02lu:%03lu,%lu,%lu,%lu,%lu,%lu\n",
+        printf("%lu,%02lu:%02lu:%02lu:%03lu,%lu,%lu,%lu,%lu,%lu,%lu\n",
             pmu_history[i].core_id,
             (unsigned long)hh, (unsigned long)mm,
             (unsigned long)ss, (unsigned long)ms,
@@ -98,6 +98,7 @@ void dump_history_to_serial(void) {
             pmu_history[i].data.instructions,
             pmu_history[i].data.cache_misses,
             pmu_history[i].data.branch_misses,
+            pmu_history[i].data.l2_cache_access,
             (unsigned long)pmu_history[i].label);
     }
 
@@ -131,10 +132,11 @@ void bao_get_pmu_data(uint8_t target_cpu, PMU_data *data) {
     register unsigned long r2 asm("x2");
     register unsigned long r3 asm("x3");
     register unsigned long r4 asm("x4");
+    register unsigned long r5 asm("x5");
   
     asm volatile(
         "hvc #0"
-        : "+r"(r0), "+r"(r1), "=r"(r2), "=r"(r3), "=r"(r4) 
+        : "+r"(r0), "+r"(r1), "=r"(r2), "=r"(r3), "=r"(r4), "=r"(r5) 
         : 
         : "memory"
     ); 
@@ -144,6 +146,7 @@ void bao_get_pmu_data(uint8_t target_cpu, PMU_data *data) {
     data->instructions = r2;
     data->branch_misses = r3;
     data->timestamp = r4;
+    data->l2_cache_access = r5;
 }
 
 void collect_and_process_pmu_sample(uint64_t timer_freq) {
@@ -233,7 +236,8 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
 
 void init_pmu_registers(void) {
     #define PMU_EVT_INST_RETIRED     0x08
-    #define PMU_EVT_L1D_CACHE_REFILL 0x03
+    #define PMU_EVT_L2D_CACHE_REFILL 0x17
+    #define PMU_EVT_L2D_CACHE        0x16
     #define PMU_EVT_BR_MIS_PRED      0x10
 
     asm volatile("msr pmselr_el0, %0" :: "r" (0));
@@ -242,13 +246,17 @@ void init_pmu_registers(void) {
 
     asm volatile("msr pmselr_el0, %0" :: "r" (1));
     asm volatile("isb");
-    asm volatile("msr pmxevtyper_el0, %0" :: "r" (PMU_EVT_L1D_CACHE_REFILL));
+    asm volatile("msr pmxevtyper_el0, %0" :: "r" (PMU_EVT_L2D_CACHE_REFILL));
+
+    asm volatile("msr pmselr_el0, %0" :: "r" (2));
+    asm volatile("isb");
+    asm volatile("msr pmxevtyper_el0, %0" :: "r" (PMU_EVT_L2D_CACHE));
 
     asm volatile("msr pmselr_el0, %0" :: "r" (3));
     asm volatile("isb");
     asm volatile("msr pmxevtyper_el0, %0" :: "r" (PMU_EVT_INST_RETIRED));
 
     asm volatile("msr pmccfiltr_el0, %0" :: "r" (0));
-    asm volatile("msr pmcntenset_el0, %0" : : "r" (0x8000000B));
+    asm volatile("msr pmcntenset_el0, %0" : : "r" (0x8000000F));  // bits 0,1,2,3 + cycle counter
     asm volatile("msr pmcr_el0, %0" : : "r" (0x07));
 }

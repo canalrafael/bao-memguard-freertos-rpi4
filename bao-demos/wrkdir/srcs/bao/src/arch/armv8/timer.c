@@ -15,10 +15,11 @@
 //eventos pmu
 #define PMU_EVT_INST_RETIRED     0x08
 #define PMU_EVT_L2D_CACHE_REFILL 0x17
+#define PMU_EVT_L2D_CACHE        0x16
 #define PMU_EVT_BR_MIS_PRED      0x10
 
 //mascara para habilitar o contador de ciclos e os contadores de eventos
-#define PMU_ENABLE_ALL  ((1UL << 31) | (1 << 0) | (1 << 1) | (1 << 3))
+#define PMU_ENABLE_ALL  ((1UL << 31) | (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3))
 
 // typedef struct {
 //     uint64_t cpu_cycles;
@@ -61,6 +62,9 @@ static void pmu_init_registers(void) {
     //Contador 1: L2 cache misses (LLC no RPi4) — todos os ELs (sem filtro)
     __asm__ volatile("msr pmevtyper1_el0, %0" :: "r" ((uint64_t)(PMU_EVT_L2D_CACHE_REFILL)));
 
+    //Contador 2: L2 cache access (total de acessos ao LLC) — todos os ELs (sem filtro)
+    __asm__ volatile("msr pmevtyper2_el0, %0" :: "r" ((uint64_t)(PMU_EVT_L2D_CACHE)));
+
     //Contador 3: instrucoes — exclui EL2
     __asm__ volatile("msr pmevtyper3_el0, %0" :: "r" ((uint64_t)(PMU_EVT_INST_RETIRED | PMU_FILTER_EXCLUDE_EL2)));
 
@@ -94,6 +98,10 @@ static inline void pmu_collect_data(void) {
     //cache misses (Contador 1) — acesso direto
     __asm__ volatile("mrs %0, pmevcntr1_el0" : "=r" (val));
     g_pmu_data[id].cache_misses = val;
+
+    //L2 cache access (Contador 2) — acesso direto
+    __asm__ volatile("mrs %0, pmevcntr2_el0" : "=r" (val));
+    g_pmu_data[id].l2_cache_access = val;
 
     //instrucoes (Contador 3) — acesso direto
     __asm__ volatile("mrs %0, pmevcntr3_el0" : "=r" (val));

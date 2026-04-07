@@ -25,6 +25,7 @@ typedef struct {
     uint64_t instructions;
     uint64_t branch_misses;
     uint64_t cache_misses;
+    uint64_t l2_cache_access;
 } pmu_data_t;
 
 //array global para armazenar os dados da PMU de cada CPU

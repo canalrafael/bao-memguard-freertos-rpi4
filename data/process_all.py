@@ -19,8 +19,8 @@ import glob
 
 
 # Colunas finais do CSV limpo (sem CORE_ID)
-FINAL_COLUMNS = ["TIMESTAMP", "CPU_CYCLES", "INSTRUCTIONS", "CACHE_MISSES", "BRANCH_MISSES", "LABEL"]
-HEADER_WITH_CORE = "CORE_ID,TIMESTAMP,CPU_CYCLES,INSTRUCTIONS,CACHE_MISSES,BRANCH_MISSES,LABEL"
+FINAL_COLUMNS = ["TIMESTAMP", "CPU_CYCLES", "INSTRUCTIONS", "CACHE_MISSES", "BRANCH_MISSES", "L2_CACHE_ACCESS", "LABEL"]
+HEADER_WITH_CORE = "CORE_ID,TIMESTAMP,CPU_CYCLES,INSTRUCTIONS,CACHE_MISSES,BRANCH_MISSES,L2_CACHE_ACCESS,LABEL"
 VALID_CORES = {'1', '2', '3'}
 
 
@@ -38,7 +38,7 @@ def process_txt_to_clean_csv(input_file, output_file):
     lines_written = 0
     label_counts = {}
 
-    with open(input_file, 'r') as fin, open(output_file, 'w') as fout:
+    with open(input_file, 'r', errors='replace') as fin, open(output_file, 'w') as fout:
         # Escreve o cabeçalho final (sem CORE_ID)
         fout.write(','.join(FINAL_COLUMNS) + '\n')
 
@@ -63,17 +63,17 @@ def process_txt_to_clean_csv(input_file, output_file):
             parts = stripped.split(',')
 
             # Valida: 7 colunas e CORE_ID válido (1, 2 ou 3)
-            if len(parts) != 7 or parts[0] not in VALID_CORES:
+            if len(parts) != 8 or parts[0] not in VALID_CORES:
                 continue
 
             # Remove CORE_ID (índice 0), mantém as demais colunas
-            # Ordem: TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL
+            # Ordem: TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, L2_CACHE_ACCESS, LABEL
             clean_row = parts[1:]  # remove o primeiro elemento (CORE_ID)
             fout.write(','.join(clean_row) + '\n')
             lines_written += 1
 
             # Contagem de labels para diagnóstico
-            label = parts[6].strip()
+            label = parts[7].strip()
             label_counts[label] = label_counts.get(label, 0) + 1
 
     print(f"  ✓ {lines_written} linhas escritas")
