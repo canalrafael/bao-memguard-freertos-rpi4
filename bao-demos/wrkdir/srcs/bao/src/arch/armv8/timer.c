@@ -14,7 +14,7 @@
 
 //eventos pmu
 #define PMU_EVT_INST_RETIRED     0x08
-#define PMU_EVT_L1D_CACHE_REFILL 0x03
+#define PMU_EVT_L2D_CACHE_REFILL 0x17
 #define PMU_EVT_BR_MIS_PRED      0x10
 
 //mascara para habilitar o contador de ciclos e os contadores de eventos
@@ -58,9 +58,8 @@ static void pmu_init_registers(void) {
     //Contador 0: branch misses — exclui EL2
     __asm__ volatile("msr pmevtyper0_el0, %0" :: "r" ((uint64_t)(PMU_EVT_BR_MIS_PRED | PMU_FILTER_EXCLUDE_EL2)));
 
-    //Contador 1: cache misses — todos os ELs (sem filtro)
-    //EL2-only gera 0 porque o hypervisor roda por microsegundos a cada 200ms
-    __asm__ volatile("msr pmevtyper1_el0, %0" :: "r" ((uint64_t)(PMU_EVT_L1D_CACHE_REFILL)));
+    //Contador 1: L2 cache misses (LLC no RPi4) — todos os ELs (sem filtro)
+    __asm__ volatile("msr pmevtyper1_el0, %0" :: "r" ((uint64_t)(PMU_EVT_L2D_CACHE_REFILL)));
 
     //Contador 3: instrucoes — exclui EL2
     __asm__ volatile("msr pmevtyper3_el0, %0" :: "r" ((uint64_t)(PMU_EVT_INST_RETIRED | PMU_FILTER_EXCLUDE_EL2)));
