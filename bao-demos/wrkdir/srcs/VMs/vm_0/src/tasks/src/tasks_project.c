@@ -36,6 +36,15 @@ void task_monitor(void *arg) {
         vTaskDelayUntil(&xLastWakeTime, xPeriod);
 
         collect_and_process_pmu_sample(timer_freq);
+
+        // O envio via UART em dump_history_to_serial toma muito tempo, fazendo o vTaskDelayUntil
+        // tentar "compensar" os delays perdidos rodando instantaneamente sem esperar.
+        // Isso lê os dados cacheados do hypervisor, gerando dados 100% duplicados.
+        // A lógica abaixo identifica se ocorreu um atraso grande e resincroniza o timer.
+        TickType_t current_tick = xTaskGetTickCount();
+        if ((current_tick - xLastWakeTime) > xPeriod) {
+            xLastWakeTime = current_tick;
+        }
     }
 }
 

@@ -97,8 +97,9 @@
 // Cenário 1: Apenas benchmarks em 1 core (label 0)
 // Cenário 2: Apenas ataques em 1 core (label 1)
 // Cenário 3: Benchmarks + Ataques em 2 cores (bench=label 2, ataque=label 3)
+// Cenário 4: Benchmarks em 2 cores (VM1+VM2) (label 0)
 // =========================================
-#define SCENARIO 3 // <-- ALTERAR AQUI PARA MUDAR O CENÁRIO
+#define SCENARIO 4 // <-- ALTERAR AQUI PARA MUDAR O CENÁRIO
 
 #if SCENARIO == 1
 // Solo benchmarks: VM0 (monitor) + VM1 (benchmarks)
@@ -125,8 +126,16 @@
 #define SCENARIO_LABEL_BENCH 2
 #define SCENARIO_LABEL_ATTACK 3
 #define ACTIVE_IPC_CHANNELS 2 // VM1 + VM3
+#elif SCENARIO == 4
+// Benchmarks em 2 cores: VM0 (monitor) + VM1 (bench) + VM2 (bench)
+#define EXEC_VM_0 1
+#define EXEC_VM_1 1
+#define EXEC_VM_2 1
+#define EXEC_VM_3 0
+#define SCENARIO_LABEL_BENCH 0
+#define ACTIVE_IPC_CHANNELS 2 // VM1 + VM2
 #else
-#error "SCENARIO deve ser 1, 2 ou 3"
+#error "SCENARIO deve ser 1, 2, 3 ou 4"
 #endif
 
 #define VM_QNT 4

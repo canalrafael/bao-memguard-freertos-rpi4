@@ -16,7 +16,7 @@ SYNC_INTERVAL=15      # 15s
 # Label único para TODOS os ataques
 # Cenário 2 (solo ataques): usar 1
 # Cenário 3 (bench + ataques): usar 3
-L_ATTACK=3
+L_ATTACK=1
 
 # Arquivo de pid
 PIDFILE="/var/run/ataques.pid"

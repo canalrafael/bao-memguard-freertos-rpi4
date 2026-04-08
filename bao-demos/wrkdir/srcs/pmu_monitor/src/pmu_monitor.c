@@ -14,7 +14,7 @@ static uint32_t current_sample_index = 0;
 // IPC — canais isolados (VM0 acessa os ativos conforme o cenário)
 //==============================================================================
 #define IPC_VM1_ADDR 0x70000000   // Canal 1: VM0 <-> VM1
-#define IPC_VM2_ADDR 0x70010000   // Canal 2: VM0 <-> VM2
+#define IPC_VM2_ADDR 0x70020000   // Canal 2: VM0 <-> VM2 (mapeado na mesma base do canal secundário do hypervisor)
 #define IPC_VM3_ADDR 0x70020000   // Canal 3: VM0 <-> VM3
 
 typedef struct {
@@ -41,6 +41,14 @@ void ipc_init_channels(void) {
     ch_vm1->resume = 0;
     ch_vm1->current_label = 0;
     cache_clean_invalidate((void*)ch_vm1);
+#endif
+
+#if EXEC_VM_2
+    IPC_Channel* ch_vm2 = (IPC_Channel*) IPC_VM2_ADDR;
+    ch_vm2->signal_ready = 0;
+    ch_vm2->resume = 0;
+    ch_vm2->current_label = 0;
+    cache_clean_invalidate((void*)ch_vm2);
 #endif
 
 #if EXEC_VM_3
@@ -153,6 +161,9 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
 #if EXEC_VM_1
     IPC_Channel* ch_vm1 = (IPC_Channel*) IPC_VM1_ADDR;
 #endif
+#if EXEC_VM_2
+    IPC_Channel* ch_vm2 = (IPC_Channel*) IPC_VM2_ADDR;
+#endif
 #if EXEC_VM_3
     IPC_Channel* ch_vm3 = (IPC_Channel*) IPC_VM3_ADDR;
 #endif
@@ -160,6 +171,9 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
     // Forçar a leitura descarregando/invalidando a linha de cache
 #if EXEC_VM_1
     cache_clean_invalidate((void*)ch_vm1);
+#endif
+#if EXEC_VM_2
+    cache_clean_invalidate((void*)ch_vm2);
 #endif
 #if EXEC_VM_3
     cache_clean_invalidate((void*)ch_vm3);
@@ -172,6 +186,9 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
     int all_ready = 1;
 #if EXEC_VM_1
     if (ch_vm1->signal_ready != 1) all_ready = 0;
+#endif
+#if EXEC_VM_2
+    if (ch_vm2->signal_ready != 1) all_ready = 0;
 #endif
 #if EXEC_VM_3
     if (ch_vm3->signal_ready != 1) all_ready = 0;
@@ -186,6 +203,11 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
         ch_vm1->signal_ready = 0;
         ch_vm1->resume = 1;
         cache_clean_invalidate((void*)ch_vm1);
+#endif
+#if EXEC_VM_2
+        ch_vm2->signal_ready = 0;
+        ch_vm2->resume = 1;
+        cache_clean_invalidate((void*)ch_vm2);
 #endif
 #if EXEC_VM_3
         ch_vm3->signal_ready = 0;
@@ -210,6 +232,20 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
             FANN_sample sample;
             sample.core_id = 1;
             bao_get_pmu_data(1, &sample.data);
+            sample.label = SCENARIO_LABEL_BENCH;  // label do cenário
+            sample.output = g_label_atual;
+            pmu_history[current_sample_index] = sample;
+            current_sample_index++;
+            xQueueSend(xPmuQueue, &sample, 0);
+        }
+#endif
+
+#if EXEC_VM_2
+        // Coleta core 2 (VM2 = benchmarks)
+        if (current_sample_index < MAX_SAMPLES) {
+            FANN_sample sample;
+            sample.core_id = 2;
+            bao_get_pmu_data(2, &sample.data);
             sample.label = SCENARIO_LABEL_BENCH;  // label do cenário
             sample.output = g_label_atual;
             pmu_history[current_sample_index] = sample;

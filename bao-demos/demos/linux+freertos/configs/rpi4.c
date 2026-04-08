@@ -27,6 +27,8 @@ struct config config =
             [1] = { .size = 0x00010000 },  // Canal: VM0 <-> VM3 (cenário 3)
 #elif EXEC_VM_3
             [0] = { .size = 0x00010000 },  // Canal: VM0 <-> VM3 (cenário 2)
+#elif EXEC_VM_2 && EXEC_VM_1
+            [1] = { .size = 0x00010000 },  // Canal: VM0 <-> VM2 (cenário 4)
 #endif
         },
 
@@ -71,6 +73,9 @@ struct config config =
 #elif EXEC_VM_3
                                      {.base = 0x70020000, .size = 0x00010000, .shmem_id = 0,
                                       .interrupt_num = 1, .interrupts = (irqid_t[]){52}},
+#elif EXEC_VM_2 && EXEC_VM_1
+                                     {.base = 0x70020000, .size = 0x00010000, .shmem_id = 1,
+                                      .interrupt_num = 1, .interrupts = (irqid_t[]){53}},
 #endif
                                  },
 
