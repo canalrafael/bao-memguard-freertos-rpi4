@@ -82,7 +82,7 @@ def process_txt_to_clean_csv(input_file, output_file):
         for label, cnt in sorted(label_counts.items()):
             print(f"    Label {label}: {cnt} amostras")
 
-    return lines_written
+    return lines_written, label_counts
 
 
 def main():
@@ -115,6 +115,7 @@ def main():
 
     total_lines = 0
     processed = 0
+    total_label_counts = {}
 
     for txt_path in txt_files:
         basename = os.path.basename(txt_path)
@@ -122,14 +123,20 @@ def main():
         csv_name = os.path.splitext(basename)[0] + '_clean.csv'
         csv_path = os.path.join(output_dir, csv_name)
 
-        lines = process_txt_to_clean_csv(txt_path, csv_path)
+        lines, file_label_counts = process_txt_to_clean_csv(txt_path, csv_path)
         total_lines += lines
         processed += 1
+        for label, count in file_label_counts.items():
+            total_label_counts[label] = total_label_counts.get(label, 0) + count
 
     print(f"\n{'='*60}")
     print(f"  ✅ Concluído! {processed} arquivo(s) processado(s)")
     print(f"  📊 Total de linhas: {total_lines}")
     print(f"  📁 CSVs salvos em: {output_dir}/")
+    if total_label_counts:
+        print(f"  📈 Distribuição total de labels (todos os arquivos):")
+        for label, cnt in sorted(total_label_counts.items()):
+            print(f"    Label {label}: {cnt} amostras")
     print(f"{'='*60}\n")
 
 

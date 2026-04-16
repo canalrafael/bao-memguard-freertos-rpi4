@@ -3,7 +3,8 @@
 #include <arch/generic_timer.h>
 #include <interrupts.h>
 #include <cpu.h>
-#include <arch/neural_network.h>
+#include <arch/detector.h>
+#include <arch/fp_context.h>
 
 #define MRS(v, r) __asm__ volatile("mrs %0, " #r : "=r" (v))
 #define MSR(r, v) __asm__ volatile("msr " #r ", %0" : : "r" (v))
@@ -21,14 +22,11 @@
 //mascara para habilitar o contador de ciclos e os contadores de eventos
 #define PMU_ENABLE_ALL  ((1UL << 31) | (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3))
 
-// typedef struct {
-//     uint64_t cpu_cycles;
-//     uint64_t instuctions;
-//     uint64_t branch_misses;
-//     uint64_t cache_misses;
-// } pmu_data_t;
-
 volatile pmu_data_t g_pmu_data[PMU_MAX_CPUS];
+
+// contexto FP por CPU — protege os registradores NEON/FP das VMs
+// durante a execucao do detector (que usa float)
+static fp_context_t s_fp_ctx[PMU_MAX_CPUS];
 
 // funcao para transformar microsegundos em ticks do timer
 static uint64_t us_to_ticks(uint64_t us) {
@@ -59,11 +57,11 @@ static void pmu_init_registers(void) {
     //Contador 0: branch misses — exclui EL2
     __asm__ volatile("msr pmevtyper0_el0, %0" :: "r" ((uint64_t)(PMU_EVT_BR_MIS_PRED | PMU_FILTER_EXCLUDE_EL2)));
 
-    //Contador 1: L2 cache misses (LLC no RPi4) — todos os ELs (sem filtro)
-    __asm__ volatile("msr pmevtyper1_el0, %0" :: "r" ((uint64_t)(PMU_EVT_L2D_CACHE_REFILL)));
+    //Contador 1: L2 cache misses (LLC no RPi4) — exclui EL2
+    __asm__ volatile("msr pmevtyper1_el0, %0" :: "r" ((uint64_t)(PMU_EVT_L2D_CACHE_REFILL | PMU_FILTER_EXCLUDE_EL2)));
 
-    //Contador 2: L2 cache access (total de acessos ao LLC) — todos os ELs (sem filtro)
-    __asm__ volatile("msr pmevtyper2_el0, %0" :: "r" ((uint64_t)(PMU_EVT_L2D_CACHE)));
+    //Contador 2: L2 cache access (total de acessos ao LLC) — exclui EL2
+    __asm__ volatile("msr pmevtyper2_el0, %0" :: "r" ((uint64_t)(PMU_EVT_L2D_CACHE | PMU_FILTER_EXCLUDE_EL2)));
 
     //Contador 3: instrucoes — exclui EL2
     __asm__ volatile("msr pmevtyper3_el0, %0" :: "r" ((uint64_t)(PMU_EVT_INST_RETIRED | PMU_FILTER_EXCLUDE_EL2)));
@@ -123,11 +121,49 @@ void timer_handler(irqid_t irq_id) {
     ctl |= GENERIC_TIMER_IMASK; 
     MSR(cnthp_ctl_el2, ctl);
 
-    // coleta os dados da PMU
+    cpuid_t id = cpu()->id;
+
+    // coleta os dados da PMU (todos os cores — necessario para IPC data)
     pmu_collect_data();
 
-    //chama a rede neural passando os dados coletados da pmu
-    //bao_run_interference_detection(cpu()->id, &g_pmu_data[cpu()->id]);
+    // roda o detector APENAS no core 1, mas empurra dados de AMBOS os cores
+    // (1 e 2) no buffer compartilhado — replica a intercalacao de cores
+    // que o treinamento em Python faz ao percorrer linhas do CSV
+    if (id == 1) {
+        // salva o contexto FP/NEON da VM antes de usar float
+        fp_context_save(&s_fp_ctx[id]);
+
+        // empurra amostra do core 1 no buffer compartilhado
+        pmu_sample_t s1 = {
+            .cpu_cycles      = g_pmu_data[1].cpu_cycles,
+            .instructions    = g_pmu_data[1].instructions,
+            .cache_misses    = g_pmu_data[1].cache_misses,
+            .branch_misses   = g_pmu_data[1].branch_misses,
+            .l2_cache_access = g_pmu_data[1].l2_cache_access,
+        };
+        detector_process_sample(1, &s1);
+
+        // empurra amostra do core 2 no buffer compartilhado e roda inferencia
+        pmu_sample_t s2 = {
+            .cpu_cycles      = g_pmu_data[2].cpu_cycles,
+            .instructions    = g_pmu_data[2].instructions,
+            .cache_misses    = g_pmu_data[2].cache_misses,
+            .branch_misses   = g_pmu_data[2].branch_misses,
+            .l2_cache_access = g_pmu_data[2].l2_cache_access,
+        };
+        det_output_t out = detector_process_sample(2, &s2);
+
+        if (out.status == DET_ATTACK) {
+            int p_pct = (int)(out.probability * 100);
+            printk("ATTACK detected (p=%d)\n", p_pct);
+        } else if (out.status == DET_BENIGN) {
+            int p_pct = (int)(out.probability * 100);
+            printk("BENIGN (p=%d)\n", p_pct);
+        }
+
+        // restaura o contexto FP/NEON da VM
+        fp_context_restore(&s_fp_ctx[id]);
+    }
 
     // reprograma o proximo disparo
     uint64_t current_cnt;
@@ -145,6 +181,9 @@ void timer_handler(irqid_t irq_id) {
 void timer_arch_init(void) {
     // inicializa os registradores da PMU
     pmu_init_registers();
+
+    // inicializa o detector de interferencia (zera ring buffers internos)
+    detector_init();
 
     // habilita o timer fisico EL2
     uint32_t ctl = GENERIC_TIMER_ENABLE;

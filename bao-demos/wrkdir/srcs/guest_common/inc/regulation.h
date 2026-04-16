@@ -99,7 +99,7 @@
 // Cenário 3: Benchmarks + Ataques em 2 cores (bench=label 2, ataque=label 3)
 // Cenário 4: Benchmarks em 2 cores (VM1+VM2) (label 0)
 // =========================================
-#define SCENARIO 4 // <-- ALTERAR AQUI PARA MUDAR O CENÁRIO
+#define SCENARIO 3 // <-- ALTERAR AQUI PARA MUDAR O CENÁRIO
 
 #if SCENARIO == 1
 // Solo benchmarks: VM0 (monitor) + VM1 (benchmarks)
