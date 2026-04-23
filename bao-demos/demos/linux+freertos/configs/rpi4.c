@@ -21,14 +21,17 @@ struct config config =
             .shmemlist_size = ACTIVE_IPC_CHANNELS,
         .shmemlist = (struct shmem[]){
 #if EXEC_VM_1
-            [0] = { .size = 0x00010000 },  // Canal: VM0 <-> VM1
+            [0] = { .size = 0x00010000 },  // Canal 0: VM0 <-> VM1
 #endif
-#if EXEC_VM_3 && EXEC_VM_1
-            [1] = { .size = 0x00010000 },  // Canal: VM0 <-> VM3 (cenário 3)
+#if EXEC_VM_2 && EXEC_VM_1
+            [1] = { .size = 0x00010000 },  // Canal 1: VM0 <-> VM2
+#endif
+#if EXEC_VM_3 && EXEC_VM_2 && EXEC_VM_1
+            [2] = { .size = 0x00010000 },  // Canal 2: VM0 <-> VM3 (cenário 6)
+#elif EXEC_VM_3 && EXEC_VM_1
+            [1] = { .size = 0x00010000 },  // Canal 1: VM0 <-> VM3 (cenário 3)
 #elif EXEC_VM_3
-            [0] = { .size = 0x00010000 },  // Canal: VM0 <-> VM3 (cenário 2)
-#elif EXEC_VM_2 && EXEC_VM_1
-            [1] = { .size = 0x00010000 },  // Canal: VM0 <-> VM2 (cenário 4)
+            [0] = { .size = 0x00010000 },  // Canal 0: VM0 <-> VM3 (cenário 2)
 #endif
         },
 
@@ -67,15 +70,19 @@ struct config config =
                                      {.base = 0x70000000, .size = 0x00010000, .shmem_id = 0,
                                       .interrupt_num = 1, .interrupts = (irqid_t[]){52}},
 #endif
-#if EXEC_VM_3 && EXEC_VM_1
+#if EXEC_VM_2 && EXEC_VM_1
+                                     {.base = 0x70020000, .size = 0x00010000, .shmem_id = 1,
+                                      .interrupt_num = 1, .interrupts = (irqid_t[]){53}},
+#endif
+#if EXEC_VM_3 && EXEC_VM_2 && EXEC_VM_1
+                                     {.base = 0x70040000, .size = 0x00010000, .shmem_id = 2,
+                                      .interrupt_num = 1, .interrupts = (irqid_t[]){54}},
+#elif EXEC_VM_3 && EXEC_VM_1
                                      {.base = 0x70020000, .size = 0x00010000, .shmem_id = 1,
                                       .interrupt_num = 1, .interrupts = (irqid_t[]){53}},
 #elif EXEC_VM_3
                                      {.base = 0x70020000, .size = 0x00010000, .shmem_id = 0,
                                       .interrupt_num = 1, .interrupts = (irqid_t[]){52}},
-#elif EXEC_VM_2 && EXEC_VM_1
-                                     {.base = 0x70020000, .size = 0x00010000, .shmem_id = 1,
-                                      .interrupt_num = 1, .interrupts = (irqid_t[]){53}},
 #endif
                                  },
 
@@ -246,7 +253,9 @@ struct config config =
                                  .ipc_num = 1,
                                  .ipcs = (struct ipc[]){{.base = 0x70000000,
                                                          .size = 0x00010000,
-#if EXEC_VM_1
+#if EXEC_VM_2 && EXEC_VM_1
+                                                         .shmem_id = 2,  // cenário 6: VM3 usa canal 2
+#elif EXEC_VM_1
                                                          .shmem_id = 1,  // cenário 3: VM3 usa canal 1
 #else
                                                          .shmem_id = 0,  // cenário 2: VM3 usa canal 0

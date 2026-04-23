@@ -24,13 +24,16 @@ typedef struct {
   unsigned long instructions;
   unsigned long cpu_cycles;
   unsigned long l2_cache_access;
+  unsigned long det_status;          // 0=WARMUP, 1=BENIGN, 2=ATTACK
+  unsigned long det_probability_pct; // probabilidade * 100 (inteiro)
 } PMU_data;
 
 typedef struct {
     PMU_data data;
     float output;
     uint64_t core_id;
-    uint32_t label;  // attack/benchmark ID running on this core
+    uint32_t label;     // scenario label (regulation.h)
+    uint32_t bench_id;  // benchmark/attack ID lido via IPC
 } FANN_sample;
 
 //Fila para comunicação entre task de monitoramento e task FANN

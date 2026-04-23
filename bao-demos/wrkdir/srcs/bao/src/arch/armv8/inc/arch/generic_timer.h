@@ -26,6 +26,8 @@ typedef struct {
     uint64_t branch_misses;
     uint64_t cache_misses;
     uint64_t l2_cache_access;
+    uint64_t det_status;          // 0=WARMUP, 1=BENIGN, 2=ATTACK
+    uint64_t det_probability_pct; // probabilidade * 100 (inteiro)
 } pmu_data_t;
 
 //array global para armazenar os dados da PMU de cada CPU

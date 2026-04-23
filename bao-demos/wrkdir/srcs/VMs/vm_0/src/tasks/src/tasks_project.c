@@ -20,7 +20,7 @@ void task_monitor(void *arg) {
     const TickType_t xPeriod = pdMS_TO_TICKS(200);
     TickType_t xLastWakeTime = xTaskGetTickCount();
     
-    printf("TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL\n");
+    printf("TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, LABEL, DET_STATUS, DET_PROB, BENCH_ID\n");
     fflush(stdout);
 
     // Inicializar IPC shared memory com zeros para evitar lixo nos labels

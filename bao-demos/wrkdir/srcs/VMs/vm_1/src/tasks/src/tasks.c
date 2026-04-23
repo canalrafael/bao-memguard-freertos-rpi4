@@ -7,6 +7,7 @@
 
 #include "benchmarks_wrappers.h"
 #include "neural_network.h"
+#include "regulation.h"
 
 // Context for bandwidth benchmark
 static bandwidth_context_fann_t bw_ctx;
@@ -17,29 +18,17 @@ void run_bandwidth(void) {
   asm volatile("" : : "r"(bw_ctx.sum) : "memory");
 }
 
-void run_disparity(void) {
-  disparity_wrapper_fann();
-}
+void run_disparity(void) { disparity_wrapper_fann(); }
 
-void run_fft(void) {
-  fft_wrapper_fann();
-}
+void run_fft(void) { fft_wrapper_fann(); }
 
-void run_qsort_bench(void) {
-  qsort_wrapper_fann();
-}
+void run_qsort_bench(void) { qsort_wrapper_fann(); }
 
-void run_dijkstra(void) {
-  dijkstra_wrapper_fann();
-}
+void run_dijkstra(void) { dijkstra_wrapper_fann(); }
 
-void run_sha(void) {
-  sha_wrapper_fann();
-}
+void run_sha(void) { sha_wrapper_fann(); }
 
-void run_sorting(void) {
-  sorting_wrapper_fann();
-}
+void run_sorting(void) { sorting_wrapper_fann(); }
 
 void task_orchestrator(void *arg) {
   IPC_Channel *ipc = (IPC_Channel *)IPC_BASE_ADDR;
@@ -51,7 +40,72 @@ void task_orchestrator(void *arg) {
   }
   bw_ctx.sum = 0;
 
-  int current_bench = LABEL_BANDWIDTH; // Start with bandwidth
+#if BENCHMARK_RANDOM
+  prng_seed_from_timer();
+
+  printf("[VM1] Task Orquestradora (ALEATORIO) iniciada. Canal IPC: 0x%x\n",
+         IPC_BASE_ADDR);
+  fflush(stdout);
+
+  TickType_t next_sync = xTaskGetTickCount() + pdMS_TO_TICKS(SYNC_INTERVAL_MS);
+
+  while (1) {
+    // Escolhe um benchmark aleatório a cada iteração
+    int bench = (int)prng_range(LABEL_BANDWIDTH, NUM_BENCHMARKS);
+
+    // Atualiza IPC para VM0 saber qual benchmark está rodando
+    g_label_atual = (float)bench;
+    ipc->current_label = bench;
+    asm volatile("dsb sy" ::: "memory");
+
+    // Executa UMA chamada do wrapper escolhido
+    switch (bench) {
+    case LABEL_BANDWIDTH:
+      run_bandwidth();
+      break;
+    case LABEL_DISPARITY:
+      run_disparity();
+      break;
+    case LABEL_FFT:
+      run_fft();
+      break;
+    case LABEL_QSORT:
+      run_qsort_bench();
+      break;
+    case LABEL_DIJKSTRA:
+      run_dijkstra();
+      break;
+    case LABEL_SHA:
+      run_sha();
+      break;
+    case LABEL_SORTING:
+      run_sorting();
+      break;
+    }
+
+    // Sync com VM0 periodicamente (mesma lógica dos outros cenários)
+    if (xTaskGetTickCount() >= next_sync) {
+      ipc->current_label = bench;
+      asm volatile("dsb sy" ::: "memory");
+
+      ipc->signal_ready = 1;
+
+      while (ipc->resume == 0) {
+        vTaskDelay(pdMS_TO_TICKS(1));
+      }
+
+      ipc->resume = 0;
+      asm volatile("dsb sy" ::: "memory");
+
+      next_sync = xTaskGetTickCount() + pdMS_TO_TICKS(SYNC_INTERVAL_MS);
+    }
+  }
+
+#else
+  // ============================================================
+  // Cenário SEQUENCIAL: cada benchmark roda por 10 min em ordem
+  // ============================================================
+  int current_bench = LABEL_BANDWIDTH;
 
   printf("[VM1] Task Orquestradora iniciada. Canal IPC: 0x%x\n", IPC_BASE_ADDR);
   fflush(stdout);
@@ -62,43 +116,50 @@ void task_orchestrator(void *arg) {
     TickType_t end_time = start_time + pdMS_TO_TICKS(BENCHMARK_DURATION_MS);
 
     g_label_atual = (float)current_bench;
+    ipc->current_label = current_bench;
+    asm volatile("dsb sy" ::: "memory");
     printf("[VM1] Rodando benchmark %d por 10 minutos...\n", current_bench);
     fflush(stdout);
 
     while (xTaskGetTickCount() < end_time) {
       switch (current_bench) {
-        case LABEL_BANDWIDTH: run_bandwidth(); break;
-        case LABEL_DISPARITY: run_disparity(); break;
-        case LABEL_FFT: run_fft(); break;
-        case LABEL_QSORT: run_qsort_bench(); break;
-        case LABEL_DIJKSTRA: run_dijkstra(); break;
-        case LABEL_SHA: run_sha(); break;
-        case LABEL_SORTING: run_sorting(); break;
+      case LABEL_BANDWIDTH:
+        run_bandwidth();
+        break;
+      case LABEL_DISPARITY:
+        run_disparity();
+        break;
+      case LABEL_FFT:
+        run_fft();
+        break;
+      case LABEL_QSORT:
+        run_qsort_bench();
+        break;
+      case LABEL_DIJKSTRA:
+        run_dijkstra();
+        break;
+      case LABEL_SHA:
+        run_sha();
+        break;
+      case LABEL_SORTING:
+        run_sorting();
+        break;
       }
 
-      // Check if it's time to sync
       if (xTaskGetTickCount() >= next_sync) {
-        // Prepare data for VM0
         ipc->current_label = current_bench;
         asm volatile("dsb sy" ::: "memory");
-        
-        // Signal VM0
+
         ipc->signal_ready = 1;
-        
-        // Wait for VM0 to log and send resume
+
         while (ipc->resume == 0) {
           vTaskDelay(pdMS_TO_TICKS(1));
         }
 
-        // Clear resume
         ipc->resume = 0;
         asm volatile("dsb sy" ::: "memory");
 
-        // Schedule next sync 15 seconds from now
         next_sync = xTaskGetTickCount() + pdMS_TO_TICKS(SYNC_INTERVAL_MS);
-        
-        // Extend end_time slightly to account for time spent paused, ensuring full 10m of real work
-        // (Optional, for now we let it be strictly wall-clock based without trying to be perfect)
       }
     }
 
@@ -107,4 +168,5 @@ void task_orchestrator(void *arg) {
       current_bench = LABEL_BANDWIDTH;
     }
   }
+#endif
 }

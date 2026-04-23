@@ -26,31 +26,59 @@ CUSTOM_APPS := $(OVERLAY_DIR)/spectre \
                $(OVERLAY_DIR)/meltdown \
                $(OVERLAY_DIR)/zombieload
 
-# --- Regras de compilação dos ataques ---
 
-$(OVERLAY_DIR)/spectre: $(SPECTRE_SRC)
+$(BUILDROOT_DIR)/output/host/bin/aarch64-buildroot-linux-uclibc-gcc: | $(BUILDROOT_DIR) $(linux_src)
+	@echo ">> Buildroot toolchain nao encontrado. Buildando buildroot (pode demorar)..."
+	$(MAKE) -C $(BUILDROOT_DIR) defconfig BR2_DEFCONFIG=$(buildroot_defcfg)
+	$(MAKE) -C $(BUILDROOT_DIR)
+
+# --- Regras de compilação dos ataques ---
+# Dependem do compilador do buildroot (order-only para nao forcar rebuild)
+
+$(OVERLAY_DIR)/spectre: $(SPECTRE_SRC) | $(CC_ARM)
 	@echo ">> Compilando Ataque Spectre..."
 	$(CC_ARM) -O2 $< -o $@
 
-$(OVERLAY_DIR)/armageddon: $(ARMAGEDDON_SRC)
+$(OVERLAY_DIR)/armageddon: $(ARMAGEDDON_SRC) | $(CC_ARM)
 	@echo ">> Compilando Ataque Armageddon..."
 	$(CC_ARM) -O2 $< -o $@
 
-$(OVERLAY_DIR)/meltdown: $(MELTDOWN_SRC)
+$(OVERLAY_DIR)/meltdown: $(MELTDOWN_SRC) | $(CC_ARM)
 	@echo ">> Compilando Ataque Meltdown..."
 	$(CC_ARM) -O2 $< -o $@
 
-$(OVERLAY_DIR)/zombieload: $(ZOMBIELOAD_SRC)
+$(OVERLAY_DIR)/zombieload: $(ZOMBIELOAD_SRC) | $(CC_ARM)
 	@echo ">> Compilando Ataque ZombieLoad..."
 	$(CC_ARM) -O2 $< -o $@
 
+# --- Regra do attack_mode.cfg ---
+# Lê o SCENARIO de regulation.h e escreve o modo no overlay
+REGULATION_H := $(ROOT_DIR)/../../guest_common/inc/regulation.h
+ATTACK_MODE_CFG := $(OVERLAY_DIR)/attack_mode.cfg
+
+$(ATTACK_MODE_CFG): $(REGULATION_H)
+	@SCENARIO=$$(grep -oP '^\s*#define\s+SCENARIO\s+\K[0-9]+' $(REGULATION_H)); \
+	if [ "$$SCENARIO" = "7" ]; then \
+		echo "with_idle" > $@; \
+		echo ">> attack_mode.cfg: with_idle (cenário 7)"; \
+	else \
+		echo "no_idle" > $@; \
+		echo ">> attack_mode.cfg: no_idle (cenário $$SCENARIO)"; \
+	fi
+
 # --- Regra do RootFS ---
 
-$(BUILDROOT_DIR)/output/images/rootfs.cpio: $(CUSTOM_APPS)
+$(BUILDROOT_DIR)/output/images/rootfs.cpio: $(CUSTOM_APPS) $(ATTACK_MODE_CFG) | $(BUILDROOT_DIR)
 	@echo ">> Repacotando o sistema de arquivos do Linux com os ataques..."
 	$(MAKE) -C $(BUILDROOT_DIR) BR2_ROOTFS_OVERLAY="$(CUSTOM_OVERLAY)"
 
-all: $(CUSTOM_APPS) $(BUILDROOT_DIR)/output/images/rootfs.cpio $(TARGET)
+# O make.mk espera rootfs.cpio.gz, mas o buildroot gera rootfs.cpio sem compressao.
+# Gera o .gz a partir do .cpio.
+$(BUILDROOT_DIR)/output/images/rootfs.cpio.gz: $(BUILDROOT_DIR)/output/images/rootfs.cpio
+	@echo ">> Comprimindo rootfs.cpio -> rootfs.cpio.gz..."
+	gzip -k -f $<
+
+all: $(CUSTOM_APPS) $(ATTACK_MODE_CFG) $(BUILDROOT_DIR)/output/images/rootfs.cpio $(TARGET)
 
 VM3_DTS := $(BAO_DEMOS)/demos/linux+freertos/devicetrees/$(PLATFORM)/linux.dts
 

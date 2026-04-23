@@ -13,9 +13,13 @@ static uint32_t current_sample_index = 0;
 //==============================================================================
 // IPC — canais isolados (VM0 acessa os ativos conforme o cenário)
 //==============================================================================
-#define IPC_VM1_ADDR 0x70000000   // Canal 1: VM0 <-> VM1
-#define IPC_VM2_ADDR 0x70020000   // Canal 2: VM0 <-> VM2 (mapeado na mesma base do canal secundário do hypervisor)
-#define IPC_VM3_ADDR 0x70020000   // Canal 3: VM0 <-> VM3
+#define IPC_VM1_ADDR 0x70000000   // Canal 0: VM0 <-> VM1
+#define IPC_VM2_ADDR 0x70020000   // Canal 1: VM0 <-> VM2
+#if EXEC_VM_2 && EXEC_VM_3
+#define IPC_VM3_ADDR 0x70040000   // Canal 2: VM0 <-> VM3 (cenário 6: canal separado)
+#else
+#define IPC_VM3_ADDR 0x70020000   // Canal 1: VM0 <-> VM3 (cenário 3: sem VM2)
+#endif
 
 typedef struct {
     volatile uint32_t signal_ready;   // VMx -> VM0: "pause feito"
@@ -79,7 +83,7 @@ void dump_history_to_serial(void) {
 
     printf("==================================================\n");
     printf("START_OF_CSV_DATA\n");
-    printf("CORE_ID,TIMESTAMP,CPU_CYCLES,INSTRUCTIONS,CACHE_MISSES,BRANCH_MISSES,L2_CACHE_ACCESS,LABEL\n");
+    printf("CORE_ID,TIMESTAMP,CPU_CYCLES,INSTRUCTIONS,CACHE_MISSES,BRANCH_MISSES,L2_CACHE_ACCESS,LABEL,DET_STATUS,DET_PROB,BENCH_ID\n");
 
     for (uint32_t i = 0; i < current_sample_index; i++) {
         // Converter timestamp (ticks) para tempo real
@@ -98,7 +102,7 @@ void dump_history_to_serial(void) {
         uint32_t mm = (uint32_t)((day_secs % 3600) / 60);
         uint32_t ss = (uint32_t)(day_secs % 60);
 
-        printf("%lu,%02lu:%02lu:%02lu:%03lu,%lu,%lu,%lu,%lu,%lu,%lu\n",
+        printf("%lu,%02lu:%02lu:%02lu:%03lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu\n",
             pmu_history[i].core_id,
             (unsigned long)hh, (unsigned long)mm,
             (unsigned long)ss, (unsigned long)ms,
@@ -107,7 +111,10 @@ void dump_history_to_serial(void) {
             pmu_history[i].data.cache_misses,
             pmu_history[i].data.branch_misses,
             pmu_history[i].data.l2_cache_access,
-            (unsigned long)pmu_history[i].label);
+            (unsigned long)pmu_history[i].label,
+            pmu_history[i].data.det_status,
+            pmu_history[i].data.det_probability_pct,
+            (unsigned long)pmu_history[i].bench_id);
     }
 
     printf("END_OF_CSV_DATA\n");
@@ -141,10 +148,12 @@ void bao_get_pmu_data(uint8_t target_cpu, PMU_data *data) {
     register unsigned long r3 asm("x3");
     register unsigned long r4 asm("x4");
     register unsigned long r5 asm("x5");
+    register unsigned long r6 asm("x6");
+    register unsigned long r7 asm("x7");
   
     asm volatile(
         "hvc #0"
-        : "+r"(r0), "+r"(r1), "=r"(r2), "=r"(r3), "=r"(r4), "=r"(r5) 
+        : "+r"(r0), "+r"(r1), "=r"(r2), "=r"(r3), "=r"(r4), "=r"(r5), "=r"(r6), "=r"(r7)
         : 
         : "memory"
     ); 
@@ -155,6 +164,8 @@ void bao_get_pmu_data(uint8_t target_cpu, PMU_data *data) {
     data->branch_misses = r3;
     data->timestamp = r4;
     data->l2_cache_access = r5;
+    data->det_status = r6;
+    data->det_probability_pct = r7;
 }
 
 void collect_and_process_pmu_sample(uint64_t timer_freq) {
@@ -221,6 +232,11 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
     // Coleta normal de PMU — armazenar em historico
     // Apenas coleta dos cores que têm VMs ativas
     if (current_sample_index < MAX_SAMPLES) {
+        // Timestamp único para todos os cores nesta rodada de coleta
+        // Lido do cntvct_el0 do VM0 (timer global compartilhado por todos os cores)
+        uint64_t collection_timestamp;
+        asm volatile("isb \n mrs %0, cntvct_el0" : "=r"(collection_timestamp));
+
         // Mapeamento core físico → VM (conforme cpu_affinity no rpi4.c):
         //   Core 0 físico = VM0 (cpu_affinity=0b1)   → monitor (não coleta)
         //   Core 1 físico = VM1 (cpu_affinity=0b10)  → benchmarks
@@ -232,7 +248,9 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
             FANN_sample sample;
             sample.core_id = 1;
             bao_get_pmu_data(1, &sample.data);
+            sample.data.timestamp = collection_timestamp;  // timestamp sincronizado
             sample.label = SCENARIO_LABEL_BENCH;  // label do cenário
+            sample.bench_id = ch_vm1->current_label;  // benchmark ID via IPC
             sample.output = g_label_atual;
             pmu_history[current_sample_index] = sample;
             current_sample_index++;
@@ -246,7 +264,9 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
             FANN_sample sample;
             sample.core_id = 2;
             bao_get_pmu_data(2, &sample.data);
+            sample.data.timestamp = collection_timestamp;  // timestamp sincronizado
             sample.label = SCENARIO_LABEL_BENCH;  // label do cenário
+            sample.bench_id = ch_vm2->current_label;  // benchmark ID via IPC
             sample.output = g_label_atual;
             pmu_history[current_sample_index] = sample;
             current_sample_index++;
@@ -260,7 +280,9 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
             FANN_sample sample;
             sample.core_id = 3;
             bao_get_pmu_data(3, &sample.data);
+            sample.data.timestamp = collection_timestamp;  // timestamp sincronizado
             sample.label = SCENARIO_LABEL_ATTACK;  // label do cenário
+            sample.bench_id = ch_vm3->current_label;  // attack ID via IPC
             sample.output = g_label_atual;
             pmu_history[current_sample_index] = sample;
             current_sample_index++;

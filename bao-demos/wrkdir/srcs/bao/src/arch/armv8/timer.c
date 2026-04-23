@@ -141,7 +141,11 @@ void timer_handler(irqid_t irq_id) {
             .branch_misses   = g_pmu_data[1].branch_misses,
             .l2_cache_access = g_pmu_data[1].l2_cache_access,
         };
-        detector_process_sample(1, &s1);
+        det_output_t out1 = detector_process_sample(1, &s1);
+
+        // armazena resultado do detector para core 1
+        g_pmu_data[1].det_status          = (uint64_t)out1.status;
+        g_pmu_data[1].det_probability_pct = (uint64_t)(out1.probability * 100);
 
         // empurra amostra do core 2 no buffer compartilhado e roda inferencia
         pmu_sample_t s2 = {
@@ -151,15 +155,11 @@ void timer_handler(irqid_t irq_id) {
             .branch_misses   = g_pmu_data[2].branch_misses,
             .l2_cache_access = g_pmu_data[2].l2_cache_access,
         };
-        det_output_t out = detector_process_sample(2, &s2);
+        det_output_t out2 = detector_process_sample(2, &s2);
 
-        if (out.status == DET_ATTACK) {
-            int p_pct = (int)(out.probability * 100);
-            printk("ATTACK detected (p=%d)\n", p_pct);
-        } else if (out.status == DET_BENIGN) {
-            int p_pct = (int)(out.probability * 100);
-            printk("BENIGN (p=%d)\n", p_pct);
-        }
+        // armazena resultado do detector para core 2
+        g_pmu_data[2].det_status          = (uint64_t)out2.status;
+        g_pmu_data[2].det_probability_pct = (uint64_t)(out2.probability * 100);
 
         // restaura o contexto FP/NEON da VM
         fp_context_restore(&s_fp_ctx[id]);

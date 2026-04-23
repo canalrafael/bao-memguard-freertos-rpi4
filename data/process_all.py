@@ -5,8 +5,12 @@ e gerar os CSVs finais limpos em data/csv_final/.
 
 Pipeline (por arquivo .txt):
   1. Extrai linhas CSV entre marcadores START_OF_CSV_DATA / END_OF_CSV_DATA
-  2. Remove a coluna CORE_ID
+  2. Salva o CSV limpo em data/csv_final/
   3. Salva o CSV limpo em data/csv_final/
+
+Suporta dois formatos de entrada:
+  - Antigo (8 colunas):  CORE_ID,TIMESTAMP,...,LABEL
+  - Novo  (11 colunas): CORE_ID,TIMESTAMP,...,LABEL,DET_STATUS,DET_PROB,BENCH_ID
 
 Uso:
   python3 process_all.py                  # processa todos os .txt na pasta data/
@@ -18,16 +22,20 @@ import os
 import glob
 
 
-# Colunas finais do CSV limpo (sem CORE_ID)
-FINAL_COLUMNS = ["TIMESTAMP", "CPU_CYCLES", "INSTRUCTIONS", "CACHE_MISSES", "BRANCH_MISSES", "L2_CACHE_ACCESS", "LABEL"]
-HEADER_WITH_CORE = "CORE_ID,TIMESTAMP,CPU_CYCLES,INSTRUCTIONS,CACHE_MISSES,BRANCH_MISSES,L2_CACHE_ACCESS,LABEL"
+# Formatos suportados (mantém CORE_ID na saída)
+COLUMNS_OLD = ["CORE_ID", "TIMESTAMP", "CPU_CYCLES", "INSTRUCTIONS", "CACHE_MISSES", "BRANCH_MISSES", "L2_CACHE_ACCESS", "LABEL"]
+COLUMNS_NEW = ["CORE_ID", "TIMESTAMP", "CPU_CYCLES", "INSTRUCTIONS", "CACHE_MISSES", "BRANCH_MISSES", "L2_CACHE_ACCESS", "LABEL", "DET_STATUS", "DET_PROB", "BENCH_ID"]
+
+HEADER_OLD = "CORE_ID,TIMESTAMP,CPU_CYCLES,INSTRUCTIONS,CACHE_MISSES,BRANCH_MISSES,L2_CACHE_ACCESS,LABEL"
+HEADER_NEW = "CORE_ID,TIMESTAMP,CPU_CYCLES,INSTRUCTIONS,CACHE_MISSES,BRANCH_MISSES,L2_CACHE_ACCESS,LABEL,DET_STATUS,DET_PROB,BENCH_ID"
+
 VALID_CORES = {'1', '2', '3'}
 
 
 def process_txt_to_clean_csv(input_file, output_file):
     """
     Lê um arquivo .txt bruto com dados PMU e gera diretamente o CSV final limpo.
-    Combina a extração (extract_csv) e a limpeza (clean_data) em uma única passada.
+    Auto-detecta o formato (8 ou 11 colunas) a partir do cabeçalho CSV.
     """
     print(f"\n{'='*60}")
     print(f"  Processando: {os.path.basename(input_file)}")
@@ -37,11 +45,13 @@ def process_txt_to_clean_csv(input_file, output_file):
     in_csv = False
     lines_written = 0
     label_counts = {}
+    bench_id_counts = {}
+    detected_format = None  # 'old' or 'new'
+    expected_cols = None
+    output_columns = None
+    header_written = False
 
     with open(input_file, 'r', errors='replace') as fin, open(output_file, 'w') as fout:
-        # Escreve o cabeçalho final (sem CORE_ID)
-        fout.write(','.join(FINAL_COLUMNS) + '\n')
-
         for line in fin:
             stripped = line.strip()
 
@@ -56,31 +66,61 @@ def process_txt_to_clean_csv(input_file, output_file):
             if not in_csv:
                 continue
 
-            # Ignora cabeçalhos repetidos e linhas vazias
-            if stripped.startswith("CORE_ID") or stripped == "":
+            # Ignora linhas vazias
+            if stripped == "":
+                continue
+
+            # Detecta formato a partir do cabeçalho
+            if stripped.startswith("CORE_ID"):
+                if "BENCH_ID" in stripped:
+                    detected_format = 'new'
+                    expected_cols = 11
+                    output_columns = COLUMNS_NEW
+                else:
+                    detected_format = 'old'
+                    expected_cols = 8
+                    output_columns = COLUMNS_OLD
+
+                # Escreve cabeçalho apenas uma vez
+                if not header_written:
+                    fout.write(','.join(output_columns) + '\n')
+                    header_written = True
                 continue
 
             parts = stripped.split(',')
 
-            # Valida: 7 colunas e CORE_ID válido (1, 2 ou 3)
-            if len(parts) != 8 or parts[0] not in VALID_CORES:
+            # Valida número de colunas e CORE_ID válido
+            if len(parts) != expected_cols or parts[0] not in VALID_CORES:
                 continue
 
-            # Remove CORE_ID (índice 0), mantém as demais colunas
-            # Ordem: TIMESTAMP, CPU_CYCLES, INSTRUCTIONS, CACHE_MISSES, BRANCH_MISSES, L2_CACHE_ACCESS, LABEL
-            clean_row = parts[1:]  # remove o primeiro elemento (CORE_ID)
-            fout.write(','.join(clean_row) + '\n')
+            # Mantém todas as colunas (incluindo CORE_ID)
+            fout.write(stripped + '\n')
             lines_written += 1
 
             # Contagem de labels para diagnóstico
             label = parts[7].strip()
             label_counts[label] = label_counts.get(label, 0) + 1
 
+            # Contagem de BENCH_ID (formato novo)
+            if detected_format == 'new' and len(parts) >= 11:
+                bench_id = parts[10].strip()
+                bench_id_counts[bench_id] = bench_id_counts.get(bench_id, 0) + 1
+
+    # Se nenhum header foi encontrado, escrever header padrão (old)
+    if not header_written:
+        print(f"  ⚠ Nenhum bloco CSV encontrado no arquivo!")
+
+    fmt_str = f"({detected_format}, {expected_cols} cols)" if detected_format else "(não detectado)"
+    print(f"  Formato:  {fmt_str}")
     print(f"  ✓ {lines_written} linhas escritas")
     if label_counts:
         print(f"  Distribuição de labels:")
         for label, cnt in sorted(label_counts.items()):
             print(f"    Label {label}: {cnt} amostras")
+    if bench_id_counts:
+        print(f"  Distribuição de BENCH_ID:")
+        for bid, cnt in sorted(bench_id_counts.items()):
+            print(f"    BENCH_ID {bid}: {cnt} amostras")
 
     return lines_written, label_counts
 
@@ -142,3 +182,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

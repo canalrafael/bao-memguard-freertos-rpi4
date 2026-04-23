@@ -94,12 +94,16 @@
 #define PERIOD_QNT 10
 
 // ===== SELEÇÃO DE CENÁRIO DE COLETA =====
-// Cenário 1: Apenas benchmarks em 1 core (label 0)
+// Cenário 1: Apenas benchmarks em 1 core, sequencial (label 0)
 // Cenário 2: Apenas ataques em 1 core (label 1)
 // Cenário 3: Benchmarks + Ataques em 2 cores (bench=label 2, ataque=label 3)
-// Cenário 4: Benchmarks em 2 cores (VM1+VM2) (label 0)
+// Cenário 4: Benchmarks em 2 cores (VM1+VM2), sequencial (label 0)
+// Cenário 5: Benchmarks em 2 cores (VM1+VM2), ALEATÓRIO (label 0)
+// Cenário 6: Benchmarks ALEATÓRIOS (VM1+VM2) + Ataques (VM3)
+// Cenário 7: Benchmarks ALEATÓRIOS (VM1+VM2) + Ataques com IDLE (VM3)
+//            Ciclo VM3: sem_ataque → Spectre → Armageddon → Meltdown → repete
 // =========================================
-#define SCENARIO 3 // <-- ALTERAR AQUI PARA MUDAR O CENÁRIO
+#define SCENARIO 5 // <-- ALTERAR AQUI PARA MUDAR O CENÁRIO
 
 #if SCENARIO == 1
 // Solo benchmarks: VM0 (monitor) + VM1 (benchmarks)
@@ -108,6 +112,7 @@
 #define EXEC_VM_2 0
 #define EXEC_VM_3 0
 #define SCENARIO_LABEL_BENCH 0
+#define BENCHMARK_RANDOM 0
 #define ACTIVE_IPC_CHANNELS 1 // só VM1
 #elif SCENARIO == 2
 // Solo ataques: VM0 (monitor) + VM3 (ataques Linux)
@@ -116,6 +121,7 @@
 #define EXEC_VM_2 0
 #define EXEC_VM_3 1
 #define SCENARIO_LABEL_ATTACK 1
+#define BENCHMARK_RANDOM 0
 #define ACTIVE_IPC_CHANNELS 1 // só VM3
 #elif SCENARIO == 3
 // Benchmarks + ataques: VM0 + VM1 + VM3
@@ -125,6 +131,7 @@
 #define EXEC_VM_3 1
 #define SCENARIO_LABEL_BENCH 2
 #define SCENARIO_LABEL_ATTACK 3
+#define BENCHMARK_RANDOM 0
 #define ACTIVE_IPC_CHANNELS 2 // VM1 + VM3
 #elif SCENARIO == 4
 // Benchmarks em 2 cores: VM0 (monitor) + VM1 (bench) + VM2 (bench)
@@ -133,9 +140,40 @@
 #define EXEC_VM_2 1
 #define EXEC_VM_3 0
 #define SCENARIO_LABEL_BENCH 0
+#define BENCHMARK_RANDOM 0
 #define ACTIVE_IPC_CHANNELS 2 // VM1 + VM2
+#elif SCENARIO == 5
+// Benchmarks ALEATÓRIOS em 2 cores: VM0 (monitor) + VM1 + VM2 (benchmarks aleatórios)
+#define EXEC_VM_0 1
+#define EXEC_VM_1 1
+#define EXEC_VM_2 1
+#define EXEC_VM_3 0
+#define SCENARIO_LABEL_BENCH 0
+#define BENCHMARK_RANDOM 1
+#define ACTIVE_IPC_CHANNELS 2 // VM1 + VM2
+#elif SCENARIO == 6
+// Benchmarks ALEATÓRIOS (VM1+VM2) + Ataques (VM3)
+#define EXEC_VM_0 1
+#define EXEC_VM_1 1
+#define EXEC_VM_2 1
+#define EXEC_VM_3 1
+#define SCENARIO_LABEL_BENCH 2
+#define SCENARIO_LABEL_ATTACK 3
+#define BENCHMARK_RANDOM 1
+#define ACTIVE_IPC_CHANNELS 3 // VM1 + VM2 + VM3
+#elif SCENARIO == 7
+// Benchmarks ALEATÓRIOS (VM1+VM2) + Ataques com fase IDLE (VM3)
+// Ciclo VM3: sem_ataque → Spectre → Armageddon → Meltdown → repete
+#define EXEC_VM_0 1
+#define EXEC_VM_1 1
+#define EXEC_VM_2 1
+#define EXEC_VM_3 1
+#define SCENARIO_LABEL_BENCH 2
+#define SCENARIO_LABEL_ATTACK 3
+#define BENCHMARK_RANDOM 1
+#define ACTIVE_IPC_CHANNELS 3 // VM1 + VM2 + VM3
 #else
-#error "SCENARIO deve ser 1, 2, 3 ou 4"
+#error "SCENARIO deve ser 1, 2, 3, 4, 5, 6 ou 7"
 #endif
 
 #define VM_QNT 4

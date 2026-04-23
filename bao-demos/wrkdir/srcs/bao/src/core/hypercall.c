@@ -80,8 +80,9 @@ long int hypercall(unsigned long id)
             vcpu_writereg(cpu()->vcpu, 3, g_pmu_data[target_cpu].branch_misses);
             vcpu_writereg(cpu()->vcpu, 4, g_pmu_data[target_cpu].timestamp);
             vcpu_writereg(cpu()->vcpu, 5, g_pmu_data[target_cpu].l2_cache_access);
-            
-            
+            vcpu_writereg(cpu()->vcpu, 6, g_pmu_data[target_cpu].det_status);
+            vcpu_writereg(cpu()->vcpu, 7, g_pmu_data[target_cpu].det_probability_pct);
+
             ret = g_pmu_data[target_cpu].cpu_cycles;
             break;
         default:
