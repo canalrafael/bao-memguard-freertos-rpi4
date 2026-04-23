@@ -5,7 +5,6 @@
 #include <cpu.h>
 #include <arch/detector.h>
 #include <arch/fp_context.h>
-#include <spinlock.h>
 
 #define MRS(v, r) __asm__ volatile("mrs %0, " #r : "=r" (v))
 #define MSR(r, v) __asm__ volatile("msr " #r ", %0" : : "r" (v))
@@ -138,12 +137,9 @@ void timer_handler(irqid_t irq_id) {
         // garantindo que cada amostra represente exatamente um intervalo de 200ms.
         pmu_collect_data();
 
-        // Usa o spinlock nativo do Bao para evitar erro de linkagem do __sync_lock_test_and_set
-        static spinlock_t detector_lock = SPINLOCK_INITVAL;
-
-        // Passo 2: executa a inferencia para este core com exclusao mutua
-        spin_lock(&detector_lock);
-
+        // Passo 2: executa a inferencia para este core.
+        // O detector agora possui arrays PER-CPU (s_ring[cpu_id]),
+        // entao nao e mais necessario nenhum spinlock. Execucao 100% paralela.
         fp_context_save(&s_fp_ctx[id]);
 
         pmu_sample_t s = {
@@ -161,8 +157,6 @@ void timer_handler(irqid_t irq_id) {
         g_pmu_data[id].det_probability_pct = (uint64_t)(out.probability * 100);
 
         fp_context_restore(&s_fp_ctx[id]);
-
-        spin_unlock(&detector_lock);
     }
 
     // reprograma o proximo disparo

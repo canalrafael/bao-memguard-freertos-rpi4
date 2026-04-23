@@ -82,33 +82,35 @@ static float bm_sqrtf(float x)
 
 
 /* ───────────────────────────────────────────────────────────────────────────
- * We maintain a SINGLE shared ring buffer (not per-CPU) so that samples from
- * multiple cores are interleaved — matching the training CSV where rows from
- * different cores appear sequentially in the rolling window.
+ * We maintain a PER-CPU ring buffer so that samples from multiple cores
+ * are tracked independently. This is a true per-core anomaly detector.
  * ─────────────────────────────────────────────────────────────────────────── */
 
 #define N_SIGNALS 4   /* IPC, MPKI, L2_PRESSURE, BRANCH_MISS_RATE */
 
-static float  s_ring[N_SIGNALS][MDL_WINDOW_SIZE];  /* shared across CPUs */
-static int    s_idx    = 0;      /* next-write position in ring       */
-static int    s_filled = 0;      /* 1 once all W slots have been used */
+static float  s_ring[PMU_MAX_CPUS][N_SIGNALS][MDL_WINDOW_SIZE];
+static int    s_idx[PMU_MAX_CPUS];
+static int    s_filled[PMU_MAX_CPUS];
 
 /* ── Public API ─────────────────────────────────────────────────────────────── */
 
 void detector_init(void)
 {
-    int s, w;
-    s_idx    = 0;
-    s_filled = 0;
-    for (s = 0; s < N_SIGNALS; s++)
-        for (w = 0; w < MDL_WINDOW_SIZE; w++)
-            s_ring[s][w] = 0.0f;
+    int c, s, w;
+    for (c = 0; c < PMU_MAX_CPUS; c++) {
+        s_idx[c]    = 0;
+        s_filled[c] = 0;
+        for (s = 0; s < N_SIGNALS; s++)
+            for (w = 0; w < MDL_WINDOW_SIZE; w++)
+                s_ring[c][s][w] = 0.0f;
+    }
 }
 
 det_output_t detector_process_sample(cpuid_t cpu_id, const pmu_sample_t *sample)
 {
     det_output_t result = { DET_WARMUP, 0.0f };
-    (void)cpu_id;  /* cpu_id not used for ring indexing (shared buffer) */
+    
+    if (cpu_id >= PMU_MAX_CPUS) return result;
 
     /* ── Step 1: compute 4 ratio signals from raw PMU counters ─────────────── */
     const float eps = 1e-9f;
@@ -120,20 +122,20 @@ det_output_t detector_process_sample(cpuid_t cpu_id, const pmu_sample_t *sample)
 
     float new_vals[N_SIGNALS] = { sig_ipc, sig_mpki, sig_l2p, sig_branch };
 
-    /* ── Step 2: update SHARED ring buffer and compute per-signal stats ────── */
-    int   idx = s_idx;
+    /* ── Step 2: update PER-CPU ring buffer and compute per-signal stats ────── */
+    int   idx = s_idx[cpu_id];
     float old_vals[N_SIGNALS]; /* = values from exactly W steps ago (for delta) */
     float mean_v[N_SIGNALS], std_v[N_SIGNALS], delta_v[N_SIGNALS];
     int   s;
 
     for (s = 0; s < N_SIGNALS; s++) {
-        old_vals[s]         = s_ring[s][idx];
-        s_ring[s][idx]      = new_vals[s];
+        old_vals[s]         = s_ring[cpu_id][s][idx];
+        s_ring[cpu_id][s][idx] = new_vals[s];
 
         float sum = 0.0f, sum_sq = 0.0f;
         int   w;
         for (w = 0; w < MDL_WINDOW_SIZE; w++) {
-            float v  = s_ring[s][w];
+            float v  = s_ring[cpu_id][s][w];
             sum     += v;
             sum_sq  += v * v;
         }
@@ -146,12 +148,12 @@ det_output_t detector_process_sample(cpuid_t cpu_id, const pmu_sample_t *sample)
         delta_v[s] = new_vals[s] - old_vals[s];
     }
 
-    /* Advance shared ring index */
-    s_idx = (idx + 1) % MDL_WINDOW_SIZE;
-    if (s_idx == 0)
-        s_filled = 1;
+    /* Advance per-cpu ring index */
+    s_idx[cpu_id] = (idx + 1) % MDL_WINDOW_SIZE;
+    if (s_idx[cpu_id] == 0)
+        s_filled[cpu_id] = 1;
 
-    if (!s_filled)
+    if (!s_filled[cpu_id])
         return result;   /* Still in warm-up period */
 
     /* ── Step 3: assemble 12-element feature vector ─────────────────────────── */
