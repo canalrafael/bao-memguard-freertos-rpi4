@@ -137,7 +137,14 @@ void timer_handler(irqid_t irq_id) {
         // garantindo que cada amostra represente exatamente um intervalo de 200ms.
         pmu_collect_data();
 
-        // Passo 2: executa a inferencia para este core.
+        // Lock simples usando GCC atomic builtin para evitar corrupcao do s_ring compartilhado
+        static volatile int detector_lock = 0;
+
+        // Passo 2: executa a inferencia para este core com exclusao mutua
+        while (__sync_lock_test_and_set(&detector_lock, 1)) {
+            while (detector_lock) { } // spin
+        }
+
         fp_context_save(&s_fp_ctx[id]);
 
         pmu_sample_t s = {
@@ -155,6 +162,8 @@ void timer_handler(irqid_t irq_id) {
         g_pmu_data[id].det_probability_pct = (uint64_t)(out.probability * 100);
 
         fp_context_restore(&s_fp_ctx[id]);
+
+        __sync_lock_release(&detector_lock);
     }
 
     // reprograma o proximo disparo
