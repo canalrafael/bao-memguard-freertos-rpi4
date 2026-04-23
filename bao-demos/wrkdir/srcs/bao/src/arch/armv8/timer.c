@@ -123,45 +123,37 @@ void timer_handler(irqid_t irq_id) {
 
     cpuid_t id = cpu()->id;
 
-    // coleta os dados da PMU (todos os cores — necessario para IPC data)
-    pmu_collect_data();
+    // Cada core coleta e processa seus proprios dados de forma independente.
+    //
+    // CORRECAO: a versao anterior centralizava a inferencia no core 1, que lia
+    // os dados do core 2 sem garantia de sincronizacao (dado potencialmente
+    // desatualizado do intervalo anterior). Alem disso, o core 0 nunca era
+    // processado. Esta versao elimina ambos os problemas:
+    //   - Sem sincronizacao entre cores (sem risco de dados obsoletos).
+    //   - Todos os PMU_MAX_CPUS cores sao monitorados.
+    //   - Espelha exatamente o pipeline Python: uma linha (um core) por vez.
+    if (id < PMU_MAX_CPUS) {
+        // Passo 1: coleta os dados da PMU deste core e reseta os contadores,
+        // garantindo que cada amostra represente exatamente um intervalo de 200ms.
+        pmu_collect_data();
 
-    // roda o detector APENAS no core 1, mas empurra dados de AMBOS os cores
-    // (1 e 2) no buffer compartilhado — replica a intercalacao de cores
-    // que o treinamento em Python faz ao percorrer linhas do CSV
-    if (id == 1) {
-        // salva o contexto FP/NEON da VM antes de usar float
+        // Passo 2: executa a inferencia para este core.
         fp_context_save(&s_fp_ctx[id]);
 
-        // empurra amostra do core 1 no buffer compartilhado
-        pmu_sample_t s1 = {
-            .cpu_cycles      = g_pmu_data[1].cpu_cycles,
-            .instructions    = g_pmu_data[1].instructions,
-            .cache_misses    = g_pmu_data[1].cache_misses,
-            .branch_misses   = g_pmu_data[1].branch_misses,
-            .l2_cache_access = g_pmu_data[1].l2_cache_access,
+        pmu_sample_t s = {
+            .cpu_cycles      = g_pmu_data[id].cpu_cycles,
+            .instructions    = g_pmu_data[id].instructions,
+            .cache_misses    = g_pmu_data[id].cache_misses,
+            .branch_misses   = g_pmu_data[id].branch_misses,
+            .l2_cache_access = g_pmu_data[id].l2_cache_access,
         };
-        det_output_t out1 = detector_process_sample(1, &s1);
 
-        // armazena resultado do detector para core 1
-        g_pmu_data[1].det_status          = (uint64_t)out1.status;
-        g_pmu_data[1].det_probability_pct = (uint64_t)(out1.probability * 100);
+        det_output_t out = detector_process_sample(id, &s);
 
-        // empurra amostra do core 2 no buffer compartilhado e roda inferencia
-        pmu_sample_t s2 = {
-            .cpu_cycles      = g_pmu_data[2].cpu_cycles,
-            .instructions    = g_pmu_data[2].instructions,
-            .cache_misses    = g_pmu_data[2].cache_misses,
-            .branch_misses   = g_pmu_data[2].branch_misses,
-            .l2_cache_access = g_pmu_data[2].l2_cache_access,
-        };
-        det_output_t out2 = detector_process_sample(2, &s2);
+        // armazena o resultado do detector para este core
+        g_pmu_data[id].det_status          = (uint64_t)out.status;
+        g_pmu_data[id].det_probability_pct = (uint64_t)(out.probability * 100);
 
-        // armazena resultado do detector para core 2
-        g_pmu_data[2].det_status          = (uint64_t)out2.status;
-        g_pmu_data[2].det_probability_pct = (uint64_t)(out2.probability * 100);
-
-        // restaura o contexto FP/NEON da VM
         fp_context_restore(&s_fp_ctx[id]);
     }
 
