@@ -3,10 +3,11 @@
 #
 # Cenários de ataque:
 #   - Cenário 6: Ciclo contínuo Spectre → Armageddon → Meltdown → repete
-#   - Cenário 7: Ciclo com idle: sem_ataque → Spectre → Armageddon → Meltdown → repete
+#   - Cenário 7: Ciclo com benchmarks aleatórios nas fases sem ataque:
+#                benchmark → Spectre → benchmark → Armageddon → benchmark → Meltdown → repete
 #
 # O label é passado como argumento para ipc_sync e escrito via ipc_signal.
-# Configuração do modo (com ou sem idle) é feita via /root/attack_mode.cfg
+# Configuração do modo (com ou sem benchmarks) é feita via /root/attack_mode.cfg
 
 # Configurações
 LOGFILE="/tmp/ataques.log"
@@ -15,10 +16,14 @@ SYNC_INTERVAL=15      # 15s
 
 # Labels únicos por ataque (para diferenciar no CSV)
 # Benchmarks usam 1-7, ataques começam em 10
-L_IDLE=0
+L_BENCH=0
 L_SPECTRE=10
 L_ARMAGEDDON=11
 L_MELTDOWN=12
+
+# Benchmarks disponíveis para fase sem ataque
+BENCHMARKS="bandwidth dijkstra disparity fft qsort sha sorting"
+NUM_BENCHMARKS=7
 
 # Arquivo de pid
 PIDFILE="/var/run/ataques.pid"
@@ -26,8 +31,43 @@ PIDFILE="/var/run/ataques.pid"
 # Arquivo de configuração do modo (criado pelo build conforme o cenário)
 MODE_FILE="/root/attack_mode.cfg"
 
+# Função para mapear nome do benchmark para ID numérico
+# (mesmos IDs que VM1/VM2 em globals.h)
+bench_name_to_id() {
+    case $1 in
+        bandwidth)  echo 1 ;;
+        disparity)  echo 2 ;;
+        fft)        echo 3 ;;
+        qsort)      echo 4 ;;
+        dijkstra)   echo 5 ;;
+        sha)        echo 6 ;;
+        sorting)    echo 7 ;;
+        *)          echo 0 ;;
+    esac
+}
+
+# Função para escolher benchmark aleatório
+random_bench() {
+    # Usa /dev/urandom para gerar um índice aleatório
+    IDX=$(od -An -N1 -tu1 /dev/urandom | tr -d ' ')
+    IDX=$(( IDX % NUM_BENCHMARKS ))
+    
+    # Seleciona o benchmark pelo índice
+    COUNT=0
+    for B in $BENCHMARKS; do
+        if [ $COUNT -eq $IDX ]; then
+            echo "$B"
+            return
+        fi
+        COUNT=$(( COUNT + 1 ))
+    done
+    
+    # Fallback
+    echo "sha"
+}
+
 run_attacks() {
-    # Detecta modo: "with_idle" ou "no_idle"
+    # Detecta modo: "with_bench" ou "no_idle"
     MODE="no_idle"
     if [ -f $MODE_FILE ]; then
         MODE=$(cat $MODE_FILE)
@@ -36,18 +76,18 @@ run_attacks() {
     echo "[VM3] Iniciando orquestrador de ataques (modo=$MODE, spectre=$L_SPECTRE armageddon=$L_ARMAGEDDON meltdown=$L_MELTDOWN)..." | tee $LOGFILE > /dev/console
 
     while true; do
-        if [ "$MODE" = "with_idle" ]; then
-            # --- IDLE → SPECTRE → IDLE → ARMAGEDDON → IDLE → MELTDOWN ---
-            run_idle_for $L_IDLE
+        if [ "$MODE" = "with_bench" ]; then
+            # --- BENCH → SPECTRE → BENCH → ARMAGEDDON → BENCH → MELTDOWN ---
+            run_bench_for $L_BENCH
             run_attack_for "/root/spectre" "Spectre" $L_SPECTRE
 
-            run_idle_for $L_IDLE
+            run_bench_for $L_BENCH
             run_attack_for "/root/armageddon" "Armageddon" $L_ARMAGEDDON
 
-            run_idle_for $L_IDLE
+            run_bench_for $L_BENCH
             run_attack_for "/root/meltdown" "Meltdown" $L_MELTDOWN
         else
-            # --- SPECTRE → ARMAGEDDON → MELTDOWN (sem idle) ---
+            # --- SPECTRE → ARMAGEDDON → MELTDOWN (sem benchmarks intermediários) ---
             run_attack_for "/root/spectre" "Spectre" $L_SPECTRE
             run_attack_for "/root/armageddon" "Armageddon" $L_ARMAGEDDON
             run_attack_for "/root/meltdown" "Meltdown" $L_MELTDOWN
@@ -55,26 +95,55 @@ run_attacks() {
     done
 }
 
-run_idle_for() {
+run_bench_for() {
     LABEL=$1
 
-    echo "[VM3] >> Fase IDLE (sem ataque) por $(($ATTACK_DURATION / 60)) minutos (label=$LABEL)..." | tee -a $LOGFILE > /dev/console
-    
-    # Escreve o label idle no IPC
-    /root/ipc_signal write 8 $LABEL
+    echo "[VM3] >> Fase BENCHMARK (sem ataque) por $(($ATTACK_DURATION / 60)) minutos (label=$LABEL)..." | tee -a $LOGFILE > /dev/console
 
     # Conta o tempo total
     TIME_ELAPSED=0
 
-    # Apenas dorme e sincroniza — nenhum ataque rodando
+    # Escolhe e inicia primeiro benchmark aleatório
+    CURR_BENCH=$(random_bench)
+    CURR_BENCH_ID=$(bench_name_to_id $CURR_BENCH)
+    echo "[VM3]    > Benchmark: $CURR_BENCH (id=$CURR_BENCH_ID)" | tee -a $LOGFILE > /dev/console
+
+    # Escreve o ID do benchmark no IPC (offset 8 = current_label)
+    # IDs 1-7 indicam benchmark; PMU monitor usa >=10 para detectar ataques
+    /root/ipc_signal write 8 $CURR_BENCH_ID
+
+    /root/benchmark $CURR_BENCH &
+    BENCH_PID=$!
+
     while [ $TIME_ELAPSED -lt $ATTACK_DURATION ]; do
         sleep $SYNC_INTERVAL
 
-        # Sincroniza via ipc_sync: envia label, sinaliza VM0, espera VM0 liberar
-        /root/ipc_sync $LABEL
+        # Pausa o benchmark
+        kill -STOP $BENCH_PID 2>/dev/null
+
+        # Sincroniza via ipc_sync: envia o ID do benchmark atual
+        /root/ipc_sync $CURR_BENCH_ID
+
+        # Mata o benchmark atual e inicia um novo aleatório
+        kill -9 $BENCH_PID 2>/dev/null
+        wait $BENCH_PID 2>/dev/null
+
+        CURR_BENCH=$(random_bench)
+        CURR_BENCH_ID=$(bench_name_to_id $CURR_BENCH)
+        echo "[VM3]    > Benchmark: $CURR_BENCH (id=$CURR_BENCH_ID)" | tee -a $LOGFILE > /dev/console
+
+        # Escreve o novo ID do benchmark no IPC
+        /root/ipc_signal write 8 $CURR_BENCH_ID
+
+        /root/benchmark $CURR_BENCH &
+        BENCH_PID=$!
 
         TIME_ELAPSED=$(($TIME_ELAPSED + $SYNC_INTERVAL))
     done
+
+    # Terminou o tempo, mata o benchmark
+    kill -9 $BENCH_PID 2>/dev/null
+    wait $BENCH_PID 2>/dev/null
 }
 
 run_attack_for() {
@@ -138,7 +207,7 @@ case "$1" in
             kill $PID
             rm -f $PIDFILE
             # mata os binarios tambem
-            killall spectre armageddon meltdown 2>/dev/null
+            killall spectre armageddon meltdown benchmark 2>/dev/null
         else
             echo "Not running"
         fi

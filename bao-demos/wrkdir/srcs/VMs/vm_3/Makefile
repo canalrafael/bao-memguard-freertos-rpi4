@@ -21,10 +21,44 @@ ARMAGEDDON_SRC := $(wrkdir_src)/attacks/armageddon/src/armageddon.c
 MELTDOWN_SRC := $(wrkdir_src)/attacks/meltdown/src/meltdown.c
 ZOMBIELOAD_SRC := $(wrkdir_src)/attacks/zombieload/src/zombieload.c
 
+# --- Fontes dos benchmarks (para cenário 7: benchmarks no core 3) ---
+BENCH_ROOT := $(ROOT_DIR)/../../benchmarks
+BENCH_MAIN_SRC := $(OVERLAY_DIR)/main_benchmark.c
+BENCH_WRAPPER_SRC := $(BENCH_ROOT)/wrappers/src/benchmarks_wrappers.c
+BENCH_C_SRCS := $(BENCH_ROOT)/bandwidth/src/bandwidth.c \
+                $(BENCH_ROOT)/dijkstra/src/dijkstra.c \
+                $(BENCH_ROOT)/disparity/src/computeSAD.c \
+                $(BENCH_ROOT)/disparity/src/correlateSAD_2D.c \
+                $(BENCH_ROOT)/disparity/src/disparity.c \
+                $(BENCH_ROOT)/disparity/src/finalSAD.c \
+                $(BENCH_ROOT)/disparity/src/findDisparity.c \
+                $(BENCH_ROOT)/disparity/src/getDisparity.c \
+                $(BENCH_ROOT)/disparity/src/integralImage2D2D.c \
+                $(BENCH_ROOT)/disparity/src/padarray2.c \
+                $(BENCH_ROOT)/disparity/src/padarray4.c \
+                $(BENCH_ROOT)/fft/src/driver.c \
+                $(BENCH_ROOT)/fft/src/fft.c \
+                $(BENCH_ROOT)/mser/src/mser.c \
+                $(BENCH_ROOT)/qsort/src/qsort.c \
+                $(BENCH_ROOT)/sha/src/sha.c \
+                $(BENCH_ROOT)/sha/src/sha_driver.c \
+                $(BENCH_ROOT)/sorting/src/sorting.c
+
+BENCH_INC_DIRS := -I$(BENCH_ROOT)/wrappers/inc \
+                  -I$(BENCH_ROOT)/bandwidth/inc \
+                  -I$(BENCH_ROOT)/dijkstra/inc \
+                  -I$(BENCH_ROOT)/disparity/inc \
+                  -I$(BENCH_ROOT)/fft/inc \
+                  -I$(BENCH_ROOT)/mser/inc \
+                  -I$(BENCH_ROOT)/qsort/inc \
+                  -I$(BENCH_ROOT)/sha/inc \
+                  -I$(BENCH_ROOT)/sorting/inc
+
 CUSTOM_APPS := $(OVERLAY_DIR)/spectre \
                $(OVERLAY_DIR)/armageddon \
                $(OVERLAY_DIR)/meltdown \
-               $(OVERLAY_DIR)/zombieload
+               $(OVERLAY_DIR)/zombieload \
+               $(OVERLAY_DIR)/benchmark
 
 
 $(BUILDROOT_DIR)/output/host/bin/aarch64-buildroot-linux-uclibc-gcc: | $(BUILDROOT_DIR) $(linux_src)
@@ -51,6 +85,11 @@ $(OVERLAY_DIR)/zombieload: $(ZOMBIELOAD_SRC) | $(CC_ARM)
 	@echo ">> Compilando Ataque ZombieLoad..."
 	$(CC_ARM) -O2 $< -o $@
 
+# --- Regra de compilação do benchmark para Linux ---
+$(OVERLAY_DIR)/benchmark: $(BENCH_MAIN_SRC) $(BENCH_WRAPPER_SRC) $(BENCH_C_SRCS) | $(CC_ARM)
+	@echo ">> Compilando Benchmark para Linux (VM3)..."
+	$(CC_ARM) -O2 $(BENCH_INC_DIRS) $(BENCH_MAIN_SRC) $(BENCH_WRAPPER_SRC) $(BENCH_C_SRCS) -o $@ -lm
+
 # --- Regra do attack_mode.cfg ---
 # Lê o SCENARIO de regulation.h e escreve o modo no overlay
 REGULATION_H := $(ROOT_DIR)/../../guest_common/inc/regulation.h
@@ -59,8 +98,8 @@ ATTACK_MODE_CFG := $(OVERLAY_DIR)/attack_mode.cfg
 $(ATTACK_MODE_CFG): $(REGULATION_H)
 	@SCENARIO=$$(grep -oP '^\s*#define\s+SCENARIO\s+\K[0-9]+' $(REGULATION_H)); \
 	if [ "$$SCENARIO" = "7" ]; then \
-		echo "with_idle" > $@; \
-		echo ">> attack_mode.cfg: with_idle (cenário 7)"; \
+		echo "with_bench" > $@; \
+		echo ">> attack_mode.cfg: with_bench (cenário 7)"; \
 	else \
 		echo "no_idle" > $@; \
 		echo ">> attack_mode.cfg: no_idle (cenário $$SCENARIO)"; \
@@ -87,3 +126,4 @@ $(eval $(call build-linux, $(TARGET), $(VM3_DTS)))
 clean:
 	rm -f $(TARGET)
 	rm -f $(wrkdir_demo_imgs)/*.dtb
+	rm -f $(OVERLAY_DIR)/benchmark

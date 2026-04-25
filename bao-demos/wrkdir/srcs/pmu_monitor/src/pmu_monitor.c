@@ -241,6 +241,19 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
         //   Core 0 físico = VM0 (cpu_affinity=0b1)   → monitor (não coleta)
         //   Core 1 físico = VM1 (cpu_affinity=0b10)  → benchmarks
         //   Core 3 físico = VM3 (cpu_affinity=0b1000) → Linux (ataques)
+        // ── Label dinâmico (cenário 7) ──
+        // Quando VM3 está rodando benchmarks (current_label 1-7), todas as VMs recebem label=0
+        // Quando VM3 está atacando (current_label>=10), VM1/VM2=SCENARIO_LABEL_BENCH, VM3=SCENARIO_LABEL_ATTACK
+#if EXEC_VM_3
+        IPC_Channel* ch_vm3_label = (IPC_Channel*) IPC_VM3_ADDR;
+        cache_clean_invalidate((void*)ch_vm3_label);
+        uint32_t vm3_current = ch_vm3_label->current_label;
+        int vm3_attacking = (vm3_current >= 10);  // 10=spectre, 11=armageddon, 12=meltdown
+        unsigned long label_bench  = vm3_attacking ? SCENARIO_LABEL_BENCH  : 0;
+        unsigned long label_attack = vm3_attacking ? SCENARIO_LABEL_ATTACK : 0;
+#else
+        unsigned long label_bench  = SCENARIO_LABEL_BENCH;
+#endif
 
 #if EXEC_VM_1
         // Coleta core 1 (VM1 = benchmarks)
@@ -249,7 +262,7 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
             sample.core_id = 1;
             bao_get_pmu_data(1, &sample.data);
             sample.data.timestamp = collection_timestamp;  // timestamp sincronizado
-            sample.label = SCENARIO_LABEL_BENCH;  // label do cenário
+            sample.label = label_bench;  // label dinâmico baseado no estado da VM3
             sample.bench_id = ch_vm1->current_label;  // benchmark ID via IPC
             sample.output = g_label_atual;
             pmu_history[current_sample_index] = sample;
@@ -265,7 +278,7 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
             sample.core_id = 2;
             bao_get_pmu_data(2, &sample.data);
             sample.data.timestamp = collection_timestamp;  // timestamp sincronizado
-            sample.label = SCENARIO_LABEL_BENCH;  // label do cenário
+            sample.label = label_bench;  // label dinâmico baseado no estado da VM3
             sample.bench_id = ch_vm2->current_label;  // benchmark ID via IPC
             sample.output = g_label_atual;
             pmu_history[current_sample_index] = sample;
@@ -281,8 +294,8 @@ void collect_and_process_pmu_sample(uint64_t timer_freq) {
             sample.core_id = 3;
             bao_get_pmu_data(3, &sample.data);
             sample.data.timestamp = collection_timestamp;  // timestamp sincronizado
-            sample.label = SCENARIO_LABEL_ATTACK;  // label do cenário
-            sample.bench_id = ch_vm3->current_label;  // attack ID via IPC
+            sample.label = label_attack;  // 0 quando benchmark, 3 quando atacando
+            sample.bench_id = vm3_current;  // 1-7=benchmark, 10/11/12=ataque
             sample.output = g_label_atual;
             pmu_history[current_sample_index] = sample;
             current_sample_index++;
