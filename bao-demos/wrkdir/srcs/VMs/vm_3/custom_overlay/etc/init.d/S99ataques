@@ -5,6 +5,7 @@
 #   - Cenário 6: Ciclo contínuo Spectre → Armageddon → Meltdown → repete
 #   - Cenário 7: Ciclo com benchmarks aleatórios nas fases sem ataque:
 #                benchmark → Spectre → benchmark → Armageddon → benchmark → Meltdown → repete
+#   - Cenário 8: Meltdown persistente (loop infinito) — sem benchmarks, sem outros ataques
 #
 # O label é passado como argumento para ipc_sync e escrito via ipc_signal.
 # Configuração do modo (com ou sem benchmarks) é feita via /root/attack_mode.cfg
@@ -76,7 +77,10 @@ run_attacks() {
     echo "[VM3] Iniciando orquestrador de ataques (modo=$MODE, spectre=$L_SPECTRE armageddon=$L_ARMAGEDDON meltdown=$L_MELTDOWN)..." | tee $LOGFILE > /dev/console
 
     while true; do
-        if [ "$MODE" = "with_bench" ]; then
+    if [ "$MODE" = "meltdown_only" ]; then
+            # --- MELTDOWN PERSISTENTE (cenário 8) ---
+            run_attack_for "/root/meltdown" "Meltdown" $L_MELTDOWN
+        elif [ "$MODE" = "with_bench" ]; then
             # --- BENCH → SPECTRE → BENCH → ARMAGEDDON → BENCH → MELTDOWN ---
             run_bench_for $L_BENCH
             run_attack_for "/root/spectre" "Spectre" $L_SPECTRE

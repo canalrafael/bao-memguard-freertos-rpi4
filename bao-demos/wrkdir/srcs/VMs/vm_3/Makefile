@@ -97,7 +97,10 @@ ATTACK_MODE_CFG := $(OVERLAY_DIR)/attack_mode.cfg
 
 $(ATTACK_MODE_CFG): $(REGULATION_H)
 	@SCENARIO=$$(grep -oP '^\s*#define\s+SCENARIO\s+\K[0-9]+' $(REGULATION_H)); \
-	if [ "$$SCENARIO" = "7" ]; then \
+	if [ "$$SCENARIO" = "8" ]; then \
+		echo "meltdown_only" > $@; \
+		echo ">> attack_mode.cfg: meltdown_only (cenário 8)"; \
+	elif [ "$$SCENARIO" = "7" ]; then \
 		echo "with_bench" > $@; \
 		echo ">> attack_mode.cfg: with_bench (cenário 7)"; \
 	else \

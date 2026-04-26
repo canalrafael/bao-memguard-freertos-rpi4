@@ -101,9 +101,12 @@
 // Cenário 5: Benchmarks em 2 cores (VM1+VM2), ALEATÓRIO (label 0)
 // Cenário 6: Benchmarks ALEATÓRIOS (VM1+VM2) + Ataques (VM3)
 // Cenário 7: Benchmarks ALEATÓRIOS (VM1+VM2) + Ataques com BENCHMARKS (VM3)
-//            Ciclo VM3: benchmark_aleatório → Spectre → benchmark_aleatório → Armageddon → benchmark_aleatório → Meltdown → repete
+//            Ciclo VM3: benchmark_aleatório → Spectre → benchmark_aleatório →
+//            Armageddon → benchmark_aleatório → Meltdown → repete
+// Cenário 8: Benchmarks FIXOS (VM1=SHA, VM2=FFT) + Meltdown persistente (VM3)
+//            Core 1: SHA em loop, Core 2: FFT em loop, Core 3: Meltdown em loop
 // =========================================
-#define SCENARIO 7 // <-- ALTERAR AQUI PARA MUDAR O CENÁRIO
+#define SCENARIO 8 // <-- ALTERAR AQUI PARA MUDAR O CENÁRIO
 
 #if SCENARIO == 1
 // Solo benchmarks: VM0 (monitor) + VM1 (benchmarks)
@@ -143,7 +146,8 @@
 #define BENCHMARK_RANDOM 0
 #define ACTIVE_IPC_CHANNELS 2 // VM1 + VM2
 #elif SCENARIO == 5
-// Benchmarks ALEATÓRIOS em 2 cores: VM0 (monitor) + VM1 + VM2 (benchmarks aleatórios)
+// Benchmarks ALEATÓRIOS em 2 cores: VM0 (monitor) + VM1 + VM2 (benchmarks
+// aleatórios)
 #define EXEC_VM_0 1
 #define EXEC_VM_1 1
 #define EXEC_VM_2 1
@@ -163,7 +167,8 @@
 #define ACTIVE_IPC_CHANNELS 3 // VM1 + VM2 + VM3
 #elif SCENARIO == 7
 // Benchmarks ALEATÓRIOS (VM1+VM2) + Ataques com benchmarks aleatórios no VM3
-// Ciclo VM3: benchmark_aleatório → Spectre → benchmark_aleatório → Armageddon → benchmark_aleatório → Meltdown → repete
+// Ciclo VM3: benchmark_aleatório → Spectre → benchmark_aleatório → Armageddon →
+// benchmark_aleatório → Meltdown → repete
 #define EXEC_VM_0 1
 #define EXEC_VM_1 1
 #define EXEC_VM_2 1
@@ -172,8 +177,24 @@
 #define SCENARIO_LABEL_ATTACK 3
 #define BENCHMARK_RANDOM 1
 #define ACTIVE_IPC_CHANNELS 3 // VM1 + VM2 + VM3
+#elif SCENARIO == 8
+// Benchmarks FIXOS (VM1=SHA, VM2=FFT) + Meltdown persistente (VM3)
+#define EXEC_VM_0 1
+#define EXEC_VM_1 1
+#define EXEC_VM_2 1
+#define EXEC_VM_3 1
+#define SCENARIO_LABEL_BENCH 2
+#define SCENARIO_LABEL_ATTACK 3
+#define BENCHMARK_RANDOM 0
+#define BENCHMARK_FIXED 1
+#define ACTIVE_IPC_CHANNELS 3 // VM1 + VM2 + VM3
 #else
-#error "SCENARIO deve ser 1, 2, 3, 4, 5, 6 ou 7"
+#error "SCENARIO deve ser 1, 2, 3, 4, 5, 6, 7 ou 8"
+#endif
+
+// Default BENCHMARK_FIXED para cenários que não o definem
+#ifndef BENCHMARK_FIXED
+#define BENCHMARK_FIXED 0
 #endif
 
 #define VM_QNT 4

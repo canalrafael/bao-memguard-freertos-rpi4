@@ -39,7 +39,40 @@ void task_orchestrator(void *arg) {
   }
   bw_ctx.sum = 0;
 
-#if BENCHMARK_RANDOM
+#if BENCHMARK_FIXED
+  // ============================================================
+  // Cenário 8: FIXO — VM2 roda FFT em loop infinito
+  // ============================================================
+  printf("[VM2] Task Orquestradora (FIXO: FFT) iniciada. Canal IPC: 0x%x\n", IPC_BASE_ADDR);
+  fflush(stdout);
+
+  g_label_atual = (float)LABEL_FFT;
+  ipc->current_label = LABEL_FFT;
+  asm volatile("dsb sy" ::: "memory");
+
+  TickType_t next_sync = xTaskGetTickCount() + pdMS_TO_TICKS(SYNC_INTERVAL_MS);
+
+  while (1) {
+    run_fft();
+
+    if (xTaskGetTickCount() >= next_sync) {
+      ipc->current_label = LABEL_FFT;
+      asm volatile("dsb sy" ::: "memory");
+
+      ipc->signal_ready = 1;
+
+      while (ipc->resume == 0) {
+        vTaskDelay(pdMS_TO_TICKS(1));
+      }
+
+      ipc->resume = 0;
+      asm volatile("dsb sy" ::: "memory");
+
+      next_sync = xTaskGetTickCount() + pdMS_TO_TICKS(SYNC_INTERVAL_MS);
+    }
+  }
+
+#elif BENCHMARK_RANDOM
   prng_seed_from_timer();
 
   printf("[VM2] Task Orquestradora (ALEATORIO) iniciada. Canal IPC: 0x%x\n",
