@@ -28,8 +28,8 @@
  *       ./detector_sim results/phase2_simplified/test_data.csv
  */
 
-#include <arch/detector.h>
-#include <arch/model_weights.h>
+#include "detector.h"
+#include "model_weights.h"
 
 /* ── Bare-metal math ─────────────────────────────────────────────────────────
  * Raspberry Pi 4 (Cortex-A72) has hardware VFP/NEON, so float arithmetic
@@ -81,16 +81,18 @@ static float bm_sqrtf(float x)
 #define BM_RELU(x)  ((x) > 0.0f ? (x) : 0.0f)
 
 
-/* ───────────────────────────────────────────────────────────────────────────
- * We maintain a PER-CPU ring buffer so that samples from multiple cores
- * are tracked independently. This is a true per-core anomaly detector.
+/* ── Per-CPU ring buffer state ───────────────────────────────────────────────
+ * We maintain one ring buffer of W=MDL_WINDOW_SIZE scalars per signal per CPU.
+ * The delta (diff(W)) is computed by saving the value that is about to be
+ * overwritten (= the sample from exactly W steps ago) before writing the new
+ * sample — see inline comments in detector_process_sample().
  * ─────────────────────────────────────────────────────────────────────────── */
 
 #define N_SIGNALS 4   /* IPC, MPKI, L2_PRESSURE, BRANCH_MISS_RATE */
 
 static float  s_ring[PMU_MAX_CPUS][N_SIGNALS][MDL_WINDOW_SIZE];
-static int    s_idx[PMU_MAX_CPUS];
-static int    s_filled[PMU_MAX_CPUS];
+static int    s_idx[PMU_MAX_CPUS];      /* next-write position in ring       */
+static int    s_filled[PMU_MAX_CPUS];   /* 1 once all W slots have been used */
 
 /* ── Public API ─────────────────────────────────────────────────────────────── */
 
@@ -109,8 +111,9 @@ void detector_init(void)
 det_output_t detector_process_sample(cpuid_t cpu_id, const pmu_sample_t *sample)
 {
     det_output_t result = { DET_WARMUP, 0.0f };
-    
-    if (cpu_id >= PMU_MAX_CPUS) return result;
+
+    if (cpu_id < 0 || cpu_id >= PMU_MAX_CPUS)
+        return result;
 
     /* ── Step 1: compute 4 ratio signals from raw PMU counters ─────────────── */
     const float eps = 1e-9f;
@@ -122,51 +125,43 @@ det_output_t detector_process_sample(cpuid_t cpu_id, const pmu_sample_t *sample)
 
     float new_vals[N_SIGNALS] = { sig_ipc, sig_mpki, sig_l2p, sig_branch };
 
-    /* ── Step 2: update PER-CPU ring buffer and compute per-signal stats ────── */
+    /* ── Step 2: update ring buffer and compute per-signal stats ────────────── */
     int   idx = s_idx[cpu_id];
     float old_vals[N_SIGNALS]; /* = values from exactly W steps ago (for delta) */
     float mean_v[N_SIGNALS], std_v[N_SIGNALS], delta_v[N_SIGNALS];
     int   s;
 
     for (s = 0; s < N_SIGNALS; s++) {
-        old_vals[s]         = s_ring[cpu_id][s][idx];
-        s_ring[cpu_id][s][idx] = new_vals[s];
+        /* Save the value that is about to be overwritten.
+         * When idx == head of ring (next to be written), the current
+         * occupant ring[idx] is the sample from exactly W steps ago.  */
+        old_vals[s]               = s_ring[cpu_id][s][idx];
+        s_ring[cpu_id][s][idx]    = new_vals[s];
 
-        float sum = 0.0f, sum_sq = 0.0f;
+        /* Compute mean over the full ring buffer (W samples) — pass 1. */
+        float sum = 0.0f;
         int   w;
-        for (w = 0; w < MDL_WINDOW_SIZE; w++) {
-            float v  = s_ring[cpu_id][s][w];
-            sum     += v;
-            sum_sq  += v * v;
-        }
-        mean_v[s]  = sum / (float)MDL_WINDOW_SIZE;
+        for (w = 0; w < MDL_WINDOW_SIZE; w++)
+            sum += s_ring[cpu_id][s][w];
+        mean_v[s] = sum / (float)MDL_WINDOW_SIZE;
 
-        /* 
-         * [TIP/FUTURE FIX] Numerical Instability Warning:
-         * The 1-pass variance formula below ((sum_sq - N * mean^2) / (N-1)) can 
-         * suffer from catastrophic cancellation in 32-bit floats when the variance 
-         * is very small (e.g., during steady-state attack or idle). 
-         * This can result in a garbage negative number on bare-metal AArch64, 
-         * causing std_v to clamp to 0.0f and dropping the anomaly probability to 9%.
-         * 
-         * If you experience erratic probability drops during steady workloads, 
-         * replace this with the 2-pass variance algorithm:
-         * 
-         * float sum_dev = 0.0f;
-         * for (int w = 0; w < MDL_WINDOW_SIZE; w++) {
-         *     float dev = s_ring[cpu_id][s][w] - mean_v[s];
-         *     sum_dev += dev * dev;
-         * }
-         * float var = sum_dev / (float)(MDL_WINDOW_SIZE - 1);
-         */
-        float var  = (sum_sq - (float)MDL_WINDOW_SIZE * mean_v[s] * mean_v[s])
-                   / (float)(MDL_WINDOW_SIZE - 1);
+        /* Sample std (ddof=1), matching pandas .std() used during training.
+         * 2-pass algorithm: avoids catastrophic cancellation in 32-bit floats
+         * on bare-metal AArch64 that caused the 1-pass formula to produce a
+         * garbage negative variance and clamp std_v to 0.0f. */
+        float sum_dev = 0.0f;
+        for (w = 0; w < MDL_WINDOW_SIZE; w++) {
+            float dev  = s_ring[cpu_id][s][w] - mean_v[s];
+            sum_dev   += dev * dev;
+        }
+        float var  = sum_dev / (float)(MDL_WINDOW_SIZE - 1);
         std_v[s]   = bm_sqrtf(var > 0.0f ? var : 0.0f);
 
+        /* delta = signal[t] - signal[t-W]  (old_vals[s] = signal[t-W]) */
         delta_v[s] = new_vals[s] - old_vals[s];
     }
 
-    /* Advance per-cpu ring index */
+    /* Advance ring index */
     s_idx[cpu_id] = (idx + 1) % MDL_WINDOW_SIZE;
     if (s_idx[cpu_id] == 0)
         s_filled[cpu_id] = 1;
@@ -286,9 +281,9 @@ int main(int argc, char *argv[])
 
     while (fgets(line, sizeof(line), csv)) {
         line_no++;
-        /* Accept lines with either 5 or 6 columns (label may be absent) */
+        /* Accept lines with 6 columns after timestamp (label may be absent) */
         int parsed = sscanf(line,
-            "%llu,%llu,%llu,%llu,%llu,%llu",
+            "%*[^,],%llu,%llu,%llu,%llu,%llu,%llu",
             (unsigned long long *)&s.cpu_cycles,
             (unsigned long long *)&s.instructions,
             (unsigned long long *)&s.cache_misses,
